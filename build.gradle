@@ -27,7 +27,7 @@ manifest.mainAttributes("Main-Class" : mainClass)
 dependencies {
     testCompile 'junit:junit:4.11'
     compile 'com.google.code.findbugs:jsr305:2.0.2'
-    compile 'org.frows:puregds:0.0.3'
+    compile 'org.frows:puregds:0.1.4'
     compile 'org.frows:lilex:0.0.3'
 }
 
