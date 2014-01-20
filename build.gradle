@@ -1,0 +1,78 @@
+// plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+// encoding
+def defaultEncoding = 'UTF-8'
+tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
+tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding }
+
+// defaulttasks
+defaultTasks 'clean', 'build'
+
+sourceCompatibility = 1.6
+
+ext {
+    project.version = '0.0.1'
+    project.group = 'info.rosetto'
+    appName = 'rosetto-base'
+    project.description = 'Rosetto base classes'
+    mainClass = 'info.olivinecafe.testapp.Launcher'
+}
+
+manifest.mainAttributes("Main-Class" : mainClass)
+
+
+dependencies {
+    testCompile 'junit:junit:4.11'
+    compile 'com.google.code.findbugs:jsr305:2.0.2'
+    compile 'org.frows:puregds:0.0.3'
+    compile 'org.frows:lilex:0.0.3'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    flatDir { dirs 'lib' }
+}
+
+task runMain(dependsOn: classes, type: JavaExec) {
+    main = mainClass
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.compile
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
+
+artifacts {
+    //archives sourcesJar
+    //archives javadocJar
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: m2Repository)
+            pom.version = project.version
+            pom.groupId = project.group
+            pom.artifactId = appName
+        }
+    }
+}
+
+jar {
+    //from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from (configurations.compile.collect { it.isDirectory() ? it : fileTree(it) }) {
+        exclude '**/*.jar'
+    }
+}
