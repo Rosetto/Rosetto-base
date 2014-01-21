@@ -15,6 +15,8 @@ import java.util.Set;
  * @author tohhy
  */
 public class NameSpace implements Serializable {
+    private static final long serialVersionUID = 5454239542524847421L;
+
     /**
      * この名前空間の名称.
      */

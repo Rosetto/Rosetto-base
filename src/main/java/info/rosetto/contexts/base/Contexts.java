@@ -7,6 +7,7 @@ public class Contexts {
     
     private RosettoEvaluator evaluator;
     private WholeSpace wholeSpace;
+    private NameSpace currentNameSpace = new NameSpace("story");
     
     private Contexts() {}
     
@@ -24,6 +25,15 @@ public class Contexts {
     
     public static void setWholeSpace(WholeSpace wholeSpace) {
         instance.wholeSpace = wholeSpace;
+    }
+
+    public static NameSpace getCurrentNameSpace() {
+        return instance.currentNameSpace;
+    }
+
+    public static void setNameSpaceAsCurrent(String name) {
+        instance.currentNameSpace = instance.wholeSpace.contains(name) ? 
+                instance.wholeSpace.get(name) : instance.wholeSpace.create(name);;
     }
     
 }

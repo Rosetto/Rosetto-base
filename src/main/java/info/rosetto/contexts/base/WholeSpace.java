@@ -19,8 +19,14 @@ public class WholeSpace {
         return nameSpaces.get(name);
     }
     
-    public void create(String name) {
-        nameSpaces.put(name, new NameSpace(name));
+    public NameSpace create(String name) {
+        NameSpace space = new NameSpace(name);
+        nameSpaces.put(name, space);
+        return space;
+    }
+    
+    public boolean contains(String name) {
+        return nameSpaces.containsKey(name);
     }
 
 }
