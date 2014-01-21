@@ -13,7 +13,7 @@ public class FunctionValue implements RosettoValue {
 
     @Override
     public ValueType getType() {
-        return ValueType.FuncCall;
+        return ValueType.FUNCTION_CALL;
     }
 
     @Override

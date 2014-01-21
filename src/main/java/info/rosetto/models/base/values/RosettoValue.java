@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * Rosetto中のあらゆる値を表現するインタフェース.<br>
  * String, boolean, int, doubleのそれぞれのプリミティブな型への解釈手続きを定義する.<br>
+ * 実装クラスはSerializableであることが必要.<br>
  * <br>
  * RosettoScriptの記法を実現する都合上、引数には型の情報を持たせることができない.<br>
  * そのため、ユーザが入力したあらゆるスクリプトからの引数は全てRosettoValueを継承したStringValueとして渡ってくる.<br>
@@ -40,20 +41,26 @@ public interface RosettoValue extends Serializable {
     
     /**
      * この値を文字列として解釈した場合の値を返す.
-     * @return
+     * @return この値を文字列として解釈した場合の値
      */
     public String toString();
     
+    public boolean toBool() throws NotConvertibleException;
+
+    /**
+     * この値を真偽値として解釈した場合の値を返す.<br>
+     * 真偽値として解釈できなかった場合、defaultValueを返す.
+     * @param defaultValue
+     * @return
+     */
     public boolean toBool(boolean defaultValue);
     
-    public boolean toBool() throws NotConvertibleException;
-    
+    public int toInt() throws NotConvertibleException;
+
     public int toInt(int defaultValue);
     
-    public int toInt() throws NotConvertibleException;
-    
-    public double toDouble(double defaultValue);
-    
     public double toDouble() throws NotConvertibleException;
+
+    public double toDouble(double defaultValue);
     
 }

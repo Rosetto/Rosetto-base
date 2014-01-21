@@ -24,7 +24,7 @@ public class VoidValue implements RosettoValue {
     
     @Override
     public ValueType getType() {
-        return ValueType.Void;
+        return ValueType.VOID;
     }
     
     /**

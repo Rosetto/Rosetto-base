@@ -1,5 +1,9 @@
 package info.rosetto.exceptions;
 
+/**
+ * RosettoValueの型変換に失敗した場合にスローされる.
+ * @author tohhy
+ */
 public class NotConvertibleException extends Exception {
     private static final long serialVersionUID = 2301662577097233475L;
 

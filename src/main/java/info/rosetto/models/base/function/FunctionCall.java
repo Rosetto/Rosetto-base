@@ -19,7 +19,6 @@ import javax.annotation.concurrent.Immutable;
 public class FunctionCall implements Serializable {
     private static final long serialVersionUID = 2814186388967644971L;
     
-    
     /**
      * このアクションが実行する関数名.
      */
