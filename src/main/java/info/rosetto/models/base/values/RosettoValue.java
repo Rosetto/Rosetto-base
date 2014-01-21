@@ -43,9 +43,9 @@ public interface RosettoValue extends Serializable {
      * この値を文字列として解釈した場合の値を返す.
      * @return この値を文字列として解釈した場合の値
      */
-    public String toString();
+    public String asString();
     
-    public boolean toBool() throws NotConvertibleException;
+    public boolean asBool() throws NotConvertibleException;
 
     /**
      * この値を真偽値として解釈した場合の値を返す.<br>
@@ -53,14 +53,14 @@ public interface RosettoValue extends Serializable {
      * @param defaultValue
      * @return
      */
-    public boolean toBool(boolean defaultValue);
+    public boolean asBool(boolean defaultValue);
     
-    public int toInt() throws NotConvertibleException;
+    public int asInt() throws NotConvertibleException;
 
-    public int toInt(int defaultValue);
+    public int asInt(int defaultValue);
     
-    public double toDouble() throws NotConvertibleException;
+    public double asDouble() throws NotConvertibleException;
 
-    public double toDouble(double defaultValue);
+    public double asDouble(double defaultValue);
     
 }

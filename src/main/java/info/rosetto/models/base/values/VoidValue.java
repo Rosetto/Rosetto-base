@@ -37,7 +37,7 @@ public class VoidValue implements RosettoValue {
     }
     
     @Override
-    public String toString() {
+    public String asString() {
         return "VOID";
     }
     
@@ -46,7 +46,7 @@ public class VoidValue implements RosettoValue {
      * @throws NotConvertibleException 
      */
     @Override
-    public boolean toBool() throws NotConvertibleException {
+    public boolean asBool() throws NotConvertibleException {
         throw new NotConvertibleException();
     }
     
@@ -55,7 +55,7 @@ public class VoidValue implements RosettoValue {
      * @return defaultValueで指定した値
      */
     @Override
-    public boolean toBool(boolean defaultValue) {
+    public boolean asBool(boolean defaultValue) {
         return defaultValue;
     }
     
@@ -64,7 +64,7 @@ public class VoidValue implements RosettoValue {
      * @throws NotConvertibleException 
      */
     @Override
-    public int toInt() throws NotConvertibleException {
+    public int asInt() throws NotConvertibleException {
         throw new NotConvertibleException();
     }
     
@@ -73,7 +73,7 @@ public class VoidValue implements RosettoValue {
      * @return defaultValueで指定した値
      */
     @Override
-    public int toInt(int defaultValue) {
+    public int asInt(int defaultValue) {
         return defaultValue;
     }
 
@@ -82,7 +82,7 @@ public class VoidValue implements RosettoValue {
      * @throws NotConvertibleException 
      */
     @Override
-    public double toDouble() throws NotConvertibleException {
+    public double asDouble() throws NotConvertibleException {
         throw new NotConvertibleException();
     }
 
@@ -91,7 +91,7 @@ public class VoidValue implements RosettoValue {
      * @return defaultValueで指定した値
      */
     @Override
-    public double toDouble(double defaultValue) {
+    public double asDouble(double defaultValue) {
         return defaultValue;
     }
 }

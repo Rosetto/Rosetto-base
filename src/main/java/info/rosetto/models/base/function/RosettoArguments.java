@@ -5,7 +5,7 @@
 package info.rosetto.models.base.function;
 
 import info.rosetto.models.base.function.RosettoFunction.ExpandedArguments;
-import info.rosetto.models.base.syntax.ArgSyntax;
+import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.TextUtils;
 
@@ -104,7 +104,7 @@ public class RosettoArguments implements Serializable {
      * 実行時引数から逆算して引数オブジェクトを生成する.
      * @param runtimeArgs 実行時引数
      */
-    public RosettoArguments(ExpandedArguments runtimeArgs, ArgSyntax syntax) {
+    public RosettoArguments(ExpandedArguments runtimeArgs, ArgumentSyntax syntax) {
         if(runtimeArgs == null) 
             throw new IllegalArgumentException("runtime args must not be null");
         StringBuilder kb = new StringBuilder();
@@ -140,7 +140,7 @@ public class RosettoArguments implements Serializable {
      * @param macroCallAttrs マクロ呼び出し時の属性マップ
      * @param macroArgPrefix マクロ展開引数（マクロの実行時に与えられた引数で置き換える引数）の接頭詞
      */
-    public RosettoArguments createExpandedArgs(RosettoArguments contextArgs, ArgSyntax syntax) {
+    public RosettoArguments createExpandedArgs(RosettoArguments contextArgs, ArgumentSyntax syntax) {
         if(containsExpandableKey(syntax)) {
             ArrayList<String> expandArgs = new ArrayList<String>(this.args);
             TreeMap<String, String> expandKwargs = new TreeMap<String, String>(this.kwargs);
@@ -256,7 +256,7 @@ public class RosettoArguments implements Serializable {
      * @param syntax マクロ引数の文法定義
      * @return 展開可能なキーを持っているか
      */
-    public boolean containsExpandableKey(ArgSyntax syntax) {
+    public boolean containsExpandableKey(ArgumentSyntax syntax) {
         //全展開引数があればtrue
         if(args.contains(syntax.getMacroAllExpandArg())) return true;
         
@@ -338,7 +338,7 @@ public class RosettoArguments implements Serializable {
      * @param syntax マクロ引数の文法定義
      */
     private void expandMacroKeys(List<String> args, Map<String, String> kwargs, 
-            RosettoArguments macroArgs, ArgSyntax syntax) {
+            RosettoArguments macroArgs, ArgumentSyntax syntax) {
         expandAsteriskKey(args, kwargs, macroArgs, syntax);
         expandKwargs(kwargs, macroArgs, syntax);
         expandArgs(args, macroArgs, syntax);
@@ -352,7 +352,7 @@ public class RosettoArguments implements Serializable {
      * @param syntax マクロ引数の文法定義
      */
     private void expandAsteriskKey(List<String> args, Map<String, String> kwargs, 
-            RosettoArguments macroArgs, ArgSyntax syntax) {
+            RosettoArguments macroArgs, ArgumentSyntax syntax) {
         if(args.contains(syntax.getMacroAllExpandArg())) {
             kwargs.putAll(macroArgs.kwargs);
             args.addAll(macroArgs.args);
@@ -367,7 +367,7 @@ public class RosettoArguments implements Serializable {
      * @param syntax マクロ引数の文法定義
      */
     private static void expandArgs(List<String> args, 
-            RosettoArguments macroArgs, ArgSyntax syntax) {
+            RosettoArguments macroArgs, ArgumentSyntax syntax) {
         //引数のリストを複製
         List<String> result = new ArrayList<String>(args);
         
@@ -392,7 +392,7 @@ public class RosettoArguments implements Serializable {
      */
     @SuppressWarnings("unchecked")
     private static void expandKwargs(Map<String, String> kwargs, 
-            RosettoArguments macroArgs, ArgSyntax syntax) {
+            RosettoArguments macroArgs, ArgumentSyntax syntax) {
         for(Entry<String, String> entry : kwargs.entrySet().toArray(new Entry[kwargs.entrySet().size()])) {
             //展開した値でentryを編集
             entry.setValue(expandValue(entry.getValue(), macroArgs, syntax));
@@ -411,7 +411,7 @@ public class RosettoArguments implements Serializable {
      * @return
      */
     private static String expandValue(String toExpand, 
-            RosettoArguments macroArgs, ArgSyntax syntax) {
+            RosettoArguments macroArgs, ArgumentSyntax syntax) {
         //この引数がマクロ展開引数でなければ何もしない
         if(!toExpand.matches(syntax.getExpandArgRegex())) return toExpand;
         //接頭詞を除いた引数の値を取得

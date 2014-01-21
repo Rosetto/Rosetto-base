@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -46,9 +47,17 @@ public class NameSpace implements Serializable {
     }
     
     public void put(String key, RosettoValue value) {
-        if(isSealed(key))
+        if(isSealed(key)) {
             RosettoLogger.warning("specified key " + key + " is sealed");
+            return;
+        }
         variables.put(key, value);
+    }
+    
+    public void use(NameSpace space) {
+        for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
+            put(e.getKey(), e.getValue());
+        }
     }
     
     public boolean isSealed(String key) {

@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.base.syntax;
+package info.rosetto.models.base.parser;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public class ArgSyntax implements Serializable {
+public class ArgumentSyntax implements Serializable {
     private static final long serialVersionUID = 4249071714150861333L;
 
     private final String macroExpandPrefix;
@@ -25,7 +25,7 @@ public class ArgSyntax implements Serializable {
     
     private final char mutableArgNumSeparator;
     
-    public ArgSyntax(String macroExpandPrefix, 
+    public ArgumentSyntax(String macroExpandPrefix, 
             String macroAllExpandArg,
             char macroDefaultValueSeparator,
             char mutableArgNumSeparator) {

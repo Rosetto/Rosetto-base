@@ -39,7 +39,7 @@ public class StringValue implements RosettoValue {
     }
     
     @Override
-    public String toString() {
+    public String asString() {
         return value;
     }
     
@@ -50,7 +50,7 @@ public class StringValue implements RosettoValue {
      * それ以外の場合はNotConvertibleExceptionをスローする.
      */
     @Override
-    public boolean toBool() throws NotConvertibleException {
+    public boolean asBool() throws NotConvertibleException {
         if(value.toLowerCase().equals("true")) return true;
         if(value.toLowerCase().equals("false")) return false;
         if(value.length() == 0) return false;
@@ -64,7 +64,7 @@ public class StringValue implements RosettoValue {
      * それ以外の場合はデフォルト値を返す.
      */
     @Override
-    public boolean toBool(boolean defaultValue) {
+    public boolean asBool(boolean defaultValue) {
         if(value.toLowerCase().equals("true")) return true;
         if(value.toLowerCase().equals("false")) return false;
         if(value.length() == 0) return false;
@@ -76,7 +76,7 @@ public class StringValue implements RosettoValue {
      * それ以外の場合はNotConvertibleExceptionをスローする.
      */
     @Override
-    public int toInt() throws NotConvertibleException {
+    public int asInt() throws NotConvertibleException {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
@@ -85,7 +85,7 @@ public class StringValue implements RosettoValue {
     }
 
     @Override
-    public int toInt(int defaultValue) {
+    public int asInt(int defaultValue) {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
@@ -94,7 +94,7 @@ public class StringValue implements RosettoValue {
     }
 
     @Override
-    public double toDouble() throws NotConvertibleException {
+    public double asDouble() throws NotConvertibleException {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
@@ -103,7 +103,7 @@ public class StringValue implements RosettoValue {
     }
 
     @Override
-    public double toDouble(double defaultValue) {
+    public double asDouble(double defaultValue) {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {

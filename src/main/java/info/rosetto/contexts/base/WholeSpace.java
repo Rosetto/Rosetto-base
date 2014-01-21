@@ -10,18 +10,17 @@ import java.util.Map;
  * @author tohhy
  */
 public class WholeSpace {
-    private static final WholeSpace instance = new WholeSpace();
     
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
-    private WholeSpace() {}
+    public WholeSpace() {}
     
-    public static NameSpace get(String name) {
-        return instance.nameSpaces.get(name);
+    public NameSpace get(String name) {
+        return nameSpaces.get(name);
     }
     
-    public static void create(String name) {
-        instance.nameSpaces.put(name, new NameSpace(name));
+    public void create(String name) {
+        nameSpaces.put(name, new NameSpace(name));
     }
 
 }

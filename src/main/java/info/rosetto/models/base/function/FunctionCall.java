@@ -4,7 +4,11 @@
 
 package info.rosetto.models.base.function;
 
-import java.io.Serializable;
+import info.rosetto.contexts.base.Contexts;
+import info.rosetto.exceptions.NotConvertibleException;
+import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.values.ValueType;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -16,7 +20,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public class FunctionCall implements Serializable {
+public class FunctionCall implements RosettoValue {
     private static final long serialVersionUID = 2814186388967644971L;
     
     /**
@@ -105,15 +109,6 @@ public class FunctionCall implements Serializable {
     }
     
     /**
-     * このRosettoActionのtypeの文字列表現を返す.
-     * この関数呼び出しを表現する正規記法のタグ.
-     */
-    @Override
-    public String toString() {
-        return toTag();
-    }
-
-    /**
      * この関数呼び出しを表現する正規記法のタグに再度変換する.
      */
     public String toTag() {
@@ -135,5 +130,54 @@ public class FunctionCall implements Serializable {
      */
     public RosettoArguments getArgs() {
         return args;
+    }
+    
+    @Override
+    public ValueType getType() {
+        return ValueType.FUNCTION_CALL;
+    }
+    
+    @Override
+    public Object getValue() {
+        return this;
+    }
+    
+    private RosettoValue evaluate() {
+        return Contexts.getEvaluator().evaluate(this);
+    }
+    
+    @Override
+    public String asString() {
+        return evaluate().asString();
+    }
+
+    @Override
+    public boolean asBool() throws NotConvertibleException {
+        return evaluate().asBool();
+    }
+
+    @Override
+    public int asInt() throws NotConvertibleException {
+        return evaluate().asInt();
+    }
+    
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        return evaluate().asDouble();
+    }
+    
+    @Override
+    public boolean asBool(boolean defaultValue) {
+        return evaluate().asBool(defaultValue);
+    }
+    
+    @Override
+    public int asInt(int defaultValue) {
+        return evaluate().asInt(defaultValue);
+    }
+    
+    @Override
+    public double asDouble(double defaultValue) {
+        return evaluate().asDouble(defaultValue);
     }
 }

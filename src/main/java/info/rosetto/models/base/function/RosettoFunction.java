@@ -4,8 +4,10 @@
 
 package info.rosetto.models.base.function;
 
+import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.base.values.VoidValue;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.RosettoLogger;
@@ -24,7 +26,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public abstract class RosettoFunction {
+public abstract class RosettoFunction implements RosettoValue {
     /**
      * 何もしない関数.テキストのみのユニット等で用いられる.
      */
@@ -216,6 +218,51 @@ public abstract class RosettoFunction {
         return new FunctionCall(getNameObject(), args);
     }
     
+    @Override
+    public ValueType getType() {
+        return ValueType.FUNCTION;
+    }
+
+    @Override
+    public RosettoFunction getValue() {
+        return this;
+    }
+
+    @Override
+    public String asString() {
+        return name.getFullName();
+    }
+
+    @Override
+    public boolean asBool() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public boolean asBool(boolean defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public int asInt() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public int asInt(int defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public double asDouble(double defaultValue) {
+        return defaultValue;
+    }
+
     /**
      * 引数定義の形式が正当かをチェックする.文法エラーが見つかると例外をスローする.
      * Ruby同様、一旦引数のデフォルト値を定義したら
