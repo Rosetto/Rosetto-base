@@ -6,6 +6,7 @@ package info.rosetto.models.base.function;
 
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.values.VoidValue;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.RosettoLogger;
 
@@ -31,7 +32,7 @@ public abstract class RosettoFunction {
             new FunctionName("core", "pass")) {
         @Override
         protected RosettoValue run(ExpandedArguments args) {
-            return RosettoValue.VOID;
+            return VoidValue.INSTANCE;
         }
     };
     

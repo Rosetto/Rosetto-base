@@ -1,9 +1,11 @@
 package info.rosetto.models.base.function;
 
-import javax.annotation.concurrent.Immutable;
-
+import info.rosetto.models.base.values.FunctionValue;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.values.StringValue;
 import info.rosetto.utils.base.TextUtils;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * TODO 未実装
@@ -19,10 +21,10 @@ public class RosettoArgument {
         int equalPosition = arg.indexOf("=");
         if(equalPosition == -1) {
             this.key = null;
-            this.value = new RosettoValue(arg);
+            this.value = new StringValue(arg);
         } else {
             this.key = arg.substring(0, equalPosition);
-            this.value = new RosettoValue(
+            this.value = new StringValue(
                     TextUtils.removeDoubleQuote(arg.substring(equalPosition + 1)));
         }
     }
@@ -32,9 +34,14 @@ public class RosettoArgument {
         return value.toString();
     }
     
-    public RosettoArgument(String key, Object value) {
+    public RosettoArgument(String key, String value) {
         this.key = key;
-        this.value = new RosettoValue(value);
+        this.value = new StringValue(value);
+    }
+    
+    public RosettoArgument(String key, FunctionCall value) {
+        this.key = key;
+        this.value = new FunctionValue(value);
     }
     
     public RosettoValue getValue() {

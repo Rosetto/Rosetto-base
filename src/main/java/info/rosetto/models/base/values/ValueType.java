@@ -4,7 +4,6 @@
 package info.rosetto.models.base.values;
 
 import info.rosetto.models.base.function.FunctionCall;
-import info.rosetto.models.base.values.RosettoValue.VoidValue;
 
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.
