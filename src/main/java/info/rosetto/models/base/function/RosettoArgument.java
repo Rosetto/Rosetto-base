@@ -1,5 +1,6 @@
 package info.rosetto.models.base.function;
 
+import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.StringValue;
 import info.rosetto.utils.base.TextUtils;
@@ -38,7 +39,7 @@ public class RosettoArgument {
         this.value = new StringValue(value);
     }
     
-    public RosettoArgument(String key, FunctionCall value) {
+    public RosettoArgument(String key, ActionCall value) {
         this.key = key;
         this.value = value;
     }

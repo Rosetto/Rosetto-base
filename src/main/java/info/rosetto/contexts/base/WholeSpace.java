@@ -15,7 +15,7 @@ public class WholeSpace {
     
     public WholeSpace() {}
     
-    public NameSpace get(String name) {
+    public NameSpace getNameSpace(String name) {
         return nameSpaces.get(name);
     }
     

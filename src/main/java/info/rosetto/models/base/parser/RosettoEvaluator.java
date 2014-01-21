@@ -1,6 +1,6 @@
 package info.rosetto.models.base.parser;
 
-import info.rosetto.models.base.function.FunctionCall;
+import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoValue;
 
 public interface RosettoEvaluator {
@@ -10,6 +10,6 @@ public interface RosettoEvaluator {
      * @param fc 評価する関数呼び出し
      * @return 評価結果
      */
-    public RosettoValue evaluate(FunctionCall fc);
+    public RosettoValue evaluate(ActionCall fc);
 
 }

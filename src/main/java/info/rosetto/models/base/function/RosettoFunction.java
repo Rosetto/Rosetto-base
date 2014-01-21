@@ -6,6 +6,7 @@ package info.rosetto.models.base.function;
 
 import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.base.values.VoidValue;
@@ -196,8 +197,8 @@ public abstract class RosettoFunction implements RosettoValue {
      * この関数を引数なしで呼び出した際のアクションオブジェクトを生成する.
      * @return この関数を引数なしで呼び出した際のアクションオブジェクト
      */
-    public FunctionCall toAction() {
-        return new FunctionCall(getNameObject());
+    public ActionCall toAction() {
+        return new ActionCall(getNameObject());
     }
     
     /**
@@ -205,8 +206,8 @@ public abstract class RosettoFunction implements RosettoValue {
      * @param args 呼び出し時に与える引数
      * @return この関数を指定引数で呼び出した際のアクションオブジェクト
      */
-    public FunctionCall toAction(RosettoArguments args) {
-        return new FunctionCall(getNameObject(), args);
+    public ActionCall toAction(RosettoArguments args) {
+        return new ActionCall(getNameObject(), args);
     }
     
     /**
@@ -214,8 +215,8 @@ public abstract class RosettoFunction implements RosettoValue {
      * @param args 呼び出し時に与える引数
      * @return この関数を指定引数で呼び出した際のアクションオブジェクト
      */
-    public FunctionCall toAction(String args) {
-        return new FunctionCall(getNameObject(), args);
+    public ActionCall toAction(String args) {
+        return new ActionCall(getNameObject(), args);
     }
     
     @Override

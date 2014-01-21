@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
-import info.rosetto.models.base.function.FunctionCall;
 import info.rosetto.models.base.function.RosettoFunction;
 
 /**
@@ -18,21 +17,17 @@ public enum ValueType {
      */
     VOID(VoidValue.class), 
     /**
+     * 関数やマクロの呼び出しを示す型.
+     */
+    ACTION_CALL(ActionCall.class),
+    /**
      * 関数を示す型.
      */
     FUNCTION(RosettoFunction.class),
     /**
-     * 関数呼び出しを示す型.
-     */
-    FUNCTION_CALL(FunctionCall.class),
-    /**
      * マクロを示す型.
      */
     MACRO(String.class),
-    /**
-     * マクロ呼び出しを示す型.
-     */
-    MACRO_CALL(String.class),
     /**
      * 文字列リテラルを示す型.
      */

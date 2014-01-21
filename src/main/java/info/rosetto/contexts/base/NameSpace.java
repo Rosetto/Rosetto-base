@@ -23,9 +23,14 @@ public class NameSpace implements Serializable {
     private final String name;
     
     /**
-     * この名前空間が保持する変数の一覧.
+     * この名前空間が直接保持する変数の一覧.
      */
     private final Map<String, RosettoValue> variables = new HashMap<String, RosettoValue>();
+    
+    /**
+     * この名前空間がパッケージをrequireしたことにより、パッケージ付き名称で保持されている変数の一覧.
+     */
+    private final Map<String, RosettoValue> absoluteVariables = new HashMap<String, RosettoValue>();
     
     /**
      * ロックされた変数名の一覧.<br>
@@ -45,7 +50,11 @@ public class NameSpace implements Serializable {
     }
     
     public RosettoValue get(String key) {
-        return variables.get(key);
+        if(variables.containsKey(key))
+            return variables.get(key);
+        if(absoluteVariables.containsKey(key))
+            return absoluteVariables.get(key);
+        return null;
     }
     
     public void put(String key, RosettoValue value) {
@@ -56,9 +65,23 @@ public class NameSpace implements Serializable {
         variables.put(key, value);
     }
     
+    private void putAbsolute(String key, RosettoValue value) {
+        if(isSealed(key)) {
+            RosettoLogger.warning("specified key " + key + " is sealed");
+            return;
+        }
+        absoluteVariables.put(key, value);
+    }
+    
     public void use(NameSpace space) {
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             put(e.getKey(), e.getValue());
+        }
+    }
+    
+    public void require(NameSpace space) {
+        for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
+            putAbsolute(e.getKey(), e.getValue());
         }
     }
     
@@ -73,4 +96,9 @@ public class NameSpace implements Serializable {
     public void unSeal(String key) {
         sealedKeys.remove(key);
     }
+
+    public String getName() {
+        return name;
+    }
+    
 }

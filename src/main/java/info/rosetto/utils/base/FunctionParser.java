@@ -1,7 +1,7 @@
 package info.rosetto.utils.base;
 
-import info.rosetto.models.base.function.FunctionCall;
 import info.rosetto.models.base.function.RosettoArgument;
+import info.rosetto.models.base.values.ActionCall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class FunctionParser {
      * @param functionCall
      * @return
      */
-    public static FunctionCall parse(String functionCall) {
+    public static ActionCall parse(String functionCall) {
         if(functionCall == null)
             throw new IllegalArgumentException("arg must not be null");
         String removeQuoted = TextUtils.removeAllDoubleQuotedStrings(functionCall);
@@ -51,15 +51,15 @@ public class FunctionParser {
                 result.add(new RosettoArgument(key, value));
             }
         }
-        return new FunctionCall(funcName, result);
+        return new ActionCall(funcName, result);
     }
     
-    private static FunctionCall parse(String functionCall, int parensisCount) {
+    private static ActionCall parse(String functionCall, int parensisCount) {
         char[] chars = functionCall.toCharArray();
         int len = functionCall.length();
         Stack<Integer> stack = new Stack<Integer>();
         Map<Integer, Integer> coressMap = new HashMap<Integer, Integer>();
-        Map<Integer, FunctionCall> fcMap = new HashMap<Integer, FunctionCall>();
+        Map<Integer, ActionCall> fcMap = new HashMap<Integer, ActionCall>();
         coressMap.put(0, -1);
         for(int i=0; i<len; i++) {
             char c = chars[i];
@@ -72,7 +72,7 @@ public class FunctionParser {
                     throw new IllegalArgumentException("parse error");
                 int start = stack.pop();
                 coressMap.put(start, i);
-                FunctionCall fc = parseFunctionCall(chars, start+1, i-1, coressMap, fcMap);
+                ActionCall fc = parseFunctionCall(chars, start+1, i-1, coressMap, fcMap);
                 fcMap.put(start, fc);
                 break;
             }
@@ -81,9 +81,9 @@ public class FunctionParser {
     }
     
     
-    private static FunctionCall parseFunctionCall(char[] chars, 
+    private static ActionCall parseFunctionCall(char[] chars, 
             int contentStart, int contentEnd, 
-            Map<Integer, Integer> coressMap, Map<Integer, FunctionCall> fcMap) {
+            Map<Integer, Integer> coressMap, Map<Integer, ActionCall> fcMap) {
         String funcName = null;
         List<RosettoArgument> result = new LinkedList<RosettoArgument>();
         StringBuilder buf = new StringBuilder();
@@ -130,6 +130,6 @@ public class FunctionParser {
             }
             buf = new StringBuilder();
         }
-        return new FunctionCall(funcName, result);
+        return new ActionCall(funcName, result);
     }
 }

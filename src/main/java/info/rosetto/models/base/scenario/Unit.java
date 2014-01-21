@@ -4,7 +4,7 @@
 
 package info.rosetto.models.base.scenario;
 
-import info.rosetto.models.base.function.FunctionCall;
+import info.rosetto.models.base.values.ActionCall;
 
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ public class Unit implements Serializable, Token {
      * このユニットが保持する関数呼び出し.
      */
     @Nonnull
-    private final FunctionCall action;
+    private final ActionCall action;
     
     /**
      * textを指定してUnitを初期化する.<br>
@@ -49,9 +49,9 @@ public class Unit implements Serializable, Token {
      * @param text このUnitが保持する文章
      * @param action このUnitが保持するアクション
      */
-    public Unit(String text, FunctionCall action) {
+    public Unit(String text, ActionCall action) {
         this.text = (text != null) ? text : "";
-        this.action = (action != null) ? action : FunctionCall.EMPTY;
+        this.action = (action != null) ? action : ActionCall.EMPTY;
     }
     
     /**
@@ -68,7 +68,7 @@ public class Unit implements Serializable, Token {
      * nullにはならないことが保証される.生成時にnullを与えた場合はRosettoAction.EMPTYが返る.
      * @return このユニットが保持するアクション
      */
-    public FunctionCall getAction() {
+    public ActionCall getAction() {
         return action;
     }
     
