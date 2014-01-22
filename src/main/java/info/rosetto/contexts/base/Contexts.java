@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
 
 /**
@@ -21,6 +22,11 @@ public class Contexts {
      * 全ての名前空間.
      */
     private WholeSpace wholeSpace;
+    
+    /**
+     * このコンテキストでスクリプト解釈に使用されるパーサー.
+     */
+    private RosettoParser parser;
 
     /**
      * 初期化が済んでいるかどうか.
@@ -50,6 +56,7 @@ public class Contexts {
      */
     public static void dispose() {
         instance.wholeSpace = null;
+        instance.parser = null;
         instance.isInitialized = false;
     }
     
@@ -98,6 +105,24 @@ public class Contexts {
             throw new IllegalArgumentException("wholespace must not be null");
         instance.wholeSpace = wholeSpace;
     }
+    
+    /**
+     * TODO
+     * @return
+     */
+    public static RosettoParser getParser() {
+        return instance.parser;
+    }
+    
+    /**
+     * TODO
+     * @param parser
+     */
+    public static void setParser(RosettoParser parser) {
+        instance.parser = parser;
+    }
+    
+    
     
     /**
      * 現在アクティブな名前空間を取得する.

@@ -7,14 +7,10 @@ import info.rosetto.models.base.function.FunctionName;
 
 import org.junit.Test;
 
-/**
- * OK(2013/05/16)
- * @author tohhy
- */
 public class FunctionNameTest {
 
     @Test
-    public void インスタンス化テスト() {
+    public void ConstructorTest() {
         FunctionName sut = new FunctionName("org.test", "testfunc");
         assertThat(sut.getPackage(), is("org.test"));
         assertThat(sut.getShortName(), is("testfunc"));
@@ -23,7 +19,7 @@ public class FunctionNameTest {
     }
     
     @Test
-    public void パッケージ名がない場合と関数名がない場合にエラー() throws Exception {
+    public void ConstructorExceptionTest() throws Exception {
         try {
             new FunctionName("", "testfunc");
             fail();
@@ -51,7 +47,7 @@ public class FunctionNameTest {
     }
     
     @Test
-    public void equalsが正常に動作する() throws Exception {
+    public void equalsTest() throws Exception {
         assertThat(new FunctionName("org.test", "testfunc")
         .equals(new FunctionName("org.test", "testfunc"))
                 , is(true));
@@ -64,7 +60,7 @@ public class FunctionNameTest {
     }
 
     @Test
-    public void equalsNameが正常に動作する() throws Exception {
+    public void equalsNameTest() throws Exception {
          FunctionName sut = new FunctionName("org.test", "testfunc");
          assertThat(sut.equalsName("testfunc"), is(true));
          assertThat(sut.equalsName("org.test.testfunc"), is(true));

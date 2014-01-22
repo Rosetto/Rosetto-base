@@ -28,11 +28,14 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public abstract class RosettoFunction implements RosettoValue {
+    private static final long serialVersionUID = -3266766756619640445L;
+
     /**
      * 何もしない関数.テキストのみのユニット等で用いられる.
      */
     public static final RosettoFunction pass = new RosettoFunction(
             new FunctionName("core", "pass")) {
+        private static final long serialVersionUID = -1128862955060980485L;
         @Override
         protected RosettoValue run(ExpandedArguments args) {
             return VoidValue.INSTANCE;

@@ -53,6 +53,8 @@ public class NameSpace implements Serializable {
     public NameSpace(String name) {
         if(name == null || name.length() == 0)
             throw new IllegalArgumentException("name must not be empty");
+        if(name.endsWith("."))
+            throw new IllegalArgumentException("name must not end with dot");
         this.name = name;
     }
     
@@ -94,10 +96,9 @@ public class NameSpace implements Serializable {
     }
     
     /**
-     * 外部パッケージの絶対参照をこの名前空間に追加する.<br>
-     * 
-     * @param key
-     * @param value
+     * 外部パッケージ中の変数の絶対参照をこの名前空間に追加する.
+     * @param key 絶対参照のキー
+     * @param value 値
      */
     private void putAbsolute(String key, RosettoValue value) {
         if(!key.contains("."))
@@ -117,7 +118,10 @@ public class NameSpace implements Serializable {
     
     public void require(NameSpace space) {
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
-            putAbsolute(e.getKey(), e.getValue());
+            String absoluteKey = space.getName() + "." + e.getKey();
+            putAbsolute(absoluteKey, e.getValue());
+            //シールされているキーをrequireした場合このパッケージでもseal
+            if(space.isSealed(e.getKey())) seal(absoluteKey);
         }
     }
     

@@ -2,7 +2,14 @@ package info.rosetto.contexts.base;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import info.rosetto.models.base.parser.ArgumentSyntax;
+import info.rosetto.models.base.parser.RosettoParser;
+import info.rosetto.models.base.scenario.Scenario;
+import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.utils.base.Values;
+
+import java.io.File;
+import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -83,6 +90,35 @@ public class ContextsTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
     }
+    
+    @Test
+    public void getAndSetParserTest() throws Exception {
+        Contexts.initialize();
+        
+        Contexts.setParser(new RosettoParser() {
+            @Override
+            public Scenario parseString(String script) {
+                return new Scenario(new Unit("TestParser"));
+            }
+            @Override
+            public Scenario parseFile(URL url) {
+                return null;
+            }
+            @Override
+            public ArgumentSyntax getArgumentSyntax() {
+                return null;
+            }
+            @Override
+            public Scenario parseFile(File file) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        });
+        assertThat(Contexts.getParser().parseString("foobar")
+                .getUnitAt(0).getContent(), is("TestParser"));
+        
+    }
+    
     
     @Test
     public void getAndSetNameSpaceTest() throws Exception {

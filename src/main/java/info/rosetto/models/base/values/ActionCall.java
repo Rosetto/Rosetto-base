@@ -112,6 +112,11 @@ public class ActionCall implements RosettoValue {
         this(functionName.getFullName(), args);
     }
     
+    @Override
+    public String toString() {
+        return toTag();
+    }
+    
     /**
      * この関数呼び出しを表現する正規記法のタグに再度変換する.
      */
