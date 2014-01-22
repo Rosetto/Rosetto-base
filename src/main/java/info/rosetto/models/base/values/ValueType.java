@@ -15,7 +15,11 @@ public enum ValueType {
     /**
      * 値を返さないことを示す型.
      */
-    VOID(VoidValue.class), 
+    VOID(VoidValue.class),
+    /**
+     * Null値を示す型.
+     */
+    NULL(NullValue.class),
     /**
      * 関数やマクロの呼び出しを示す型.
      */
@@ -33,9 +37,13 @@ public enum ValueType {
      */
     STRING(String.class),
     /**
+     * 真偽値を示す型.
+     */
+    BOOLEAN(boolean.class),
+    /**
      * 整数を示す型.
      */
-    INT(int.class),
+    INTEGER(int.class),
     /**
      * 浮動小数点数を示す型.
      */
