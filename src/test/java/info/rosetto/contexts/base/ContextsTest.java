@@ -6,6 +6,7 @@ import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
 import java.io.File;
@@ -27,6 +28,14 @@ public class ContextsTest {
     public void InitializeAndDisposeTest() throws Exception {
         //setupで破棄済み
         assertThat(Contexts.isInitialized(), is(false));
+        
+        //破棄されている状態で各種操作するとエラー
+        try {
+            Contexts.get("foo");
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalStateException.class));
+        }
         
         //初期状態ではinitialize可能
         Contexts.initialize();
@@ -59,7 +68,7 @@ public class ContextsTest {
         assertThat(Contexts.get("foobar").asString(), is("baz"));
         
         //値を上書きする
-        Contexts.put("foobar", Values.create("true"));
+        Contexts.put("foobar", true);
         assertThat(Contexts.get("foobar").asBool(), is(true));
         
         //nullキーでputするとエラー
@@ -84,7 +93,30 @@ public class ContextsTest {
         
         //nullvalueでputするとエラー
         try {
-            Contexts.put("fuga", null);
+            Contexts.put("fuga", (RosettoValue)null);
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+    }
+    
+    @Test
+    public void getAndPutAbsoluteValueTest() throws Exception {
+        Contexts.initialize();
+        
+        //名前空間指定付きで登録、この段階では絶対参照しかできない
+        Contexts.put("org.example.foo", "bar");
+        assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
+        assertThat(Contexts.get("foo"), is(nullValue()));
+        
+        //名前空間がcurrentになれば見えるようになる
+        Contexts.setNameSpaceAsCurrent("org.example");
+        assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
+        assertThat(Contexts.get("foo").asString(), is("bar"));
+        
+        //dotで終わる変数名は不可
+        try {
+            Contexts.put("org.example.foobar.", "baz");
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -126,13 +158,13 @@ public class ContextsTest {
         
         //デフォルトの名前空間は"story"
         assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
-        Contexts.put("namespacenum", Values.create("1"));
+        Contexts.put("namespacenum", 1);
         assertThat(Contexts.get("namespacenum").asInt(), is(1));
         
         //変更できる
         Contexts.setNameSpaceAsCurrent("foobar");
         assertThat(Contexts.getCurrentNameSpace().getName(), is("foobar"));
-        Contexts.put("namespacenum", Values.create("2"));
+        Contexts.put("namespacenum", 2.0);
         assertThat(Contexts.get("namespacenum").asInt(), is(2));
         
         //戻せる
@@ -167,9 +199,9 @@ public class ContextsTest {
         
         //変更できる
         WholeSpace ws = new WholeSpace();
-        ws.create("foo");
-        ws.create("bar");
-        ws.setNameSpaceAsCurrent("foo");
+        ws.createNameSpace("foo");
+        ws.createNameSpace("bar");
+        ws.setCurrentNameSpace("foo");
         Contexts.setWholeSpace(ws);
         assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(3));
         assertThat(Contexts.getWholeSpace().contains("story"), is(true));

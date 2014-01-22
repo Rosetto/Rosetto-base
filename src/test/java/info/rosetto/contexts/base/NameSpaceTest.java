@@ -152,6 +152,48 @@ public class NameSpaceTest {
         
     }
     
+    
+
+    @Test
+    public void useTest() throws Exception {
+        NameSpace sut = new NameSpace("foo");
+        
+        //既に値を入れた変数を用意しておく
+        NameSpace include = new NameSpace("org.example");
+        include.put("bar", Values.create("baz"));
+        include.put("hoge", Values.create("fuga"));
+        include.put("piyo", Values.create(100));
+        include.seal("piyo");
+        
+        //use時に指定したパッケージの全変数がputされる
+        sut.use(include);
+        
+        //直接参照可能
+        assertThat(sut.get("bar").asString(), is("baz"));
+        assertThat(sut.get("hoge").asString(), is("fuga"));
+        assertThat(sut.get("piyo").asInt(), is(100));
+        
+        //完全名での参照も可能
+        assertThat(sut.get("org.example.bar").asString(), is("baz"));
+        assertThat(sut.get("org.example.hoge").asString(), is("fuga"));
+        assertThat(sut.get("org.example.piyo").asString(), is("100"));
+        
+        //sealされた変数はrequireしてもseal
+        assertThat(sut.isSealed("hoge"), is(false));
+        assertThat(sut.isSealed("piyo"), is(true));
+        
+        //同名のパッケージで上書きuseしたケース
+        NameSpace include2 = new NameSpace("org.example");
+        include2.put("hoge", Values.create(true));
+        include2.put("piyo", Values.create(12.345));
+        sut.use(include2);
+        
+        //sealされていればそのまま、されていなければ上書き
+        assertThat(sut.get("hoge").asString(), is("true"));
+        assertThat(sut.get("piyo").asString(), is("100"));
+        
+    }
+    
     @Test
     public void sealTest() throws Exception {
         NameSpace sut = new NameSpace("foo");

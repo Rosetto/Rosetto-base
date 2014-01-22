@@ -93,6 +93,7 @@ public class NameSpace implements Serializable {
             return;
         }
         variables.put(key, value);
+        VariableObservatory.getInstance().valueChanged(this.name, key, value);
     }
     
     /**
@@ -101,8 +102,6 @@ public class NameSpace implements Serializable {
      * @param value 値
      */
     private void putAbsolute(String key, RosettoValue value) {
-        if(!key.contains("."))
-            throw new IllegalArgumentException("key must contain at least one dots");
         if(isSealed(key)) {
             RosettoLogger.warning("specified key " + key + " is sealed");
             return;
@@ -110,12 +109,25 @@ public class NameSpace implements Serializable {
         absoluteVariables.put(key, value);
     }
     
+    /**
+     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
+     * requireと同様の挙動をした後、さらに各変数を直接取り込むので変数名のみでもアクセスできる.
+     * @param space 取り込む名前空間
+     */
     public void use(NameSpace space) {
+        require(space);
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             put(e.getKey(), e.getValue());
+            //シールされているキーをuseした場合このパッケージでもseal
+            if(space.isSealed(e.getKey())) seal(e.getKey());
         }
     }
     
+    /**
+     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
+     * useとは異なり、フルパスで指定しなければアクセスできない.
+     * @param space 取り込む名前空間
+     */
     public void require(NameSpace space) {
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             String absoluteKey = space.getName() + "." + e.getKey();

@@ -29,6 +29,7 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile 'org.frows:puregds:0.1.4'
     compile 'org.frows:lilex:0.0.3'
+    compile 'org.frows:observatories:0.0.4'
 }
 
 repositories {
@@ -54,7 +55,7 @@ task javadocJar(type: Jar, dependsOn:javadoc) {
 }
 
 artifacts {
-    //archives sourcesJar
+    archives sourcesJar
     //archives javadocJar
 }
 

@@ -5,6 +5,7 @@ package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.utils.base.Values;
 
 /**
  * Rosettoの実行中の状態全体を保持するコンテキスト.<br>
@@ -67,6 +68,11 @@ public class Contexts {
     public static boolean isInitialized() {
         return instance.isInitialized;
     }
+    
+    private static void initializedCheck() {
+        if(!instance.isInitialized)
+            throw new IllegalStateException("Contexts not initialized yet");
+    }
 
     /**
      * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.
@@ -74,7 +80,16 @@ public class Contexts {
      * @return 取得した値、変数が存在しなければnull
      */
     public static RosettoValue get(String key) {
-        return instance.wholeSpace.getCurrentNameSpace().get(key);
+        initializedCheck();
+        if(key == null) return null;
+        int lastDotIndex = key.lastIndexOf(".");
+        if(lastDotIndex > 0) {
+            return instance.wholeSpace.getNameSpace(key.substring(0, lastDotIndex))
+                    .get(key.substring(lastDotIndex+1));
+        } else {
+            return instance.wholeSpace.getCurrentNameSpace().get(key);
+        }
+        
     }
     
     /**
@@ -83,7 +98,55 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void put(String key, RosettoValue value) {
-        instance.wholeSpace.getCurrentNameSpace().put(key, value);
+        initializedCheck();
+        if(key == null || key.length() == 0)
+            throw new IllegalArgumentException("key must not be empty");
+        if(key.endsWith("."))
+            throw new IllegalArgumentException("name must not end with dot");
+        int lastDotIndex = key.lastIndexOf(".");
+        if(lastDotIndex > 0) {
+            String packageName = key.substring(0, lastDotIndex);
+            NameSpace ns = instance.wholeSpace.getNameSpace(packageName);
+            ns.put(key.substring(lastDotIndex+1), value);
+        } else {
+            instance.wholeSpace.getCurrentNameSpace().put(key, value);
+        }
+    }
+    
+    /**
+     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * @param key 値を設定する変数名
+     * @param value 設定する値
+     */
+    public static void put(String key, String value) {
+        put(key, Values.create(value));
+    }
+    
+    /**
+     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * @param key 値を設定する変数名
+     * @param value 設定する値
+     */
+    public static void put(String key, boolean value) {
+        put(key, Values.create(value));
+    }
+    
+    /**
+     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * @param key 値を設定する変数名
+     * @param value 設定する値
+     */
+    public static void put(String key, int value) {
+        put(key, Values.create(value));
+    }
+    
+    /**
+     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * @param key 値を設定する変数名
+     * @param value 設定する値
+     */
+    public static void put(String key, double value) {
+        put(key, Values.create(value));
     }
     
     /**
@@ -91,6 +154,7 @@ public class Contexts {
      * @return このContextが保持する名前空間全体のインスタンス
      */
     public static WholeSpace getWholeSpace() {
+        initializedCheck();
         return instance.wholeSpace;
     }
     
@@ -101,6 +165,7 @@ public class Contexts {
      * @param wholeSpace 新しく指定する名前空間全体のインスタンス
      */
     public static void setWholeSpace(WholeSpace wholeSpace) {
+        initializedCheck();
         if(wholeSpace == null)
             throw new IllegalArgumentException("wholespace must not be null");
         instance.wholeSpace = wholeSpace;
@@ -111,6 +176,7 @@ public class Contexts {
      * @return
      */
     public static RosettoParser getParser() {
+        initializedCheck();
         return instance.parser;
     }
     
@@ -119,16 +185,16 @@ public class Contexts {
      * @param parser
      */
     public static void setParser(RosettoParser parser) {
+        initializedCheck();
         instance.parser = parser;
     }
-    
-    
     
     /**
      * 現在アクティブな名前空間を取得する.
      * @return 現在アクティブな名前空間
      */
     public static NameSpace getCurrentNameSpace() {
+        initializedCheck();
         return instance.wholeSpace.getCurrentNameSpace();
     }
 
@@ -137,6 +203,7 @@ public class Contexts {
      * @param name 新しくアクティブにする名前空間の名称
      */
     public static void setNameSpaceAsCurrent(String name) {
-        instance.wholeSpace.setNameSpaceAsCurrent(name);
+        initializedCheck();
+        instance.wholeSpace.setCurrentNameSpace(name);
     }
 }

@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +13,12 @@ import java.util.Map;
  * WholeSpaceをシリアライズすることでゲーム上の状態が完全に保存できるように実装する.
  * @author tohhy
  */
-public class WholeSpace {
-    
+public class WholeSpace implements Serializable {
+    private static final long serialVersionUID = -8911679659186174490L;
+
+    /**
+     * このインスタンスが保有する全ての名前空間の一覧.
+     */
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
     /**
@@ -21,37 +26,68 @@ public class WholeSpace {
      */
     private NameSpace currentNameSpace;
     
+    /**
+     * 
+     */
     public WholeSpace() {
-        currentNameSpace = create("story");
+        currentNameSpace = createNameSpace("story");
     }
     
+    /**
+     * 
+     * @param name
+     * @return
+     */
     public NameSpace getNameSpace(String name) {
+        if(!nameSpaces.containsKey(name))
+            createNameSpace(name);
         return nameSpaces.get(name);
     }
     
-    public NameSpace create(String name) {
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    public NameSpace createNameSpace(String name) {
         NameSpace space = new NameSpace(name);
         nameSpaces.put(name, space);
         return space;
     }
     
+    /**
+     * 
+     * @param name
+     * @return
+     */
     public boolean contains(String name) {
         return nameSpaces.containsKey(name);
     }
     
+    /**
+     * このインスタンス中に実体として生成された名前空間の数を返す.
+     * @return このインスタンス中に実体として生成された名前空間の数
+     */
     public int getCreatedNameSpaceCount() {
         return nameSpaces.size();
     }
-
+    
+    /**
+     * 現在アクティブな名前空間を取得する.
+     * @return 現在アクティブな名前空間
+     */
     public NameSpace getCurrentNameSpace() {
         return currentNameSpace;
     }
-
-    public void setNameSpaceAsCurrent(String name) {
+    
+    /**
+     * 指定名の名前空間をアクティブな名前空間にする.
+     * @param name アクティブにする名前空間の完全名
+     */
+    public void setCurrentNameSpace(String name) {
         if(name == null || name.length() == 0)
             throw new IllegalArgumentException("name must not be empty");
         currentNameSpace = contains(name) ? 
-                getNameSpace(name) : create(name);
+                getNameSpace(name) : createNameSpace(name);
     }
-
 }
