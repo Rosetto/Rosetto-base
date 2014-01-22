@@ -10,6 +10,8 @@ import info.rosetto.models.base.function.FunctionName;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.utils.base.RosettoLogger;
+import info.rosetto.utils.base.Values;
 
 import java.util.List;
 
@@ -144,8 +146,43 @@ public class ActionCall implements RosettoValue {
         return this;
     }
     
-    private RosettoValue evaluate() {
-        return Contexts.getEvaluator().evaluate(this);
+    
+
+    /**
+     * このActionCallを評価する.
+     * 関数名から関数を生成し、その関数と引数から実行時引数を生成し、
+     * 関数のexecメソッドを呼び出す.
+     * 関数が見つからなかった場合はマクロコンテキストを参照し、同様に実行する.
+     * 変数が見つからない場合や、実行可能な対象でなかった場合は処理が省略されてVoidが返る.
+     * @return 評価した結果
+     */
+    public RosettoValue evaluate() {
+        String functionName = this.getFunctionName();
+        RosettoValue v = Contexts.get(functionName);
+        
+        if(v == null) {
+            RosettoLogger.warning("実行可能な対象 " + functionName + "がコンテキスト中に見つかりません");
+            return Values.VOID;
+        }
+        
+        if(v.getType() == ValueType.FUNCTION) {
+            RosettoFunction f = (RosettoFunction) v;
+            RosettoArguments args = this.getArgs();
+            RosettoValue result = f.exec(args);
+//            Observatories.getAction().functionExecuted(this);
+            return result;
+        }
+        
+//        if(v.getType() == ValueType.MACRO) {
+//            MacroBlock macro = (MacroBlock) v;
+//            Contexts.getProgress().getWhole()
+//            .pushScenario(macro.create(args));
+//            return true;
+//        }
+        
+        //それでもなければ何もしない
+        RosettoLogger.warning("変数 " + functionName + "は実行不可能です");
+        return Values.VOID;
     }
     
     @Override

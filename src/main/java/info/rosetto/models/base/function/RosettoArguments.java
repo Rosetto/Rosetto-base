@@ -69,9 +69,9 @@ public class RosettoArguments implements Serializable {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
         for(RosettoArgument a : args) {
             if(a.getKey() == null) {
-                this.args.add(a.getValue().toString());
+                this.args.add(a.getValue().asString());
             } else {
-                this.kwargs.put(a.getKey(), a.getValue().toString());
+                this.kwargs.put(a.getKey(), a.getValue().asString());
             }
         }
         this.stringArgs = null;

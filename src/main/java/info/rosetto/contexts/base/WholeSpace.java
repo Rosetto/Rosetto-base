@@ -1,3 +1,6 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
 import java.util.HashMap;
@@ -13,7 +16,14 @@ public class WholeSpace {
     
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
-    public WholeSpace() {}
+    /**
+     * 現在アクティブな名前空間.
+     */
+    private NameSpace currentNameSpace;
+    
+    public WholeSpace() {
+        currentNameSpace = create("story");
+    }
     
     public NameSpace getNameSpace(String name) {
         return nameSpaces.get(name);
@@ -27,6 +37,21 @@ public class WholeSpace {
     
     public boolean contains(String name) {
         return nameSpaces.containsKey(name);
+    }
+    
+    public int getCreatedNameSpaceCount() {
+        return nameSpaces.size();
+    }
+
+    public NameSpace getCurrentNameSpace() {
+        return currentNameSpace;
+    }
+
+    public void setNameSpaceAsCurrent(String name) {
+        if(name == null || name.length() == 0)
+            throw new IllegalArgumentException("name must not be empty");
+        currentNameSpace = contains(name) ? 
+                getNameSpace(name) : create(name);
     }
 
 }

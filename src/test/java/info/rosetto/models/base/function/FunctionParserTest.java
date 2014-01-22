@@ -23,12 +23,5 @@ public class FunctionParserTest {
         assertThat(FunctionParser.parse(sut3).getArgs().get("bar"), is("baz"));
     }
     
-    @Test
-    public void 一段階の関数展開引数を含む関数をパースできる() throws Exception {
-        String sut1 = "foo (bar baz)";
-        assertThat(FunctionParser.parse(sut1).getFunctionName(), is("foo"));
-        //TODO
-//        assertThat(FunctionParser.parse(sut1).getArgs().get(0), is("[bar baz]"));
-    }
 
 }
