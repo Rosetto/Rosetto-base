@@ -16,11 +16,11 @@ public class FunctionParserTest {
         
         String sut2 = "foo bar";
         assertThat(FunctionParser.parse(sut2).getFunctionName(), is("foo"));
-        assertThat(FunctionParser.parse(sut2).getArgs().get(0), is("bar"));
+        assertThat(FunctionParser.parse(sut2).getArgs().get(0).asString(), is("bar"));
         
         String sut3 = "foo bar=baz";
         assertThat(FunctionParser.parse(sut3).getFunctionName(), is("foo"));
-        assertThat(FunctionParser.parse(sut3).getArgs().get("bar"), is("baz"));
+        assertThat(FunctionParser.parse(sut3).getArgs().get("bar").asString(), is("baz"));
     }
     
 

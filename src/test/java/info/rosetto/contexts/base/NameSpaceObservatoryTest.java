@@ -28,14 +28,14 @@ public class NameSpaceObservatoryTest {
                 .append(newValue.asString(""));
             }
         });
-        Contexts.put("foo", "bar");
+        Contexts.set("foo", "bar");
         assertThat(sb.toString(), is("story.foo:bar"));
         
         sb.delete(0, sb.length());
-        Contexts.put("this.is.test", 12345);
+        Contexts.set("this.is.test", 12345);
         assertThat(sb.toString(), is(""));
         
-        Contexts.put("story.characters.hoge.name", "fuga");
+        Contexts.set("story.characters.hoge.name", "fuga");
         assertThat(sb.toString(), is("story.characters.hoge.name:fuga"));
     }
 

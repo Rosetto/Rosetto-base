@@ -1,5 +1,7 @@
 package info.rosetto.models.base.function;
 
+import info.rosetto.models.base.values.RosettoValue;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,7 +14,7 @@ import java.util.TreeMap;
  */
 public class ExpandedArguments {
     
-    private final Map<String, String> kwargs;
+    private final Map<String, RosettoValue> kwargs;
     
     /**
      * 未評価の引数と関数を取り、実行時引数の実体を生成する.
@@ -20,9 +22,8 @@ public class ExpandedArguments {
      * @param func 実行する関数
      */
     protected ExpandedArguments(RosettoArguments args, RosettoFunction func) {
-        Map<String, String> kwargs = new TreeMap<String, String>();
-        kwargs.putAll(args.parse(func));
-        this.kwargs = Collections.unmodifiableMap(kwargs);
+        this.kwargs = Collections.unmodifiableMap(
+                new TreeMap<String, RosettoValue>(args.parse(func)));
     }
     
     /**
@@ -31,7 +32,7 @@ public class ExpandedArguments {
      * @param key 引数名
      * @return 指定引数名にマッピングされた引数値
      */
-    public String get(String key) {
+    public RosettoValue get(String key) {
         return kwargs.get(key);
     }
     
@@ -48,7 +49,7 @@ public class ExpandedArguments {
      * キーワード引数のマップを取得する.読み込み専用.
      * @return
      */
-    public Map<String, String> getMap() {
+    public Map<String, RosettoValue> getMap() {
         return kwargs;
     }
 

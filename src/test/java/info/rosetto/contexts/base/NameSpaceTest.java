@@ -69,7 +69,7 @@ public class NameSpaceTest {
     public void getAndPutValueTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
-        sut.put("bar", Values.create("baz"));
+        sut.set("bar", Values.create("baz"));
         assertThat(sut.get("bar").asString(), is("baz"));
         
         //存在しないキーはnull
@@ -77,7 +77,7 @@ public class NameSpaceTest {
         
         //nullキーでputするとエラー
         try {
-            sut.put(null, Values.create("foo"));
+            sut.set(null, Values.create("foo"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -86,7 +86,7 @@ public class NameSpaceTest {
         assertThat(sut.get(null), is(nullValue()));
         //空文字でputするとエラー
         try {
-            sut.put("", Values.create("bar"));
+            sut.set("", Values.create("bar"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -96,7 +96,7 @@ public class NameSpaceTest {
         
         //キーにdotを含むとエラー（パッケージ階層と区別するため）
         try {
-            sut.put("some.package-like.key", Values.create("foo"));
+            sut.set("some.package-like.key", Values.create("foo"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -104,7 +104,7 @@ public class NameSpaceTest {
         
         //null値を与えるとエラー
         try {
-            sut.put("baz", null);
+            sut.set("baz", null);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -118,13 +118,13 @@ public class NameSpaceTest {
         
         
         NameSpace include = new NameSpace("org.example");
-        include.put("bar", Values.create("baz"));
-        include.put("hoge", Values.create("fuga"));
-        include.put("piyo", Values.create(100));
+        include.set("bar", Values.create("baz"));
+        include.set("hoge", Values.create("fuga"));
+        include.set("piyo", Values.create(100));
         include.seal("piyo");
         
         //require時に指定したパッケージの全変数がputAbsoluteされる
-        sut.require(include);
+        sut.refer(include);
         
         //直接参照はできない
         assertThat(sut.get("bar"), is(nullValue()));
@@ -142,9 +142,9 @@ public class NameSpaceTest {
         
         //同名のパッケージで上書きrequireしたケース
         NameSpace include2 = new NameSpace("org.example");
-        include2.put("hoge", Values.create(true));
-        include2.put("piyo", Values.create(12.345));
-        sut.require(include2);
+        include2.set("hoge", Values.create(true));
+        include2.set("piyo", Values.create(12.345));
+        sut.refer(include2);
         
         //sealされていればそのまま、されていなければ上書き
         assertThat(sut.get("org.example.hoge").asString(), is("true"));
@@ -160,13 +160,13 @@ public class NameSpaceTest {
         
         //既に値を入れた変数を用意しておく
         NameSpace include = new NameSpace("org.example");
-        include.put("bar", Values.create("baz"));
-        include.put("hoge", Values.create("fuga"));
-        include.put("piyo", Values.create(100));
+        include.set("bar", Values.create("baz"));
+        include.set("hoge", Values.create("fuga"));
+        include.set("piyo", Values.create(100));
         include.seal("piyo");
         
         //use時に指定したパッケージの全変数がputされる
-        sut.use(include);
+        sut.include(include);
         
         //直接参照可能
         assertThat(sut.get("bar").asString(), is("baz"));
@@ -184,9 +184,9 @@ public class NameSpaceTest {
         
         //同名のパッケージで上書きuseしたケース
         NameSpace include2 = new NameSpace("org.example");
-        include2.put("hoge", Values.create(true));
-        include2.put("piyo", Values.create(12.345));
-        sut.use(include2);
+        include2.set("hoge", Values.create(true));
+        include2.set("piyo", Values.create(12.345));
+        sut.include(include2);
         
         //sealされていればそのまま、されていなければ上書き
         assertThat(sut.get("hoge").asString(), is("true"));
@@ -198,24 +198,24 @@ public class NameSpaceTest {
     public void sealTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
-        sut.put("bar", Values.create("baz"));
-        sut.put("hoge", Values.create("fuga"));
+        sut.set("bar", Values.create("baz"));
+        sut.set("hoge", Values.create("fuga"));
         
         //barをsealする
         sut.seal("bar");
         
         //barに代入しても何も起きない
-        sut.put("bar", Values.create(100));
+        sut.set("bar", Values.create(100));
         assertThat(sut.get("bar").asString(), is("baz"));
         //hogeには代入できる
-        sut.put("hoge", Values.create(1000));
+        sut.set("hoge", Values.create(1000));
         assertThat(sut.get("hoge").asString(), is("1000"));
         
         //barをunsealする
         sut.unSeal("bar");
         
         //barに代入できるようになる
-        sut.put("bar", Values.create(10000));
+        sut.set("bar", Values.create(10000));
         assertThat(sut.get("bar").asInt(), is(10000));
     }
 

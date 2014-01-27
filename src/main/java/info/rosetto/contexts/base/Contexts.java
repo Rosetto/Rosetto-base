@@ -102,6 +102,7 @@ public class Contexts {
      * 値が関数でない場合、存在しない場合はnullが返る.
      * @param key 値を取得する変数名
      * @return 取得した値が関数でないか、変数が存在しなければnull
+     * TODO マクロへの対応
      */
     public static RosettoFunction getAsFunction(String key) {
         RosettoValue v = get(key);
@@ -113,7 +114,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void put(String key, RosettoValue value) {
+    public static void set(String key, RosettoValue value) {
         initializedCheck();
         if(key == null || key.length() == 0)
             throw new IllegalArgumentException("key must not be empty");
@@ -123,9 +124,9 @@ public class Contexts {
         if(lastDotIndex > 0) {
             String packageName = key.substring(0, lastDotIndex);
             NameSpace ns = instance.wholeSpace.getNameSpace(packageName);
-            ns.put(key.substring(lastDotIndex+1), value);
+            ns.set(key.substring(lastDotIndex+1), value);
         } else {
-            instance.wholeSpace.getCurrentNameSpace().put(key, value);
+            instance.wholeSpace.getCurrentNameSpace().set(key, value);
         }
     }
     
@@ -134,8 +135,8 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void put(String key, String value) {
-        put(key, Values.create(value));
+    public static void set(String key, boolean value) {
+        set(key, Values.create(value));
     }
     
     /**
@@ -143,8 +144,8 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void put(String key, boolean value) {
-        put(key, Values.create(value));
+    public static void set(String key, int value) {
+        set(key, Values.create(value));
     }
     
     /**
@@ -152,8 +153,8 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void put(String key, int value) {
-        put(key, Values.create(value));
+    public static void set(String key, long value) {
+        set(key, Values.create(value));
     }
     
     /**
@@ -161,10 +162,35 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void put(String key, double value) {
-        put(key, Values.create(value));
+    public static void set(String key, double value) {
+        set(key, Values.create(value));
     }
     
+    /**
+     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * @param key 値を設定する変数名
+     * @param value 設定する値
+     */
+    public static void set(String key, String value) {
+        set(key, Values.create(value));
+    }
+    
+    /**
+     * 指定名の名前空間の全変数を現在の名前空間から参照可能にする.
+     * @param nameSpace 現在の名前空間から参照可能にする名前空間
+     */
+    public static void refer(String nameSpace) {
+        getCurrentNameSpace().refer(getNameSpace(nameSpace));
+    }
+    
+    /**
+     * 指定名の名前空間の全変数を現在の名前空間に読み込む.
+     * @param nameSpace 現在の名前空間に変数を読み込む名前空間
+     */
+    public static void include(String nameSpace) {
+        getCurrentNameSpace().include(getNameSpace(nameSpace));
+    }
+
     /**
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
@@ -188,7 +214,7 @@ public class Contexts {
     }
     
     /**
-     * TODO
+     * 現在のコンテキストで利用するパーサーを取得する.
      * @return
      */
     public static RosettoParser getParser() {
@@ -197,7 +223,7 @@ public class Contexts {
     }
     
     /**
-     * TODO
+     * 現在のコンテキストで利用するパーサーを変更する.
      * @param parser
      */
     public static void setParser(RosettoParser parser) {
@@ -206,6 +232,16 @@ public class Contexts {
     }
     
     /**
+     * 指定名の名前空間を取得する.<br>
+     * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
+     * @param name
+     * @return
+     */
+    public static NameSpace getNameSpace(String name) {
+        return instance.wholeSpace.getNameSpace(name);
+    }
+
+    /**
      * 現在アクティブな名前空間を取得する.
      * @return 現在アクティブな名前空間
      */
@@ -213,12 +249,12 @@ public class Contexts {
         initializedCheck();
         return instance.wholeSpace.getCurrentNameSpace();
     }
-
+    
     /**
      * 指定名の名前空間を新しくアクティブにする.
      * @param name 新しくアクティブにする名前空間の名称
      */
-    public static void setNameSpaceAsCurrent(String name) {
+    public static void setCurrentNameSpace(String name) {
         initializedCheck();
         instance.wholeSpace.setCurrentNameSpace(name);
     }

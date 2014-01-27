@@ -10,9 +10,17 @@ import java.util.Set;
 
 import org.frows.observatories.ObjectObservatory;
 
+/**
+ * 
+ * @author tohhy
+ *
+ */
 public class NameSpaceObservatory extends ObjectObservatory<String, VariableObserver> 
     implements VariableObserver {
     
+    /**
+     * シングルトンインスタンス.
+     */
     private static final NameSpaceObservatory instance = new NameSpaceObservatory();
 
     @Override
@@ -25,7 +33,11 @@ public class NameSpaceObservatory extends ObjectObservatory<String, VariableObse
         }
         
     }
-
+    
+    /**
+     * 
+     * @return
+     */
     static NameSpaceObservatory getInstance() {
         return instance;
     }

@@ -4,10 +4,11 @@
 
 package info.rosetto.models.base.function;
 
-import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.models.base.parser.ArgumentSyntax;
+import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.TextUtils;
+import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,12 +39,12 @@ public class RosettoArguments implements Serializable {
     /**
      * 通常引数のリスト.
      */
-    private final ArrayList<String> args = new ArrayList<String>();
+    private final ArrayList<RosettoValue> args = new ArrayList<RosettoValue>();
     
     /**
      * キーワード引数のマップ.
      */
-    private final TreeMap<String, String> kwargs = new TreeMap<String, String>();
+    private final TreeMap<String, RosettoValue> kwargs = new TreeMap<String, RosettoValue>();
     
     /**
      * 空の引数リスト.
@@ -54,10 +55,14 @@ public class RosettoArguments implements Serializable {
      * 引数リストとキーワード引数マップを直接受け取って引数リストオブジェクトを生成する.
      * @param args 文字列形式の引数リスト
      */
-    private RosettoArguments(ArrayList<String> args, TreeMap<String, String> kwargs) {
-        this.args.addAll(args);
-        this.kwargs.putAll(kwargs);
-        this.stringArgs = createStringArgs(args, kwargs);
+    private RosettoArguments(ArrayList<RosettoValue> args, TreeMap<String, RosettoValue> kwargs) {
+        for(int i=0; i<args.size(); i++) {
+            this.args.add(args.get(i));
+        }
+        for(Entry<String, RosettoValue>e : kwargs.entrySet()) {
+            this.kwargs.put(e.getKey(), e.getValue());
+        }
+        this.stringArgs = createStringArgs(this.args, this.kwargs);
     }
     
     /**
@@ -67,16 +72,13 @@ public class RosettoArguments implements Serializable {
     public RosettoArguments(List<RosettoArgument> args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
         for(RosettoArgument a : args) {
-            try {
-                if(a.getKey() == null) {
-                    this.args.add(a.getValue().asString());
-                } else {
-                    this.kwargs.put(a.getKey(), a.getValue().asString());
-                }
-            } catch (NotConvertibleException e) {}
+            if(a.getKey() == null) {
+                this.args.add(a.getValue());
+            } else {
+                this.kwargs.put(a.getKey(), a.getValue());
+            }
         }
-        this.stringArgs = null;
-        //TODO
+        this.stringArgs = createStringArgs(this.args, this.kwargs);
     }
     /**
      * 文字列形式の引数リストを受け取って引数リストオブジェクトを生成する.
@@ -92,11 +94,11 @@ public class RosettoArguments implements Serializable {
         for(String str : splited) {
             int equalPosition = str.indexOf("=");
             if(equalPosition == -1) {
-                this.args.add(TextUtils.removeDoubleQuote(str));
+                this.args.add(Values.create(TextUtils.removeDoubleQuote(str)));
             } else {
                 String key = str.substring(0, equalPosition);
                 String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
-                this.kwargs.put(key, value);
+                this.kwargs.put(key, Values.create(value));
             }
         }
     }
@@ -109,25 +111,25 @@ public class RosettoArguments implements Serializable {
         if(runtimeArgs == null) 
             throw new IllegalArgumentException("runtime args must not be null");
         StringBuilder kb = new StringBuilder();
-        TreeMap<Integer, String> margs = new TreeMap<Integer, String>();
-        TreeMap<String, String> kwargs = new TreeMap<String, String>();
+        TreeMap<Integer, RosettoValue> margs = new TreeMap<Integer, RosettoValue>();
+        TreeMap<String, RosettoValue> kwargs = new TreeMap<String, RosettoValue>();
         //可変長引数のセパレータを取得
         char sep = syntax.getMutableArgNumSeparator();
         //マップを処理する
-        for(Entry<String, String> e : runtimeArgs.getMap().entrySet()) {
+        for(Entry<String, RosettoValue> e : runtimeArgs.getMap().entrySet()) {
             int sepIndex = e.getKey().indexOf(sep);
             if(sepIndex >= 1) {
                 //可変長引数が存在すれば処理
                 int key = Integer.parseInt(e.getKey().substring(sepIndex + 1));
                 String value = e.getKey().substring(0, sepIndex);
-                margs.put(key, value);
+                margs.put(key, Values.create(value));
             } else {
                 kwargs.put(e.getKey(), e.getValue());
                 kb.append(e.getKey()).append("=").append(e.getValue()).append(" ");
             }
         }
         StringBuilder argb = new StringBuilder();
-        for(String arg:margs.values()) {
+        for(RosettoValue arg:margs.values()) {
             argb.append(arg).append(" ");
         }
         this.stringArgs = argb.toString() + kb.toString();
@@ -143,8 +145,8 @@ public class RosettoArguments implements Serializable {
      */
     public RosettoArguments createExpandedArgs(RosettoArguments contextArgs, ArgumentSyntax syntax) {
         if(containsExpandableKey(syntax)) {
-            ArrayList<String> expandArgs = new ArrayList<String>(this.args);
-            TreeMap<String, String> expandKwargs = new TreeMap<String, String>(this.kwargs);
+            ArrayList<RosettoValue> expandArgs = new ArrayList<RosettoValue>(this.args);
+            TreeMap<String, RosettoValue> expandKwargs = new TreeMap<String, RosettoValue>(this.kwargs);
             expandMacroKeys(expandArgs, expandKwargs, contextArgs, syntax);
             return new RosettoArguments(expandArgs, expandKwargs);
         }
@@ -159,10 +161,10 @@ public class RosettoArguments implements Serializable {
      * @param func パースに用いる関数
      * @return 引数名と値のマップ
      */
-    public Map<String, String> parse(RosettoFunction func) {
+    public Map<String, RosettoValue> parse(RosettoFunction func) {
         if(func == null) throw new IllegalArgumentException("渡された関数がnullです");
         
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, RosettoValue> result = new HashMap<String, RosettoValue>();
         LinkedList<String> funcArgs = new LinkedList<String>();
         int requiredArgsCount = 0;
         for(String s : func.getArguments()) {
@@ -174,7 +176,7 @@ public class RosettoArguments implements Serializable {
             } else {
                 //名前とデフォルト値
                 String key = s.substring(0, eqIndex);
-                String value = s.substring(eqIndex+1, s.length());
+                RosettoValue value = Values.create(s.substring(eqIndex+1, s.length()));
                 //引数リストに追加
                 funcArgs.add(key);
                 //結果にデフォルト値を登録してしまう
@@ -182,7 +184,7 @@ public class RosettoArguments implements Serializable {
             }
         }
         //キーワード引数を先に処理
-        for(Entry<String, String> e : kwargs.entrySet()) {
+        for(Entry<String, RosettoValue> e : kwargs.entrySet()) {
             //もしEntryのキーがfuncArgsの値と一致するなら該当のfuncArgを消去
             boolean removed = funcArgs.remove(e.getKey());
             //一致していればカウントを減算
@@ -193,7 +195,7 @@ public class RosettoArguments implements Serializable {
         }
         
         //非キーワード引数を処理
-        String mutableArg = searchMutableArg(args);
+        RosettoValue mutableArg = searchMutableArg(args);
         if(mutableArg != null) {
             //もし可変長引数が含まれていれば
             if(requiredArgsCount > args.size() - 1) {
@@ -201,7 +203,7 @@ public class RosettoArguments implements Serializable {
                             args.toString() + "|" + func.getArguments());
             }
             
-            for(String s : args) {
+            for(RosettoValue s : args) {
                 //可変長引数自体は無視
                 if(s.equals(mutableArg)) continue;
                 
@@ -214,7 +216,7 @@ public class RosettoArguments implements Serializable {
             while(!funcArgs.isEmpty()) {
                 String farg = funcArgs.pollFirst();
                 //可変分は mutableArg-n という引数名で渡す
-                result.put(farg, mutableArg + "-" + mvarCount);
+                result.put(farg, Values.create(mutableArg.asString("") + "-" + mvarCount));
                 mvarCount++;
             }
             if(funcArgs.size() > 0)
@@ -229,7 +231,7 @@ public class RosettoArguments implements Serializable {
                 throw new IllegalArgumentException("不明な引数が余ります: " + 
                         args.toString() + "|" + func.getArguments());
             }
-            for(String s : args) {
+            for(RosettoValue s : args) {
                 //残った非キーワード引数を順に結合してマップへ追加
                 result.put(funcArgs.pollFirst(), s);
             }
@@ -262,11 +264,11 @@ public class RosettoArguments implements Serializable {
         if(args.contains(syntax.getMacroAllExpandArg())) return true;
         
         //接頭詞付きの引数が含まれていればtrue
-        for(Entry<String, String> e: kwargs.entrySet()) {
-            if(e.getValue().matches(syntax.getExpandArgRegex())) return true;
+        for(Entry<String, RosettoValue> e: kwargs.entrySet()) {
+            if(e.getValue().asString("").matches(syntax.getExpandArgRegex())) return true;
         }
-        for(String s: args) {
-            if(s.matches(syntax.getExpandArgRegex())) return true;
+        for(RosettoValue s: args) {
+            if(s.asString("").matches(syntax.getExpandArgRegex())) return true;
         }
         
         //いずれもなければfalse
@@ -291,14 +293,14 @@ public class RosettoArguments implements Serializable {
     /**
      * 通常引数中の指定インデックスに存在する値を取得する.
      */
-    public String get(int argNum) {
+    public RosettoValue get(int argNum) {
         return args.get(argNum);
     }
 
     /**
      * キーワード引数中の指定キーに関連づけられた値を取得する.
      */
-    public String get(String key) {
+    public RosettoValue get(String key) {
         return kwargs.get(key);
     }
 
@@ -306,10 +308,10 @@ public class RosettoArguments implements Serializable {
      * 引数中から可変長引数を探して返す.
      * @return 可変長引数、引数中に可変長引数がなければnull
      */
-    private String searchMutableArg(List<String> args) {
-        String result = null;
-        for(String s : args) {
-            if(s.startsWith("*") && s.length() >= 2) {
+    private RosettoValue searchMutableArg(List<RosettoValue> args) {
+        RosettoValue result = null;
+        for(RosettoValue s : args) {
+            if(s.asString("").startsWith("*") && s.asString("").length() >= 2) {
                 if(result != null)
                     throw new IllegalArgumentException("multiple mutablearg found");
                 result = s;
@@ -318,14 +320,14 @@ public class RosettoArguments implements Serializable {
         return result;
     }
 
-    private static String createStringArgs(ArrayList<String> args, 
-            TreeMap<String, String> kwargs) {
+    private static String createStringArgs(ArrayList<RosettoValue> args, 
+            TreeMap<String, RosettoValue> kwargs) {
         StringBuilder builder = new StringBuilder();
-        for(String s : args) {
-            builder.append(s).append(" ");
+        for(RosettoValue s : args) {
+            builder.append(s.asString("")).append(" ");
         }
-        for(Entry<String, String> e : kwargs.entrySet()) {
-            builder.append(e.getKey()).append("=").append(e.getValue()).append(" ");
+        for(Entry<String, RosettoValue> e : kwargs.entrySet()) {
+            builder.append(e.getKey()).append("=").append(e.getValue().asString("")).append(" ");
         }
         
         return builder.toString().trim();
@@ -338,7 +340,7 @@ public class RosettoArguments implements Serializable {
      * @param macroArgs マクロ実行時の実引数
      * @param syntax マクロ引数の文法定義
      */
-    private void expandMacroKeys(List<String> args, Map<String, String> kwargs, 
+    private void expandMacroKeys(List<RosettoValue> args, Map<String, RosettoValue> kwargs, 
             RosettoArguments macroArgs, ArgumentSyntax syntax) {
         expandAsteriskKey(args, kwargs, macroArgs, syntax);
         expandKwargs(kwargs, macroArgs, syntax);
@@ -352,7 +354,7 @@ public class RosettoArguments implements Serializable {
      * @param macroArgs マクロ実行時の実引数
      * @param syntax マクロ引数の文法定義
      */
-    private void expandAsteriskKey(List<String> args, Map<String, String> kwargs, 
+    private void expandAsteriskKey(List<RosettoValue> args, Map<String, RosettoValue> kwargs, 
             RosettoArguments macroArgs, ArgumentSyntax syntax) {
         if(args.contains(syntax.getMacroAllExpandArg())) {
             kwargs.putAll(macroArgs.kwargs);
@@ -367,10 +369,10 @@ public class RosettoArguments implements Serializable {
      * @param macroArgs マクロ実行時の実引数
      * @param syntax マクロ引数の文法定義
      */
-    private static void expandArgs(List<String> args, 
+    private static void expandArgs(List<RosettoValue> args, 
             RosettoArguments macroArgs, ArgumentSyntax syntax) {
         //引数のリストを複製
-        List<String> result = new ArrayList<String>(args);
+        List<RosettoValue> result = new ArrayList<RosettoValue>(args);
         
         for(int i = 0; i < args.size(); i++) {
             //展開した値で結果のリストを編集
@@ -392,9 +394,9 @@ public class RosettoArguments implements Serializable {
      * @param syntax マクロ引数の文法定義
      */
     @SuppressWarnings("unchecked")
-    private static void expandKwargs(Map<String, String> kwargs, 
+    private static void expandKwargs(Map<String, RosettoValue> kwargs, 
             RosettoArguments macroArgs, ArgumentSyntax syntax) {
-        for(Entry<String, String> entry : kwargs.entrySet().toArray(new Entry[kwargs.entrySet().size()])) {
+        for(Entry<String, RosettoValue> entry : kwargs.entrySet().toArray(new Entry[kwargs.entrySet().size()])) {
             //展開した値でentryを編集
             entry.setValue(expandValue(entry.getValue(), macroArgs, syntax));
             
@@ -411,23 +413,23 @@ public class RosettoArguments implements Serializable {
      * @param syntax
      * @return
      */
-    private static String expandValue(String toExpand, 
+    private static RosettoValue expandValue(RosettoValue toExpand, 
             RosettoArguments macroArgs, ArgumentSyntax syntax) {
         //この引数がマクロ展開引数でなければ何もしない
-        if(!toExpand.matches(syntax.getExpandArgRegex())) return toExpand;
+        if(!toExpand.asString("").matches(syntax.getExpandArgRegex())) return toExpand;
         //接頭詞を除いた引数の値を取得
-        String value = toExpand.substring(syntax.getMacroExpandPrefix().length());
+        String value = toExpand.asString("").substring(syntax.getMacroExpandPrefix().length());
         
         //デフォルト値区切りより前を置き換えするキーに、後をデフォルト値にする
         String valueKey = value;
-        String defaultValue = null;
+        RosettoValue defaultValue = null;
         int barIndex = value.indexOf(syntax.getMacroDefaultValueChar());
         if(barIndex > 0) {
             valueKey = value.substring(0, barIndex);
-            defaultValue = value.substring(barIndex + 1);
+            defaultValue = Values.create(value.substring(barIndex + 1));
         }
         //属性リストから値の取得
-        String macroValue = macroArgs.get(valueKey);
+        RosettoValue macroValue = macroArgs.get(valueKey);
         //取得できなければデフォルト値を使う
         if(macroValue == null) macroValue = defaultValue;
         return macroValue;

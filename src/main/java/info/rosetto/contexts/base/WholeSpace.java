@@ -95,6 +95,10 @@ public class WholeSpace implements Serializable {
                 getNameSpace(name) : createNameSpace(name));
     }
     
+    /**
+     * 
+     * @param nameSpace
+     */
     public void setCurrentNameSpace(NameSpace nameSpace) {
         currentNameSpace = nameSpace;
         BaseFunctions.getInstance().addTo(nameSpace);

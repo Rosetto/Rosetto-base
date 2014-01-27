@@ -59,7 +59,7 @@ public class FunctionPackage {
      */
     public void addTo(NameSpace space) {
         for(RosettoFunction f : functions) {
-            space.put(f.getName(), f);
+            space.set(f.getName(), f);
         }
     }
     

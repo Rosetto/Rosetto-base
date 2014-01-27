@@ -89,7 +89,7 @@ public class NameSpace implements Serializable {
      * @param key 設定する変数名
      * @param value 設定する値
      */
-    public void put(String key, RosettoValue value) {
+    public void set(String key, RosettoValue value) {
         if(key == null || key.length() == 0)
             throw new IllegalArgumentException("key must not be empty");
         if(value == null)
@@ -105,11 +105,11 @@ public class NameSpace implements Serializable {
     }
     
     /**
-     * 外部パッケージ中の変数の絶対参照をこの名前空間に追加する.
+     * 外部パッケージ中の変数の参照をこの名前空間に追加する.
      * @param key 絶対参照のキー
      * @param value 値
      */
-    public void putAbsolute(String key, RosettoValue value) {
+    public void refer(String key, RosettoValue value) {
         if(isSealed(key)) {
             RosettoLogger.warning("specified key " + key + " is sealed");
             return;
@@ -119,29 +119,30 @@ public class NameSpace implements Serializable {
     
     /**
      * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
+     * useとは異なり、フルパスで指定しなければアクセスできない.
+     * @param space 取り込む名前空間
+     * TODO
+     */
+    public void refer(NameSpace space) {
+        for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
+            String absoluteKey = space.getName() + "." + e.getKey();
+            refer(absoluteKey, e.getValue());
+            //シールされているキーをrequireした場合このパッケージでもseal
+            if(space.isSealed(e.getKey())) seal(absoluteKey);
+        }
+    }
+
+    /**
+     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
      * requireと同様の挙動をした後、さらに各変数を直接取り込むので変数名のみでもアクセスできる.
      * @param space 取り込む名前空間
      */
-    public void use(NameSpace space) {
-        require(space);
+    public void include(NameSpace space) {
+        refer(space);
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
-            put(e.getKey(), e.getValue());
+            set(e.getKey(), e.getValue());
             //シールされているキーをuseした場合このパッケージでもseal
             if(space.isSealed(e.getKey())) seal(e.getKey());
-        }
-    }
-    
-    /**
-     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
-     * useとは異なり、フルパスで指定しなければアクセスできない.
-     * @param space 取り込む名前空間
-     */
-    public void require(NameSpace space) {
-        for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
-            String absoluteKey = space.getName() + "." + e.getKey();
-            putAbsolute(absoluteKey, e.getValue());
-            //シールされているキーをrequireした場合このパッケージでもseal
-            if(space.isSealed(e.getKey())) seal(absoluteKey);
         }
     }
     

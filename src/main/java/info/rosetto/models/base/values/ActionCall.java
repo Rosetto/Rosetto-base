@@ -142,20 +142,10 @@ public class ActionCall implements RosettoValue {
         return args;
     }
     
-    @Override
-    public ValueType getType() {
-        return ValueType.ACTION_CALL;
-    }
-    
-    @Override
-    public Object getValue() {
-        return this;
-    }
-    
     /**
      * このActionCallを評価する.
      * 関数名から関数を生成し、その関数と引数から実行時引数を生成し、
-     * 関数のexecメソッドを呼び出す.
+     * 関数のexecuteメソッドを呼び出す.
      * 関数が見つからなかった場合はマクロコンテキストを参照し、同様に実行する.
      * 変数が見つからない場合や、実行可能な対象でなかった場合は処理が省略されてVoidが返る.
      * @return 評価した結果
@@ -172,7 +162,7 @@ public class ActionCall implements RosettoValue {
         if(v.getType() == ValueType.FUNCTION) {
             RosettoFunction f = (RosettoFunction) v;
             RosettoArguments args = this.getArgs();
-            RosettoValue result = f.exec(args);
+            RosettoValue result = f.execute(args);
 //            Observatories.getAction().functionExecuted(this);
             return result;
         }
@@ -187,6 +177,16 @@ public class ActionCall implements RosettoValue {
         //それでもなければ何もしない
         RosettoLogger.warning("変数 " + functionName + "は実行不可能です");
         return Values.VOID;
+    }
+
+    @Override
+    public ValueType getType() {
+        return ValueType.ACTION_CALL;
+    }
+    
+    @Override
+    public Object getValue() {
+        return this;
     }
     
     @Override

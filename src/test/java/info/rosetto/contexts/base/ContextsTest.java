@@ -66,16 +66,16 @@ public class ContextsTest {
         assertThat(Contexts.get("foobar"), is(nullValue()));
         
         //値をセットする
-        Contexts.put("foobar", Values.create("baz"));
+        Contexts.set("foobar", Values.create("baz"));
         assertThat(Contexts.get("foobar").asString(), is("baz"));
         
         //値を上書きする
-        Contexts.put("foobar", true);
+        Contexts.set("foobar", true);
         assertThat(Contexts.get("foobar").asBool(), is(true));
         
         //nullキーでputするとエラー
         try {
-            Contexts.put(null, Values.create("hoge"));
+            Contexts.set(null, Values.create("hoge"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -85,7 +85,7 @@ public class ContextsTest {
         
         //空文字キーでputするとエラー
         try {
-            Contexts.put("", Values.create("hoge"));
+            Contexts.set("", Values.create("hoge"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -95,7 +95,7 @@ public class ContextsTest {
         
         //nullvalueでputするとエラー
         try {
-            Contexts.put("fuga", (RosettoValue)null);
+            Contexts.set("fuga", (RosettoValue)null);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -106,14 +106,14 @@ public class ContextsTest {
     public void getAsFunctionTest() throws Exception {
         Contexts.initialize();
         
-        Contexts.put("org.example.foo", new RosettoFunction("func") {
+        Contexts.set("org.example.foo", new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
             @Override
             protected RosettoValue run(ExpandedArguments args) {
                 return Values.VOID;
             }
         });
-        Contexts.put("org.example.bar", "not function value");
+        Contexts.set("org.example.bar", "not function value");
         assertThat(Contexts.getAsFunction("org.example.foo").getName(), is("func"));
         assertThat(Contexts.getAsFunction("org.example.bar"), is(nullValue()));
         assertThat(Contexts.getAsFunction("org.example.not-found-value"), is(nullValue()));
@@ -124,18 +124,18 @@ public class ContextsTest {
         Contexts.initialize();
         
         //名前空間指定付きで登録、この段階では絶対参照しかできない
-        Contexts.put("org.example.foo", "bar");
+        Contexts.set("org.example.foo", "bar");
         assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
         assertThat(Contexts.get("foo"), is(nullValue()));
         
         //名前空間がcurrentになれば見えるようになる
-        Contexts.setNameSpaceAsCurrent("org.example");
+        Contexts.setCurrentNameSpace("org.example");
         assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
         assertThat(Contexts.get("foo").asString(), is("bar"));
         
         //dotで終わる変数名は不可
         try {
-            Contexts.put("org.example.foobar.", "baz");
+            Contexts.set("org.example.foobar.", "baz");
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -176,22 +176,22 @@ public class ContextsTest {
         
         //デフォルトの名前空間は"story"
         assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
-        Contexts.put("namespacenum", 1);
+        Contexts.set("namespacenum", 1);
         assertThat(Contexts.get("namespacenum").asInt(), is(1));
         
         //変更できる
-        Contexts.setNameSpaceAsCurrent("foobar");
+        Contexts.setCurrentNameSpace("foobar");
         assertThat(Contexts.getCurrentNameSpace().getName(), is("foobar"));
-        Contexts.put("namespacenum", 2.0);
+        Contexts.set("namespacenum", 2.0);
         assertThat(Contexts.get("namespacenum").asInt(), is(2));
         
         //戻せる
-        Contexts.setNameSpaceAsCurrent("story");
+        Contexts.setCurrentNameSpace("story");
         assertThat(Contexts.get("namespacenum").asInt(), is(1));
         
         //nullセットでエラー
         try {
-            Contexts.setNameSpaceAsCurrent(null);
+            Contexts.setCurrentNameSpace(null);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -199,7 +199,7 @@ public class ContextsTest {
         
         //空文字セットでエラー
         try {
-            Contexts.setNameSpaceAsCurrent("");
+            Contexts.setCurrentNameSpace("");
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));

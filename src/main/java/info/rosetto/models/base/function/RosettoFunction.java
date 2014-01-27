@@ -68,7 +68,7 @@ public abstract class RosettoFunction implements RosettoValue {
      * この関数を実行する.
      * @param args 実行時引数
      */
-    public RosettoValue exec(RosettoArguments args) {
+    public RosettoValue execute(RosettoArguments args) {
         if(args == null)
             args = RosettoArguments.EMPTY;
         RosettoValue result = run(new ExpandedArguments(args, this));
@@ -80,7 +80,7 @@ public abstract class RosettoFunction implements RosettoValue {
      * この関数を実行する.
      * @param args 実行時引数
      */
-    public RosettoValue exec(String args) {
+    public RosettoValue execute(String args) {
         RosettoValue result = null;
         if(args == null) {
             result = run(new ExpandedArguments(RosettoArguments.EMPTY, this));
@@ -93,10 +93,10 @@ public abstract class RosettoFunction implements RosettoValue {
     
     /**
      * 引数なしでこの関数を実行する.
-     * exec(RuntimeArguments.EMPTY)と同じ.
+     * execute(RuntimeArguments.EMPTY)と同じ.
      */
-    public RosettoValue exec() {
-        return exec(RosettoArguments.EMPTY);
+    public RosettoValue execute() {
+        return execute(RosettoArguments.EMPTY);
     }
     
     /**

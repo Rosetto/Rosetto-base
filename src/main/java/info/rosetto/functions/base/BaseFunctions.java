@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.functions.base;
 
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
@@ -57,12 +58,15 @@ public class BaseFunctions extends FunctionPackage {
      * 例えば標準のtextパッケージをreferした場合は、text.brやtext.pなどのようにして呼び出せるようになる.<br>
      */
     public static final RosettoFunction refer = new RosettoFunction("refer",
-            "package") {
+            "package", "as=") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
-            args.get("package");
+            String packageName = args.get("package").asString("");
+            if(packageName.length() > 0) {
+                Contexts.refer(packageName);
+            }
             return Values.VOID;
         }
     };
@@ -72,11 +76,16 @@ public class BaseFunctions extends FunctionPackage {
      * 取り込んだ変数は全て現在のパッケージ直下に定義した変数と同様に扱われる.<br>
      * 例えば標準のtextパッケージをincludeした場合は、text.brやtext.pは単にbrやpで呼び出せるようになる.<br>
      */
-    public static final RosettoFunction include = new RosettoFunction("include") {
+    public static final RosettoFunction include = new RosettoFunction("include",
+            "package") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
+            String packageName = args.get("package").asString("");
+            if(packageName.length() > 0) {
+                Contexts.include(packageName);
+            }
             return Values.VOID;
         }
     };
@@ -84,11 +93,16 @@ public class BaseFunctions extends FunctionPackage {
     /**
      * 
      */
-    public static final RosettoFunction namespace = new RosettoFunction("namespace") {
+    public static final RosettoFunction namespace = new RosettoFunction("namespace",
+            "package") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
+            String packageName = args.get("package").asString("");
+            if(packageName.length() > 0) {
+                Contexts.setCurrentNameSpace(packageName);
+            }
             return Values.VOID;
         }
     };
