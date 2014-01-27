@@ -4,6 +4,7 @@
 
 package info.rosetto.models.base.function;
 
+import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.TextUtils;
@@ -66,11 +67,13 @@ public class RosettoArguments implements Serializable {
     public RosettoArguments(List<RosettoArgument> args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
         for(RosettoArgument a : args) {
-            if(a.getKey() == null) {
-                this.args.add(a.getValue().asString());
-            } else {
-                this.kwargs.put(a.getKey(), a.getValue().asString());
-            }
+            try {
+                if(a.getKey() == null) {
+                    this.args.add(a.getValue().asString());
+                } else {
+                    this.kwargs.put(a.getKey(), a.getValue().asString());
+                }
+            } catch (NotConvertibleException e) {}
         }
         this.stringArgs = null;
         //TODO

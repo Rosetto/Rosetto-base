@@ -1,38 +1,49 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.functions.base;
 
-import info.rosetto.contexts.base.FunctionPackage;
 import info.rosetto.models.base.function.ExpandedArguments;
+import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
 /**
- * Rosettoの基本的な関数.
+ * Rosettoの基本的な関数.<br>
+ * 名前空間の生成時に自動的にuseされる.
  * @author tohhy
  */
 public class BaseFunctions extends FunctionPackage {
-
-    public BaseFunctions() {
+    
+    /**
+     * シングルトンインスタンス.
+     */
+    private static BaseFunctions instance;
+    
+    /**
+     * BaseFunctionsのインスタンスを取得する.
+     * @return BaseFunctionsのインスタンス
+     */
+    public static BaseFunctions getInstance() {
+        if(instance == null) {
+            instance = new BaseFunctions();
+        }
+        return instance;
+    }
+    
+    /**
+     * コンストラクタは公開しない.
+     */
+    private BaseFunctions() {
         super("rosetto.base", 
-                pass, require, use, namespace);
+                pass, refer, include, namespace);
     }
     
     /**
      * 「何もしない」関数.実行すると何もせずにVOIDを返す.
      */
     public static final RosettoFunction pass = new RosettoFunction("pass") {
-        private static final long serialVersionUID = 4075950193187972686L;
-
-        @Override
-        protected RosettoValue run(ExpandedArguments args) {
-            return Values.VOID;
-        }
-    };
-    
-    /**
-     * 
-     */
-    public static final RosettoFunction require = new RosettoFunction("require") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
@@ -42,9 +53,26 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 
+     * 指定したパッケージに含まれる全変数を現在のパッケージから参照できるようにする.<br>
+     * 例えば標準のtextパッケージをreferした場合は、text.brやtext.pなどのようにして呼び出せるようになる.<br>
      */
-    public static final RosettoFunction use = new RosettoFunction("use") {
+    public static final RosettoFunction refer = new RosettoFunction("refer",
+            "package") {
+        private static final long serialVersionUID = 4075950193187972686L;
+        
+        @Override
+        protected RosettoValue run(ExpandedArguments args) {
+            args.get("package");
+            return Values.VOID;
+        }
+    };
+    
+    /**
+     * 指定したパッケージに含まれる全変数を現在のパッケージに取り込む.<br>
+     * 取り込んだ変数は全て現在のパッケージ直下に定義した変数と同様に扱われる.<br>
+     * 例えば標準のtextパッケージをincludeした場合は、text.brやtext.pは単にbrやpで呼び出せるようになる.<br>
+     */
+    public static final RosettoFunction include = new RosettoFunction("include") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override

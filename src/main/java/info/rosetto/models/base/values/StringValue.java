@@ -31,7 +31,11 @@ public class StringValue implements RosettoValue {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof RosettoValue) {
-            return (value.equals(((RosettoValue)obj).asString()));
+            try {
+                return (value.equals(((RosettoValue)obj).asString()));
+            } catch (NotConvertibleException e) {
+                return false;
+            }
         }
         return false;
     }
@@ -51,6 +55,11 @@ public class StringValue implements RosettoValue {
         return value;
     }
     
+    @Override
+    public String asString(String defaultValue) {
+        return value;
+    }
+
     /**
      * valueを全て小文字に変換したときに"true"である場合はtrue.<br>
      * valueを全て小文字に変換したときに"false"である場合はfalse.<br>

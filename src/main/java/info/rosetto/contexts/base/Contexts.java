@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
@@ -38,6 +39,11 @@ public class Contexts {
      * コンストラクタは非公開.
      */
     private Contexts() {}
+    
+    @Override
+    public String toString() {
+        return "Context[initialized=" + isInitialized + ", " + wholeSpace + parser + "]";
+    }
     
     /**
      * Contextsを初期化して使用可能な状態にする.<br>
@@ -89,7 +95,17 @@ public class Contexts {
         } else {
             return instance.wholeSpace.getCurrentNameSpace().get(key);
         }
-        
+    }
+    
+    /**
+     * 現在アクティブな名前空間から指定した変数に保存されている値を探し、それが関数であれば取得する.<br>
+     * 値が関数でない場合、存在しない場合はnullが返る.
+     * @param key 値を取得する変数名
+     * @return 取得した値が関数でないか、変数が存在しなければnull
+     */
+    public static RosettoFunction getAsFunction(String key) {
+        RosettoValue v = get(key);
+        return (v instanceof RosettoFunction) ? (RosettoFunction)v : null;
     }
     
     /**

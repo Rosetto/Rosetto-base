@@ -29,8 +29,13 @@ public class NullValue implements RosettoValue {
     }
 
     @Override
-    public String asString() {
-        return "NULL";
+    public String asString() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public String asString(String defaultValue) {
+        return defaultValue;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import info.rosetto.models.base.values.RosettoValue;
 
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class VariableObservatoryTest {
             public void valueChanged(String nameSpace, String variableName,
                     RosettoValue newValue) {
                 sb.append(nameSpace).append(".").append(variableName).append(":")
-                .append(newValue.asString());
+                .append(newValue.asString(""));
             }
         });
         Contexts.put("foo", "bar");
@@ -33,6 +33,28 @@ public class VariableObservatoryTest {
         sb.delete(0, sb.length());
         Contexts.put("this.is.test", 12345);
         assertThat(sb.toString(), is("this.is.test:12345"));
+    }
+    
+    @Test
+    public void addNameSpaceObserverTest() throws Exception {
+        final StringBuilder sb = new StringBuilder();
+        VariableObservatory.getInstance().addNameSpaceObserver("story", 
+                new VariableObserver() {
+            @Override
+            public void valueChanged(String nameSpace, String variableName,
+                    RosettoValue newValue) {
+                sb.append(nameSpace).append(".").append(variableName).append(":")
+                .append(newValue.asString(""));
+            }
+        });
+        //指定している名前空間には反応
+        Contexts.put("foo", "bar");
+        assertThat(sb.toString(), is("story.foo:bar"));
+        
+        //指定外の名前空間には反応しない
+        sb.delete(0, sb.length());
+        Contexts.put("this.is.test", 12345);
+        assertThat(sb.toString(), is(""));
     }
 
 }

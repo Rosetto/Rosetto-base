@@ -36,8 +36,10 @@ public class WholeSpace implements Serializable {
     }
     
     /**
-     * 
-     * @param name
+     * 指定名の名前空間を取得する.<br>
+     * 名前空間のインスタンスが存在しない場合は新しく空の名前空間を生成し、
+     * rosetto.baseの関数群をUseした状態にして取得する.
+     * @param name 
      * @return
      */
     public NameSpace getNameSpace(String name) {
@@ -95,6 +97,6 @@ public class WholeSpace implements Serializable {
     
     public void setCurrentNameSpace(NameSpace nameSpace) {
         currentNameSpace = nameSpace;
-        new BaseFunctions().addTo(nameSpace);
+        BaseFunctions.getInstance().addTo(nameSpace);
     }
 }

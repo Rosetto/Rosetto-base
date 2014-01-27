@@ -2,6 +2,8 @@ package info.rosetto.contexts.base;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import info.rosetto.models.base.function.ExpandedArguments;
+import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.scenario.Scenario;
@@ -101,6 +103,23 @@ public class ContextsTest {
     }
     
     @Test
+    public void getAsFunctionTest() throws Exception {
+        Contexts.initialize();
+        
+        Contexts.put("org.example.foo", new RosettoFunction("func") {
+            private static final long serialVersionUID = 1694180059203694661L;
+            @Override
+            protected RosettoValue run(ExpandedArguments args) {
+                return Values.VOID;
+            }
+        });
+        Contexts.put("org.example.bar", "not function value");
+        assertThat(Contexts.getAsFunction("org.example.foo").getName(), is("func"));
+        assertThat(Contexts.getAsFunction("org.example.bar"), is(nullValue()));
+        assertThat(Contexts.getAsFunction("org.example.not-found-value"), is(nullValue()));
+    }
+    
+    @Test
     public void getAndPutAbsoluteValueTest() throws Exception {
         Contexts.initialize();
         
@@ -142,7 +161,6 @@ public class ContextsTest {
             }
             @Override
             public Scenario parseFile(File file) {
-                // TODO Auto-generated method stub
                 return null;
             }
         });

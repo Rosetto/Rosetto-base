@@ -1,9 +1,7 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.RosettoFunction;
 
@@ -52,10 +50,40 @@ public class WholeSpaceTest {
     }
     
     @Test
+    public void getNameSpaceTest() throws Exception {
+        WholeSpace sut = new WholeSpace();
+        //初期状態ではstoryのみ
+        assertThat(sut.getCreatedNameSpaceCount(), is(1));
+        //storyをgetしても変化なし
+        assertThat(sut.getNameSpace("story").getName(), is("story"));
+        assertThat(sut.getCreatedNameSpaceCount(), is(1));
+        //fooをgetすると生成されるのでcountは2
+        assertThat(sut.getNameSpace("foo.bar").getName(), is("foo.bar"));
+        assertThat(sut.getCreatedNameSpaceCount(), is(2));
+        
+        try {
+            sut.getNameSpace("");
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+        assertThat(sut.getCreatedNameSpaceCount(), is(2));
+        
+        try {
+            sut.getNameSpace(null);
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+        assertThat(sut.getCreatedNameSpaceCount(), is(2));
+    }
+    
+    @Test
     public void baseFunctionTest() throws Exception {
         WholeSpace sut = new WholeSpace();
-        assertThat((RosettoFunction)sut.getCurrentNameSpace().get("rosetto.base.pass"), is(BaseFunctions.pass));
-        
+        assertThat(
+                (RosettoFunction)sut.getCurrentNameSpace().get("pass"), 
+                is(BaseFunctions.pass));
     }
 
 }

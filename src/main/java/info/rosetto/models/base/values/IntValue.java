@@ -41,6 +41,11 @@ public class IntValue implements RosettoValue {
     public String asString() {
         return String.valueOf(value);
     }
+    
+    @Override
+    public String asString(String defaultValue) {
+        return String.valueOf(value);
+    }
 
     @Override
     public boolean asBool() throws NotConvertibleException {

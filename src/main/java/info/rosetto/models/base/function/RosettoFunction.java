@@ -48,6 +48,8 @@ public abstract class RosettoFunction implements RosettoValue {
      * @param args 引数(0個以上)
      */
     public RosettoFunction(String name, String...args) {
+        if(name == null)
+            throw new IllegalArgumentException("name must not be null");
         this.name = name;
     }
     
@@ -154,6 +156,11 @@ public abstract class RosettoFunction implements RosettoValue {
 
     @Override
     public String asString() {
+        return toString();
+    }
+    
+    @Override
+    public String asString(String defaultValue) {
         return toString();
     }
 

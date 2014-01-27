@@ -44,8 +44,20 @@ public interface RosettoValue extends Serializable {
      * この値を文字列として解釈した場合の値を返す.
      * @return この値を文字列として解釈した場合の値
      */
-    public String asString();
+    public String asString() throws NotConvertibleException;
     
+    /**
+     * この値を文字列として解釈した場合の値を返す.<br>
+     * 文字列として解釈できなかった場合、defaultValueを返す.
+     * @return この値を文字列として解釈した場合の値
+     */
+    public String asString(String defaultValue);
+    
+    /**
+     * 
+     * @return
+     * @throws NotConvertibleException
+     */
     public boolean asBool() throws NotConvertibleException;
 
     /**
@@ -56,16 +68,46 @@ public interface RosettoValue extends Serializable {
      */
     public boolean asBool(boolean defaultValue);
     
+    /**
+     * 
+     * @return
+     * @throws NotConvertibleException
+     */
     public int asInt() throws NotConvertibleException;
-
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
     public int asInt(int defaultValue);
     
+    /**
+     * 
+     * @return
+     * @throws NotConvertibleException
+     */
     public long asLong() throws NotConvertibleException;
-
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
     public long asLong(long defaultValue);
     
+    /**
+     * 
+     * @return
+     * @throws NotConvertibleException
+     */
     public double asDouble() throws NotConvertibleException;
-
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return
+     */
     public double asDouble(double defaultValue);
     
 }

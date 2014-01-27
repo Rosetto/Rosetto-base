@@ -25,7 +25,7 @@ public class NameSpaceObservatoryTest {
             public void valueChanged(String nameSpace, String variableName,
                     RosettoValue newValue) {
                 sb.append(nameSpace).append(".").append(variableName).append(":")
-                .append(newValue.asString());
+                .append(newValue.asString(""));
             }
         });
         Contexts.put("foo", "bar");

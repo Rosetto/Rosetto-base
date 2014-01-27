@@ -1,3 +1,6 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.values.RosettoValue;
@@ -28,7 +31,6 @@ public class VariableObservatory extends Observatory<VariableObserver>
     public void addNameSpaceObserver(String nameSpace, VariableObserver observer) {
         NameSpaceObservatory.getInstance().addObserver(nameSpace, observer);
     }
-    
     
     @Override
     public void valueChanged(String nameSpace, String variableName,

@@ -7,7 +7,7 @@ import info.rosetto.exceptions.NotConvertibleException;
 
 /**
  * 返り値がなかったことを表す値.<br>
- * どの値にも変換できない.toStringは"VOID", getValueはnullになる.
+ * どの値にも変換できない. getValueはnullになる.
  * @author tohhy
  */
 public class VoidValue implements RosettoValue {
@@ -44,10 +44,6 @@ public class VoidValue implements RosettoValue {
         return null;
     }
     
-    @Override
-    public String asString() {
-        return "VOID";
-    }
     
     /**
      * NotConvertibleExceptionをスローする.
@@ -110,6 +106,16 @@ public class VoidValue implements RosettoValue {
 
     @Override
     public long asLong(long defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public String asString() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public String asString(String defaultValue) {
         return defaultValue;
     }
 }

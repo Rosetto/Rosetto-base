@@ -190,8 +190,13 @@ public class ActionCall implements RosettoValue {
     }
     
     @Override
-    public String asString() {
+    public String asString() throws NotConvertibleException {
         return evaluate().asString();
+    }
+    
+    @Override
+    public String asString(String defaultValue) {
+        return evaluate().asString(defaultValue);
     }
 
     @Override
