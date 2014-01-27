@@ -11,7 +11,7 @@ import info.rosetto.models.base.values.StringValue;
 import info.rosetto.models.base.values.VoidValue;
 
 /**
- * Rosetto中の値の操作に関するユーティリティクラス.
+ * Rosetto中の値の生成・操作に関するユーティリティクラス.
  * @author tohhy
  */
 public class Values {
@@ -27,21 +27,47 @@ public class Values {
     
     /**
      * 指定した文字列を受け取ってStringValueを生成する.
-     * @param value 
-     * @return 
+     * @param value StringValueとして生成する値
+     * @return 生成したStringValue
      */
     public static StringValue create(String value) {
         return new StringValue(value);
     }
     
+    /**
+     * 指定した整数を受け取ってIntValueを生成する.<br>
+     * 値は内部的にはlong精度で保持される.
+     * @param value IntValueとして生成する値
+     * @return 生成したIntValue
+     */
     public static IntValue create(int value) {
         return new IntValue(value);
     }
     
+    /**
+     * 指定したlong整数を受け取ってIntValueを生成する.<br>
+     * 値は内部的にはlong精度で保持される.
+     * @param value IntValueとして生成する値
+     * @return 生成したIntValue
+     */
+    public static IntValue create(long value) {
+        return new IntValue(value);
+    }
+    
+    /**
+     * 指定した倍精度浮動小数点数を受け取ってDoubleValueを生成する.
+     * @param value DoubleValueとして生成する値
+     * @return 生成したDoubleValue
+     */
     public static DoubleValue create(double value) {
         return new DoubleValue(value);
     }
     
+    /**
+     * 指定した真偽値を受け取ってBoolValueを生成する.
+     * @param value BoolValueとして生成する値
+     * @return 生成したBoolValue
+     */
     public static BoolValue create(boolean value) {
         return new BoolValue(value);
     }

@@ -101,7 +101,7 @@ public class NameSpace implements Serializable {
      * @param key 絶対参照のキー
      * @param value 値
      */
-    private void putAbsolute(String key, RosettoValue value) {
+    public void putAbsolute(String key, RosettoValue value) {
         if(isSealed(key)) {
             RosettoLogger.warning("specified key " + key + " is sealed");
             return;

@@ -10,6 +10,18 @@ public class DoubleValue implements RosettoValue {
     public DoubleValue(double value) {
         this.value = value;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            try {
+                return (value == ((RosettoValue)obj).asDouble());
+            } catch (NotConvertibleException e) {
+                return false;
+            }
+        }
+        return false;
+    }
 
     @Override
     public ValueType getType() {
@@ -54,6 +66,16 @@ public class DoubleValue implements RosettoValue {
     @Override
     public double asDouble(double defaultValue) {
         return value;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        return (long)value;
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
+        return (long)value;
     }
 
 }

@@ -10,6 +10,17 @@ public class BoolValue implements RosettoValue {
     public BoolValue(boolean value) {
         this.value = value;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            try {
+                return (value == ((RosettoValue)obj).asBool());
+            } catch (NotConvertibleException e) {
+                return false;
+            }
+        }
+        return false;
+    }
 
     @Override
     public ValueType getType() {
@@ -53,6 +64,14 @@ public class BoolValue implements RosettoValue {
 
     @Override
     public double asDouble(double defaultValue) {
+        return defaultValue;
+    }
+    @Override
+    public long asLong() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+    @Override
+    public long asLong(long defaultValue) {
         return defaultValue;
     }
 

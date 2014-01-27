@@ -6,6 +6,7 @@ package info.rosetto.models.base.values;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.exceptions.NotConvertibleException;
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.FunctionName;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
@@ -43,7 +44,7 @@ public class ActionCall implements RosettoValue {
      * 何もしないActionCall.空の関数呼び出しを行う.
      */
     public static final ActionCall EMPTY = 
-            new ActionCall(RosettoFunction.pass.getFullName(), RosettoArguments.EMPTY);
+            new ActionCall(BaseFunctions.pass.getName(), RosettoArguments.EMPTY);
     
     /**
      * 引数なしで指定した対象を実行するActionCallを生成する.
@@ -151,8 +152,6 @@ public class ActionCall implements RosettoValue {
         return this;
     }
     
-    
-
     /**
      * このActionCallを評価する.
      * 関数名から関数を生成し、その関数と引数から実行時引数を生成し、
@@ -223,5 +222,15 @@ public class ActionCall implements RosettoValue {
     @Override
     public double asDouble(double defaultValue) {
         return evaluate().asDouble(defaultValue);
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        return evaluate().asLong();
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
+        return evaluate().asLong(defaultValue);
     }
 }

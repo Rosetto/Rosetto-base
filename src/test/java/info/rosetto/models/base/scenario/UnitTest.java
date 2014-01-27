@@ -2,8 +2,7 @@ package info.rosetto.models.base.scenario;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.values.ActionCall;
 
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class UnitTest {
     
     @Test
     public void getActionで生成時に与えたアクションが取得できる() throws Exception {
-        ActionCall expected = new ActionCall(RosettoFunction.pass.getNameObject());
+        ActionCall expected = new ActionCall(BaseFunctions.pass.getName());
         Unit sut = new Unit("test", expected);
         assertThat(sut.getAction(), is(expected));
     }
@@ -41,8 +40,8 @@ public class UnitTest {
     
     @Test
     public void toStringで要素を角括弧で囲んだ文字列表現が返る() throws Exception {
-        String expected = "[text=test, action=" + RosettoFunction.pass.getFullName() + "]";
-        Unit sut = new Unit("test", new ActionCall(RosettoFunction.pass.getNameObject()));
+        String expected = "[text=test, action=" + BaseFunctions.pass.getName() + "]";
+        Unit sut = new Unit("test", new ActionCall(BaseFunctions.pass.getName()));
         assertThat(sut.toString(), is(expected));
     }
 }

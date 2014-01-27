@@ -5,10 +5,26 @@ import info.rosetto.exceptions.NotConvertibleException;
 public class IntValue implements RosettoValue {
     private static final long serialVersionUID = -6660103213801013944L;
     
-    private final int value;
+    private final long value;
     
     public IntValue(int value) {
         this.value = value;
+    }
+    
+    public IntValue(long value) {
+        this.value = value;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            try {
+                return (value == ((RosettoValue)obj).asInt());
+            } catch (NotConvertibleException e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -38,11 +54,25 @@ public class IntValue implements RosettoValue {
 
     @Override
     public int asInt() throws NotConvertibleException {
-        return value;
+        if(value > Integer.MAX_VALUE || value < Integer.MIN_VALUE)
+            throw new NotConvertibleException("value out of int range");
+        return (int)value;
     }
 
     @Override
     public int asInt(int defaultValue) {
+        if(value > Integer.MAX_VALUE || value < Integer.MIN_VALUE)
+            return defaultValue;
+        return (int)value;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        return value;
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
         return value;
     }
 

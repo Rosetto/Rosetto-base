@@ -5,6 +5,7 @@ package info.rosetto.models.base.values;
 
 import info.rosetto.models.base.function.RosettoFunction;
 
+
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.
  * Rosetto中での値の引き渡しは全て文字列か関数呼び出しによって行われるため、

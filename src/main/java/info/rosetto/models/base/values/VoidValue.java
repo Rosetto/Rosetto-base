@@ -23,6 +23,14 @@ public class VoidValue implements RosettoValue {
     private VoidValue() {}
     
     @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof VoidValue) {
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
     public ValueType getType() {
         return ValueType.VOID;
     }
@@ -92,6 +100,16 @@ public class VoidValue implements RosettoValue {
      */
     @Override
     public double asDouble(double defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
         return defaultValue;
     }
 }

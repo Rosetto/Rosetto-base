@@ -29,6 +29,14 @@ public class StringValue implements RosettoValue {
     }
     
     @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            return (value.equals(((RosettoValue)obj).asString()));
+        }
+        return false;
+    }
+    
+    @Override
     public ValueType getType() {
         return ValueType.STRING;
     }
@@ -106,6 +114,24 @@ public class StringValue implements RosettoValue {
     public double asDouble(double defaultValue) {
         try {
             return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            throw new NotConvertibleException();
+        }
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
+        try {
+            return Long.parseLong(value);
         } catch (NumberFormatException e) {
             return defaultValue;
         }

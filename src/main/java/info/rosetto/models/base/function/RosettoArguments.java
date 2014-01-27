@@ -4,14 +4,12 @@
 
 package info.rosetto.models.base.function;
 
-import info.rosetto.models.base.function.RosettoFunction.ExpandedArguments;
 import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -197,7 +195,7 @@ public class RosettoArguments implements Serializable {
             //もし可変長引数が含まれていれば
             if(requiredArgsCount > args.size() - 1) {
                 throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
-                            args.toString() + "|" + Arrays.toString(func.getArguments()));
+                            args.toString() + "|" + func.getArguments());
             }
             
             for(String s : args) {
@@ -218,15 +216,15 @@ public class RosettoArguments implements Serializable {
             }
             if(funcArgs.size() > 0)
                 throw new IllegalArgumentException("不明な引数が余ります: " + 
-                        args.toString() + "|" + Arrays.toString(func.getArguments()));
+                        args.toString() + "|" + func.getArguments());
         } else {
             //含まれていなければ
             if(requiredArgsCount > args.size()) {
                 throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
-                        args.toString() + "|" + Arrays.toString(func.getArguments()));
+                        args.toString() + "|" + func.getArguments());
             } else if(funcArgs.size() < args.size()) {
                 throw new IllegalArgumentException("不明な引数が余ります: " + 
-                        args.toString() + "|" + Arrays.toString(func.getArguments()));
+                        args.toString() + "|" + func.getArguments());
             }
             for(String s : args) {
                 //残った非キーワード引数を順に結合してマップへ追加

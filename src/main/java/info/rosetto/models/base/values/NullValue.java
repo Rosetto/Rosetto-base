@@ -9,6 +9,14 @@ public class NullValue implements RosettoValue {
     public static final NullValue INSTANCE = new NullValue();
     
     private NullValue() {}
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof NullValue) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public ValueType getType() {
@@ -52,6 +60,16 @@ public class NullValue implements RosettoValue {
 
     @Override
     public double asDouble(double defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
         return defaultValue;
     }
 

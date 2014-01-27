@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.functions.base.BaseFunctions;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,7 @@ public class WholeSpace implements Serializable {
      * 
      */
     public WholeSpace() {
-        currentNameSpace = createNameSpace("story");
+        setCurrentNameSpace(createNameSpace("story"));
     }
     
     /**
@@ -87,7 +89,12 @@ public class WholeSpace implements Serializable {
     public void setCurrentNameSpace(String name) {
         if(name == null || name.length() == 0)
             throw new IllegalArgumentException("name must not be empty");
-        currentNameSpace = contains(name) ? 
-                getNameSpace(name) : createNameSpace(name);
+        setCurrentNameSpace(contains(name) ? 
+                getNameSpace(name) : createNameSpace(name));
+    }
+    
+    public void setCurrentNameSpace(NameSpace nameSpace) {
+        currentNameSpace = nameSpace;
+        new BaseFunctions().addTo(nameSpace);
     }
 }
