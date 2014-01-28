@@ -19,27 +19,21 @@ import java.util.List;
  */
 public class FunctionPackage {
     /**
-     * このパッケージが保有する要素の一覧.
+     * このパッケージが保有する関数の一覧.
      */
     private final List<RosettoFunction> functions = new ArrayList<RosettoFunction>();
     /**
      * このパッケージが保有する関数名の一覧.
      */
     private final List<String> names = new ArrayList<String>();
-    /**
-     * このパッケージの名前空間名.
-     */
-    private final String packageName;
+    
     
     /**
      * 
      * @param packageName
      * @param functions
      */
-    public FunctionPackage(String packageName, RosettoFunction...functions) {
-        if(packageName == null || packageName.length() == 0)
-            throw new IllegalArgumentException("package name must not be empty");
-        this.packageName = packageName;
+    public FunctionPackage(RosettoFunction...functions) {
         for(int i=0; i<functions.length; i++) {
             if(functions[i] == null)
                 throw new IllegalArgumentException("Functions contains null value");
@@ -61,14 +55,6 @@ public class FunctionPackage {
         for(RosettoFunction f : functions) {
             space.set(f.getName(), f);
         }
-    }
-    
-    /**
-     * このパッケージの名前空間名を返す.
-     * @return
-     */
-    public String getPackageName() {
-        return packageName;
     }
     
     /**

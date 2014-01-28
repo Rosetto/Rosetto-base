@@ -37,8 +37,7 @@ public class BaseFunctions extends FunctionPackage {
      * コンストラクタは公開しない.
      */
     private BaseFunctions() {
-        super("rosetto.base", 
-                pass, refer, include, namespace);
+        super(pass, refer, include, namespace);
     }
     
     /**
@@ -54,18 +53,20 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 指定したパッケージに含まれる全変数を現在のパッケージから参照できるようにする.<br>
-     * 例えば標準のtextパッケージをreferした場合は、text.brやtext.pなどのようにして呼び出せるようになる.<br>
+     * 指定したパッケージに含まれる全変数を、指定名のパッケージとして参照できるようにする.<br>
+     * 例えば以下のようにした場合は、rosetto.text.brをtext.brのようにして呼び出せるようになる.<br>
+     * [refer package=rosetto.text as=text]
      */
     public static final RosettoFunction refer = new RosettoFunction("refer",
-            "package", "as=") {
+            "package", "as") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
             String packageName = args.get("package").asString("");
-            if(packageName.length() > 0) {
-                Contexts.refer(packageName);
+            String refName = args.get("as").asString("");
+            if(packageName.length() > 0 && refName.length() > 0) {
+                Contexts.refer(packageName, refName);
             }
             return Values.VOID;
         }

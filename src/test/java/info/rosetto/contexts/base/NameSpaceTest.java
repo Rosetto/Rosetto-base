@@ -111,51 +111,10 @@ public class NameSpaceTest {
         }
     }
     
-    @Test
-    public void requireTest() throws Exception {
-        NameSpace sut = new NameSpace("foo");
-        //既に値を入れた変数を用意しておく
-        
-        
-        NameSpace include = new NameSpace("org.example");
-        include.set("bar", Values.create("baz"));
-        include.set("hoge", Values.create("fuga"));
-        include.set("piyo", Values.create(100));
-        include.seal("piyo");
-        
-        //require時に指定したパッケージの全変数がputAbsoluteされる
-        sut.refer(include);
-        
-        //直接参照はできない
-        assertThat(sut.get("bar"), is(nullValue()));
-        assertThat(sut.get("hoge"), is(nullValue()));
-        assertThat(sut.get("piyo"), is(nullValue()));
-        
-        //完全名で参照できる
-        assertThat(sut.get("org.example.bar").asString(), is("baz"));
-        assertThat(sut.get("org.example.hoge").asString(), is("fuga"));
-        assertThat(sut.get("org.example.piyo").asString(), is("100"));
-        
-        //sealされた変数はrequireしてもseal
-        assertThat(sut.isSealed("org.example.hoge"), is(false));
-        assertThat(sut.isSealed("org.example.piyo"), is(true));
-        
-        //同名のパッケージで上書きrequireしたケース
-        NameSpace include2 = new NameSpace("org.example");
-        include2.set("hoge", Values.create(true));
-        include2.set("piyo", Values.create(12.345));
-        sut.refer(include2);
-        
-        //sealされていればそのまま、されていなければ上書き
-        assertThat(sut.get("org.example.hoge").asString(), is("true"));
-        assertThat(sut.get("org.example.piyo").asString(), is("100"));
-        
-    }
     
     
-
     @Test
-    public void useTest() throws Exception {
+    public void includeTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
         //既に値を入れた変数を用意しておく
@@ -165,7 +124,7 @@ public class NameSpaceTest {
         include.set("piyo", Values.create(100));
         include.seal("piyo");
         
-        //use時に指定したパッケージの全変数がputされる
+        //include時に指定したパッケージの全変数がputされる
         sut.include(include);
         
         //直接参照可能
@@ -174,9 +133,9 @@ public class NameSpaceTest {
         assertThat(sut.get("piyo").asInt(), is(100));
         
         //完全名での参照も可能
-        assertThat(sut.get("org.example.bar").asString(), is("baz"));
-        assertThat(sut.get("org.example.hoge").asString(), is("fuga"));
-        assertThat(sut.get("org.example.piyo").asString(), is("100"));
+        assertThat(sut.get("foo.bar").asString(), is("baz"));
+        assertThat(sut.get("foo.hoge").asString(), is("fuga"));
+        assertThat(sut.get("foo.piyo").asString(), is("100"));
         
         //sealされた変数はrequireしてもseal
         assertThat(sut.isSealed("hoge"), is(false));

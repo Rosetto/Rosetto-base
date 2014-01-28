@@ -212,7 +212,7 @@ public class ContextsTest {
         
         //デフォルトの全体名前空間は"story"だけを持つ
         assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(1));
-        assertThat(Contexts.getWholeSpace().contains("story"), is(true));
+        assertThat(Contexts.getWholeSpace().containsNameSpace("story"), is(true));
         assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
         
         //変更できる
@@ -222,9 +222,9 @@ public class ContextsTest {
         ws.setCurrentNameSpace("foo");
         Contexts.setWholeSpace(ws);
         assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(3));
-        assertThat(Contexts.getWholeSpace().contains("story"), is(true));
-        assertThat(Contexts.getWholeSpace().contains("foo"), is(true));
-        assertThat(Contexts.getWholeSpace().contains("bar"), is(true));
+        assertThat(Contexts.getWholeSpace().containsNameSpace("story"), is(true));
+        assertThat(Contexts.getWholeSpace().containsNameSpace("foo"), is(true));
+        assertThat(Contexts.getWholeSpace().containsNameSpace("bar"), is(true));
         assertThat(Contexts.getCurrentNameSpace().getName(), is("foo"));
         
         //nullセットでエラー

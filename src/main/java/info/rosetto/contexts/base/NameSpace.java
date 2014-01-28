@@ -33,11 +33,6 @@ public class NameSpace implements Serializable {
     private final Map<String, RosettoValue> variables = new HashMap<String, RosettoValue>();
     
     /**
-     * この名前空間がパッケージをrequireしたことにより、パッケージ付き名称で保持されている変数の一覧.
-     */
-    private final Map<String, RosettoValue> referenceVariables = new HashMap<String, RosettoValue>();
-    
-    /**
      * ロックされた変数名の一覧.<br>
      * ここに登録された変数名に対して再代入しようとするとエラーになる.<br>
      * 基本関数等はここに登録され、誤って上書きされることによるバグを抑制する.
@@ -62,7 +57,6 @@ public class NameSpace implements Serializable {
     public String toString() {
         return "NameSpace:" + name + 
                 "variables:" + variables + 
-                "reference:" + referenceVariables + 
                 "sealed:" + sealedKeys;
     }
     
@@ -76,9 +70,11 @@ public class NameSpace implements Serializable {
         if(key == null) return null;
         if(variables.containsKey(key))
             return variables.get(key);
-        if(referenceVariables.containsKey(key))
-            return referenceVariables.get(key);
-        return null;
+        if(!key.contains(".")) return null;
+        String nameSpace = key.substring(0, key.lastIndexOf("."));
+        String varName = key.substring(key.lastIndexOf(".") + 1);
+        if(nameSpace.equals(this.name)) return variables.get(varName);
+        return Contexts.getWholeSpace().get(nameSpace, varName);
     }
     
     /**
@@ -105,43 +101,13 @@ public class NameSpace implements Serializable {
     }
     
     /**
-     * 外部パッケージ中の変数の参照をこの名前空間に追加する.
-     * @param key 絶対参照のキー
-     * @param value 値
-     */
-    public void refer(String key, RosettoValue value) {
-        if(isSealed(key)) {
-            RosettoLogger.warning("specified key " + key + " is sealed");
-            return;
-        }
-        referenceVariables.put(key, value);
-    }
-    
-    /**
-     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
-     * useとは異なり、フルパスで指定しなければアクセスできない.
-     * @param space 取り込む名前空間
-     * TODO
-     */
-    public void refer(NameSpace space) {
-        for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
-            String absoluteKey = space.getName() + "." + e.getKey();
-            refer(absoluteKey, e.getValue());
-            //シールされているキーをrequireした場合このパッケージでもseal
-            if(space.isSealed(e.getKey())) seal(absoluteKey);
-        }
-    }
-
-    /**
-     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.<br>
-     * requireと同様の挙動をした後、さらに各変数を直接取り込むので変数名のみでもアクセスできる.
+     * 指定した名前空間の内容をこの名前空間にコピーして取り込み、読み出せるようにする.
      * @param space 取り込む名前空間
      */
     public void include(NameSpace space) {
-        refer(space);
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             set(e.getKey(), e.getValue());
-            //シールされているキーをuseした場合このパッケージでもseal
+            //シールされているキーをincludeした場合このパッケージでもseal
             if(space.isSealed(e.getKey())) seal(e.getKey());
         }
     }

@@ -4,6 +4,7 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.functions.base.BaseFunctions;
+import info.rosetto.models.base.values.RosettoValue;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -36,6 +37,16 @@ public class WholeSpace implements Serializable {
     }
     
     /**
+     * 名前空間付きの絶対指定で値を取得する.
+     * @param key
+     * @return
+     */
+    public RosettoValue get(String nameSpace, String varName) {
+        if(!nameSpaces.containsKey(nameSpace)) return null;
+        return nameSpaces.get(nameSpace).get(varName);
+    }
+    
+    /**
      * 指定名の名前空間を取得する.<br>
      * 名前空間のインスタンスが存在しない場合は新しく空の名前空間を生成し、
      * rosetto.baseの関数群をUseした状態にして取得する.
@@ -64,8 +75,12 @@ public class WholeSpace implements Serializable {
      * @param name
      * @return
      */
-    public boolean contains(String name) {
+    public boolean containsNameSpace(String name) {
         return nameSpaces.containsKey(name);
+    }
+    
+    public void refer(String packageName, String referName) {
+        nameSpaces.put(referName, nameSpaces.get(packageName));
     }
     
     /**
@@ -91,7 +106,7 @@ public class WholeSpace implements Serializable {
     public void setCurrentNameSpace(String name) {
         if(name == null || name.length() == 0)
             throw new IllegalArgumentException("name must not be empty");
-        setCurrentNameSpace(contains(name) ? 
+        setCurrentNameSpace(containsNameSpace(name) ? 
                 getNameSpace(name) : createNameSpace(name));
     }
     
@@ -103,4 +118,6 @@ public class WholeSpace implements Serializable {
         currentNameSpace = nameSpace;
         BaseFunctions.getInstance().addTo(nameSpace);
     }
+    
+    
 }

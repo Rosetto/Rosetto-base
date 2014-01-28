@@ -179,8 +179,8 @@ public class Contexts {
      * 指定名の名前空間の全変数を現在の名前空間から参照可能にする.
      * @param nameSpace 現在の名前空間から参照可能にする名前空間
      */
-    public static void refer(String nameSpace) {
-        getCurrentNameSpace().refer(getNameSpace(nameSpace));
+    public static void refer(String nameSpace, String referName) {
+        instance.wholeSpace.refer(nameSpace, referName);
     }
     
     /**
