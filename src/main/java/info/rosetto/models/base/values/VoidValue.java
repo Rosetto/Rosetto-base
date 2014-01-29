@@ -44,7 +44,24 @@ public class VoidValue implements RosettoValue {
         return null;
     }
     
-    
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
+    @Override
+    public String asString() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
+    @Override
+    public String asString(String defaultValue) {
+        return defaultValue;
+    }
+
     /**
      * NotConvertibleExceptionをスローする.
      * @throws NotConvertibleException 
@@ -80,7 +97,7 @@ public class VoidValue implements RosettoValue {
     public int asInt(int defaultValue) {
         return defaultValue;
     }
-
+    
     /**
      * NotConvertibleExceptionをスローする.
      * @throws NotConvertibleException 
@@ -98,24 +115,22 @@ public class VoidValue implements RosettoValue {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
-
+    
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
     @Override
     public long asLong() throws NotConvertibleException {
         throw new NotConvertibleException();
     }
-
+    
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public long asLong(long defaultValue) {
-        return defaultValue;
-    }
-
-    @Override
-    public String asString() throws NotConvertibleException {
-        throw new NotConvertibleException();
-    }
-
-    @Override
-    public String asString(String defaultValue) {
         return defaultValue;
     }
 }

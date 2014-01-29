@@ -1,3 +1,6 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
 import info.rosetto.exceptions.NotConvertibleException;
@@ -11,14 +14,14 @@ import java.io.Serializable;
  * <br>
  * RosettoScriptの記法を実現する都合上、引数には型の情報を持たせることができない.<br>
  * そのため、ユーザが入力したあらゆるスクリプトからの引数は全てRosettoValueを継承したStringValueとして渡ってくる.<br>
- * 関数の実装に際しては、そうした文字列状態の引数を数値や真偽値として解釈する必要があるが、
+ * ある種の関数の実装に際しては、そうした文字列状態の引数を数値や真偽値として解釈する必要があるが、
  * その手続きを一貫して行うのがRosettoValueに定義された各種の変換メソッド.<br>
  * <br>
- * 一方で、関数の返り値については、数値を返したい関数であるのに
+ * 一方で、関数の返り値については、元々数値を返したい関数であるのに
  * わざわざユーザ入力の形式に合わせて文字列に変換するのは不要なオーバーヘッドになる.<br>
- * その点、このインタフェースに則って変換している限りは
- * 大方のメソッド実装においてRosettoValueの実体が何であるかは気にする必要がない.<br>
- * そのため、単純にIntValueやDoubleValueでラップして返すことができる.<br>
+ * このインタフェースを実装したIntValueやDoubleValue等を用いて値を返すことで不要な処理を防げる上、
+ * 各関数の実装でRosettoValueのインタフェースを使って演算している限りは
+ * 大方の関数実装においてRosettoValueの実体が何であるかは気にする必要がななくなる.
  * <br>
  * 特定の型の実体を持った引数に限って受け取りたい関数等の実装では、getTypeで判別することができる.<br>
  * ジェネリクスではなくenumで型情報を保持しているのは、返り値の型を動的に判別するため.<br>
@@ -35,13 +38,15 @@ public interface RosettoValue extends Serializable {
     public ValueType getType();
     
     /**
-     * 
-     * @return
+     * このRosettoValueの実体となる値を返す.<br>
+     * getType()に応じた型を持つJavaクラスのインスタンスが返る.
+     * @return このRosettoValueの実体となる値
      */
     public Object getValue();
     
     /**
-     * この値を文字列として解釈した場合の値を返す.
+     * この値を文字列として解釈した場合の値を返す.<br>
+     * 文字列として解釈できなかった場合、NotConvertibleExceptionをスローする.
      * @return この値を文字列として解釈した場合の値
      */
     public String asString() throws NotConvertibleException;
@@ -49,13 +54,15 @@ public interface RosettoValue extends Serializable {
     /**
      * この値を文字列として解釈した場合の値を返す.<br>
      * 文字列として解釈できなかった場合、defaultValueを返す.
+     * @param defaultValue デフォルト値
      * @return この値を文字列として解釈した場合の値
      */
     public String asString(String defaultValue);
     
     /**
-     * 
-     * @return
+     * この値を真偽値として解釈した場合の値を返す.<br>
+     * 真偽値として解釈できなかった場合、NotConvertibleExceptionをスローする.
+     * @return この値を真偽値として解釈した場合の値
      * @throws NotConvertibleException
      */
     public boolean asBool() throws NotConvertibleException;
@@ -63,50 +70,56 @@ public interface RosettoValue extends Serializable {
     /**
      * この値を真偽値として解釈した場合の値を返す.<br>
      * 真偽値として解釈できなかった場合、defaultValueを返す.
-     * @param defaultValue
-     * @return
+     * @param defaultValue デフォルト値
+     * @return この値を真偽値として解釈した場合の値
      */
     public boolean asBool(boolean defaultValue);
     
     /**
-     * 
-     * @return
+     * この値をint値として解釈した場合の値を返す.<br>
+     * int値として解釈できなかった場合、NotConvertibleExceptionをスローする.
+     * @return この値をint値として解釈した場合の値
      * @throws NotConvertibleException
      */
     public int asInt() throws NotConvertibleException;
     
     /**
-     * 
-     * @param defaultValue
-     * @return
+     * この値をint値として解釈した場合の値を返す.<br>
+     * int値として解釈できなかった場合、defaultValueを返す.
+     * @param defaultValue デフォルト値
+     * @return この値をint値として解釈した場合の値
      */
     public int asInt(int defaultValue);
     
     /**
-     * 
-     * @return
+     * この値をlong値として解釈した場合の値を返す.<br>
+     * long値として解釈できなかった場合、NotConvertibleExceptionをスローする.
+     * @return この値をlong値として解釈した場合の値
      * @throws NotConvertibleException
      */
     public long asLong() throws NotConvertibleException;
     
     /**
-     * 
-     * @param defaultValue
-     * @return
+     * この値をlong値として解釈した場合の値を返す.<br>
+     * long値として解釈できなかった場合、defaultValueを返す.
+     * @param defaultValue デフォルト値
+     * @return この値をlong値として解釈した場合の値
      */
     public long asLong(long defaultValue);
     
     /**
-     * 
-     * @return
+     * この値をdouble値として解釈した場合の値を返す.<br>
+     * double値として解釈できなかった場合、NotConvertibleExceptionをスローする.
+     * @return この値をdouble値として解釈した場合の値
      * @throws NotConvertibleException
      */
     public double asDouble() throws NotConvertibleException;
     
     /**
-     * 
-     * @param defaultValue
-     * @return
+     * この値をdouble値として解釈した場合の値を返す.<br>
+     * double値として解釈できなかった場合、defaultValueを返す.
+     * @param defaultValue デフォルト値
+     * @return この値をdouble値として解釈した場合の値
      */
     public double asDouble(double defaultValue);
     

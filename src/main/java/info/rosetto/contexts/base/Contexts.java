@@ -40,10 +40,6 @@ public class Contexts {
      */
     private Contexts() {}
     
-    @Override
-    public String toString() {
-        return "Context[initialized=" + isInitialized + ", " + wholeSpace + parser + "]";
-    }
     
     /**
      * Contextsを初期化して使用可能な状態にする.<br>

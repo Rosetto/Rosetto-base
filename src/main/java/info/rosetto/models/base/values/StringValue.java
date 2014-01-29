@@ -41,12 +41,17 @@ public class StringValue implements RosettoValue {
     }
     
     @Override
+    public String toString() {
+        return value;
+    }
+    
+    @Override
     public ValueType getType() {
         return ValueType.STRING;
     }
     
     @Override
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
     
@@ -87,11 +92,7 @@ public class StringValue implements RosettoValue {
         if(value.length() == 0) return false;
         return defaultValue;
     }
-
-    /**
-     * 数値として解釈できる文字列であれば数値として返す.<br>
-     * それ以外の場合はNotConvertibleExceptionをスローする.
-     */
+    
     @Override
     public int asInt() throws NotConvertibleException {
         try {
@@ -111,24 +112,6 @@ public class StringValue implements RosettoValue {
     }
 
     @Override
-    public double asDouble() throws NotConvertibleException {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            throw new NotConvertibleException();
-        }
-    }
-
-    @Override
-    public double asDouble(double defaultValue) {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    @Override
     public long asLong() throws NotConvertibleException {
         try {
             return Long.parseLong(value);
@@ -141,6 +124,24 @@ public class StringValue implements RosettoValue {
     public long asLong(long defaultValue) {
         try {
             return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            throw new NotConvertibleException();
+        }
+    }
+
+    @Override
+    public double asDouble(double defaultValue) {
+        try {
+            return Double.parseDouble(value);
         } catch (NumberFormatException e) {
             return defaultValue;
         }

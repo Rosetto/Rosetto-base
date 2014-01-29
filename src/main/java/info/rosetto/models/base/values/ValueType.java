@@ -3,13 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
+import info.rosetto.models.base.blocks.Macro;
 import info.rosetto.models.base.function.RosettoFunction;
-
 
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.
- * Rosetto中での値の引き渡しは全て文字列か関数呼び出しによって行われるため、
- * FuncCallとString、Void関数の返り値となるVoidしか定義されない.
  * @author tohhy
  */
 public enum ValueType {
@@ -32,7 +30,7 @@ public enum ValueType {
     /**
      * マクロを示す型.
      */
-    MACRO(String.class),
+    MACRO(Macro.class),
     /**
      * 文字列リテラルを示す型.
      */
@@ -42,9 +40,9 @@ public enum ValueType {
      */
     BOOLEAN(boolean.class),
     /**
-     * 整数を示す型.
+     * 整数を示す型.実体はlong.
      */
-    INTEGER(int.class),
+    INTEGER(long.class),
     /**
      * 浮動小数点数を示す型.
      */
@@ -61,7 +59,7 @@ public enum ValueType {
     private final Class<?> valueClass;
     
     /**
-     * 型に対応するJavaクラスを指定してValueTypeを初期化する.
+     * 型に対応するJavaクラスを指定してValueTypeを定義する.
      * @param valueClass 型に対応するJavaクラス
      */
     private ValueType(Class<?> valueClass) {

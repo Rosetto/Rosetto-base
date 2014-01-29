@@ -4,30 +4,31 @@
 package info.rosetto.exceptions;
 
 /**
- * RosettoValueの型変換に失敗した場合にスローされる.
+ * Rosetto中の例外の基底クラス.<br>
+ * Rosetto中の例外は基本的に全てこのクラスを継承し、非チェック例外にする.
  * @author tohhy
  */
-public class NotConvertibleException extends RosettoException {
-    private static final long serialVersionUID = 2301662577097233475L;
+public class RosettoException extends RuntimeException {
+    private static final long serialVersionUID = 4570296796102725165L;
 
-    public NotConvertibleException() {
+    public RosettoException() {
         super();
     }
 
-    public NotConvertibleException(String message, Throwable cause,
+    public RosettoException(String message, Throwable cause,
             boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public NotConvertibleException(String message, Throwable cause) {
+    public RosettoException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NotConvertibleException(String message) {
+    public RosettoException(String message) {
         super(message);
     }
 
-    public NotConvertibleException(Throwable cause) {
+    public RosettoException(Throwable cause) {
         super(cause);
     }
 }

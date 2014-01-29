@@ -1,13 +1,11 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.models.base.values;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.function.FunctionName;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
@@ -55,29 +53,12 @@ public class ActionCall implements RosettoValue {
     }
     
     /**
-     * 引数なしで指定関数を呼び出すActionCallを生成する.
-     * @param functionName 呼び出す関数名
-     */
-    public ActionCall(FunctionName functionName) {
-        this(functionName.getFullName(), RosettoArguments.EMPTY);
-    }
-    
-    /**
      * 指定引数で指定関数を呼び出すActionCallを生成する.
      * @param functionName 呼び出す関数名
      * @param args 適用する引数
      */
     public ActionCall(String functionName, String args) {
         this(functionName, new RosettoArguments(args));
-    }
-    
-    /**
-     * 指定引数で指定関数を呼び出すFunctionCallを生成する.
-     * @param functionName 呼び出す関数名
-     * @param args 適用する引数
-     */
-    public ActionCall(FunctionName functionName, String args) {
-        this(functionName.getFullName(), new RosettoArguments(args));
     }
     
     /**
@@ -102,15 +83,6 @@ public class ActionCall implements RosettoValue {
             throw new IllegalArgumentException("関数オブジェクトがnullです");
         this.functionName = functionName;
         this.args = (args != null) ? args : RosettoArguments.EMPTY;
-    }
-    
-    /**
-     * 指定引数で指定関数を呼び出すFunctionCallを生成する.
-     * @param functionName 呼び出す関数名
-     * @param args 適用する引数
-     */
-    public ActionCall(FunctionName functionName, RosettoArguments args) {
-        this(functionName.getFullName(), args);
     }
     
     @Override

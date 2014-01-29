@@ -4,30 +4,30 @@
 package info.rosetto.exceptions;
 
 /**
- * RosettoValueの型変換に失敗した場合にスローされる.
+ * sealされた変数に変更を加えようとするとスローされる.
  * @author tohhy
  */
-public class NotConvertibleException extends RosettoException {
-    private static final long serialVersionUID = 2301662577097233475L;
+public class VariableSealedException extends RosettoException {
+    private static final long serialVersionUID = -7175503997965568569L;
 
-    public NotConvertibleException() {
+    public VariableSealedException() {
         super();
     }
 
-    public NotConvertibleException(String message, Throwable cause,
+    public VariableSealedException(String message, Throwable cause,
             boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public NotConvertibleException(String message, Throwable cause) {
+    public VariableSealedException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NotConvertibleException(String message) {
+    public VariableSealedException(String message) {
         super(message);
     }
 
-    public NotConvertibleException(Throwable cause) {
+    public VariableSealedException(Throwable cause) {
         super(cause);
     }
 }

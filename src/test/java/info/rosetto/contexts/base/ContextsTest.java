@@ -24,7 +24,6 @@ public class ContextsTest {
         //Contextsを削除した状態からテスト.
         if(Contexts.isInitialized()) Contexts.dispose();
     }
-
     
     @Test
     public void InitializeAndDisposeTest() throws Exception {
@@ -59,7 +58,7 @@ public class ContextsTest {
     }
     
     @Test
-    public void getAndPutValueTest() throws Exception {
+    public void getAndSetValueTest() throws Exception {
         Contexts.initialize();
         
         //存在しない変数の値はnull
@@ -72,8 +71,12 @@ public class ContextsTest {
         //値を上書きする
         Contexts.set("foobar", true);
         assertThat(Contexts.get("foobar").asBool(), is(true));
+        Contexts.set("foobar", 100L);
+        assertThat(Contexts.get("foobar").asLong(), is(100L));
+        assertThat(Contexts.get("foobar").asInt(), is(100));
+        assertThat(Contexts.get("foobar").asDouble(), is(100.0));
         
-        //nullキーでputするとエラー
+        //nullキーでsetするとエラー
         try {
             Contexts.set(null, Values.create("hoge"));
             fail();
@@ -83,7 +86,7 @@ public class ContextsTest {
         //nullキーでgetするとnull
         assertThat(Contexts.get(null), is(nullValue()));
         
-        //空文字キーでputするとエラー
+        //空文字キーでsetするとエラー
         try {
             Contexts.set("", Values.create("hoge"));
             fail();
@@ -93,7 +96,7 @@ public class ContextsTest {
         //空文字のキーは常に存在しないのでnull
         assertThat(Contexts.get(""), is(nullValue()));
         
-        //nullvalueでputするとエラー
+        //nullvalueでsetするとエラー
         try {
             Contexts.set("fuga", (RosettoValue)null);
             fail();
@@ -178,16 +181,26 @@ public class ContextsTest {
         assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
         Contexts.set("namespacenum", 1);
         assertThat(Contexts.get("namespacenum").asInt(), is(1));
+        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(1));
         
         //変更できる
         Contexts.setCurrentNameSpace("foobar");
         assertThat(Contexts.getCurrentNameSpace().getName(), is("foobar"));
         Contexts.set("namespacenum", 2.0);
         assertThat(Contexts.get("namespacenum").asInt(), is(2));
+        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(2));
         
         //戻せる
         Contexts.setCurrentNameSpace("story");
         assertThat(Contexts.get("namespacenum").asInt(), is(1));
+        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(2));
+        
+        //getで存在しない名前空間を指定すると生成される
+        Contexts.getNameSpace("some.not.found.namespace");
+        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(3));
+        //既に存在するならそのまま
+        Contexts.getNameSpace("story");
+        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(3));
         
         //nullセットでエラー
         try {
@@ -234,6 +247,48 @@ public class ContextsTest {
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
+    }
+    
+    @Test
+    public void referTest() throws Exception {
+        Contexts.initialize();
+        assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
+        
+        NameSpace foo = Contexts.getNameSpace("foo");
+        foo.set("bar", Values.create(100L));
+        foo.set("baz", Values.create(false));
+        
+        assertThat(Contexts.get("foo.bar").asLong(), is(100L));
+        assertThat(Contexts.get("foo.baz").asBool(), is(false));
+        assertThat(Contexts.get("hoge.bar"), is(nullValue()));
+        assertThat(Contexts.get("hoge.baz"), is(nullValue()));
+        
+         Contexts.refer("foo", "hoge");
+         assertThat(Contexts.get("foo.bar").asLong(), is(100L));
+         assertThat(Contexts.get("foo.baz").asBool(), is(false));
+         assertThat(Contexts.get("hoge.bar").asLong(), is(100L));
+         assertThat(Contexts.get("hoge.baz").asBool(), is(false));
+    }
+    
+    
+    @Test
+    public void includeTest() throws Exception {
+        Contexts.initialize();
+        assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
+        
+        NameSpace foo = Contexts.getNameSpace("foo.bar.baz");
+        foo.set("hoge", Values.create(12.345));
+        foo.set("fuga", Values.create("piyo"));
+        assertThat(Contexts.get("foo.bar.baz.hoge").asDouble(), is(12.345));
+        assertThat(Contexts.get("foo.bar.baz.fuga").asString(), is("piyo"));
+        assertThat(Contexts.get("hoge"), is(nullValue()));
+        assertThat(Contexts.get("fuga"), is(nullValue()));
+        
+        Contexts.include("foo.bar.baz");
+        assertThat(Contexts.get("foo.bar.baz.hoge").asDouble(), is(12.345));
+        assertThat(Contexts.get("foo.bar.baz.fuga").asString(), is("piyo"));
+        assertThat(Contexts.get("hoge").asDouble(), is(12.345));
+        assertThat(Contexts.get("fuga").asString(), is("piyo"));
     }
 
 }

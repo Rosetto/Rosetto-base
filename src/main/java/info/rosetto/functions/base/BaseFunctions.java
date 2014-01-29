@@ -4,6 +4,7 @@
 package info.rosetto.functions.base;
 
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.contexts.base.NameSpace;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
@@ -58,12 +59,12 @@ public class BaseFunctions extends FunctionPackage {
      * [refer package=rosetto.text as=text]
      */
     public static final RosettoFunction refer = new RosettoFunction("refer",
-            "package", "as") {
+            "ns", "as") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
-            String packageName = args.get("package").asString("");
+            String packageName = args.get("ns").asString("");
             String refName = args.get("as").asString("");
             if(packageName.length() > 0 && refName.length() > 0) {
                 Contexts.refer(packageName, refName);
@@ -78,12 +79,12 @@ public class BaseFunctions extends FunctionPackage {
      * 例えば標準のtextパッケージをincludeした場合は、text.brやtext.pは単にbrやpで呼び出せるようになる.<br>
      */
     public static final RosettoFunction include = new RosettoFunction("include",
-            "package") {
+            "ns") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
-            String packageName = args.get("package").asString("");
+            String packageName = args.get("ns").asString("");
             if(packageName.length() > 0) {
                 Contexts.include(packageName);
             }
@@ -95,15 +96,40 @@ public class BaseFunctions extends FunctionPackage {
      * 
      */
     public static final RosettoFunction namespace = new RosettoFunction("namespace",
-            "package") {
+            "ns") {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
         protected RosettoValue run(ExpandedArguments args) {
-            String packageName = args.get("package").asString("");
+            String packageName = args.get("ns").asString("");
             if(packageName.length() > 0) {
                 Contexts.setCurrentNameSpace(packageName);
             }
+            return Values.VOID;
+        }
+    };
+    
+    /**
+     * 
+     */
+    public static final RosettoFunction set = new RosettoFunction("set",
+            "key", "value", "ns=") {
+        private static final long serialVersionUID = 4075950193187972686L;
+        
+        @Override
+        protected RosettoValue run(ExpandedArguments args) {
+            String key = args.get("key").asString("");
+            RosettoValue value = args.get("value");
+            String packageName = args.get("ns").asString("");
+            NameSpace ns = Contexts.getCurrentNameSpace();
+            if(packageName.length() > 0) {
+                ns = Contexts.getNameSpace(packageName);
+            }
+            
+            if(ns != null) {
+                Contexts.set(key, value);
+            }
+            
             return Values.VOID;
         }
     };

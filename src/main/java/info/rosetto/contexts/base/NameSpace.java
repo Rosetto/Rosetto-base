@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.RosettoLogger;
 
@@ -93,8 +94,7 @@ public class NameSpace implements Serializable {
         if(key.contains("."))
             throw new IllegalArgumentException("variable name can't contain dot char");
         if(isSealed(key)) {
-            RosettoLogger.warning("specified key " + key + " is sealed");
-            return;
+            throw new VariableSealedException("specified key " + key + " is sealed");
         }
         variables.put(key, value);
         VariableObservatory.getInstance().valueChanged(this.name, key, value);
@@ -106,7 +106,12 @@ public class NameSpace implements Serializable {
      */
     public void include(NameSpace space) {
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
-            set(e.getKey(), e.getValue());
+            try {
+                set(e.getKey(), e.getValue());
+            } catch(VariableSealedException ex) {
+                RosettoLogger.warning("variable" + e.getKey() + " include failed: "
+                        + "key already sealed");
+            }
             //シールされているキーをincludeした場合このパッケージでもseal
             if(space.isSealed(e.getKey())) seal(e.getKey());
         }

@@ -5,28 +5,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
-import java.util.logging.Level;
-
-import info.rosetto.utils.base.RosettoLogger;
+import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.utils.base.Values;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class NameSpaceTest {
     @Before
     public void setUp() {
-        RosettoLogger.setLevel(Level.OFF);
         //Contextsを初期化した状態からテスト.
         if(Contexts.isInitialized()) Contexts.dispose();
         Contexts.initialize();
-    }
-    
-    @After
-    public void tearDown() {
-        RosettoLogger.resetLevel();
     }
     
     @Test
@@ -66,16 +56,17 @@ public class NameSpaceTest {
     }
     
     @Test
-    public void getAndPutValueTest() throws Exception {
+    public void getAndSutValueTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
         sut.set("bar", Values.create("baz"));
         assertThat(sut.get("bar").asString(), is("baz"));
+        assertThat(sut.get("foo.bar").asString(), is("baz"));
         
         //存在しないキーはnull
         assertThat(sut.get("some not found key"), is(nullValue()));
         
-        //nullキーでputするとエラー
+        //nullキーでsutするとエラー
         try {
             sut.set(null, Values.create("foo"));
             fail();
@@ -163,8 +154,13 @@ public class NameSpaceTest {
         //barをsealする
         sut.seal("bar");
         
-        //barに代入しても何も起きない
-        sut.set("bar", Values.create(100));
+        //barに代入するとエラー
+        try {
+            sut.set("bar", Values.create(100));
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(VariableSealedException.class));
+        }
         assertThat(sut.get("bar").asString(), is("baz"));
         //hogeには代入できる
         sut.set("hoge", Values.create(1000));
