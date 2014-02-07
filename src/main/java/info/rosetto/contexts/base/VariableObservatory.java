@@ -19,14 +19,18 @@ public class VariableObservatory extends Observatory<VariableObserver>
      */
     private static final VariableObservatory instance = new VariableObservatory();
     
+    /**
+     * VariableObservatoryのシングルトンインスタンスを取得する.
+     * @return VariableObservatoryのシングルトンインスタンス
+     */
     public static VariableObservatory getInstance() {
         return instance;
     }
     
     /**
      * 特定の名前空間の変数変更のみを監視するオブザーバを登録する.
-     * @param nameSpace
-     * @param observer
+     * @param nameSpace 対象とする名前空間
+     * @param observer 追加するオブザーバ
      */
     public void addNameSpaceObserver(String nameSpace, VariableObserver observer) {
         NameSpaceObservatory.getInstance().addObserver(nameSpace, observer);

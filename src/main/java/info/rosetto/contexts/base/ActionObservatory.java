@@ -11,25 +11,26 @@ import info.rosetto.models.base.values.RosettoValue;
 import org.frows.observatories.Observatory;
 
 /**
- * 
+ * アクション実行を監視するObservertory.
  * @author tohhy
  */
 public class ActionObservatory extends Observatory<ActionObserver> 
 implements ActionObserver {
-    
     /**
-     * 
+     * シングルトンインスタンス.
      */
     private static final ActionObservatory instance = new ActionObservatory();
     
+    private ActionObservatory() {}
+    
     /**
-     * 
-     * @return
+     * ActionObservatoryのシングルトンインスタンスを取得する.
+     * @return ActionObservatoryのシングルトンインスタンス
      */
     public static ActionObservatory getInstance() {
         return instance;
     }
-
+    
     @Override
     public void functionExecuted(RosettoFunction func, RosettoArguments args,
             RosettoValue evaluatedValue) {
@@ -37,7 +38,7 @@ implements ActionObserver {
             o.functionExecuted(func, args, evaluatedValue);
         }
     }
-
+    
     @Override
     public void macroExecuted(Macro macro) {
         for(ActionObserver o : getObservers()) {

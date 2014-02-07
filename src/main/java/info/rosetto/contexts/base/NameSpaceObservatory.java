@@ -11,9 +11,8 @@ import java.util.Set;
 import org.frows.observatories.ObjectObservatory;
 
 /**
- * 
+ * 単一の名前空間を観測するObservatory.
  * @author tohhy
- *
  */
 public class NameSpaceObservatory extends ObjectObservatory<String, VariableObserver> 
     implements VariableObserver {
@@ -22,7 +21,12 @@ public class NameSpaceObservatory extends ObjectObservatory<String, VariableObse
      * シングルトンインスタンス.
      */
     private static final NameSpaceObservatory instance = new NameSpaceObservatory();
-
+    
+    /**
+     * コンストラクタは非公開.
+     */
+    private NameSpaceObservatory() {}
+    
     @Override
     public void valueChanged(String nameSpace, String variableName, RosettoValue newValue) {
         for(Entry<String, Set<VariableObserver>> os : getObservers().entrySet()) {
@@ -34,8 +38,8 @@ public class NameSpaceObservatory extends ObjectObservatory<String, VariableObse
     }
     
     /**
-     * 
-     * @return
+     * NameSpaceObservatoryのシングルトンインスタンスを取得する.
+     * @return NameSpaceObservatoryのシングルトンインスタンス
      */
     static NameSpaceObservatory getInstance() {
         return instance;

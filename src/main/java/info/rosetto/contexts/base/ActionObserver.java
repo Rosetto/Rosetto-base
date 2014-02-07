@@ -24,11 +24,10 @@ public interface ActionObserver {
             RosettoArguments args, 
             RosettoValue evaluatedValue);
     
-    
     /**
      * マクロが実行された場合に呼び出される.
      * @param macro 実行されたマクロ
      */
     public void macroExecuted(Macro macro);
-
+    
 }

@@ -80,6 +80,11 @@ public class WholeSpace implements Serializable {
         return nameSpaces.containsKey(name);
     }
     
+    /**
+     * 
+     * @param packageName
+     * @param referName
+     */
     public void refer(String packageName, String referName) {
         nameSpaces.put(referName, nameSpaces.get(packageName));
     }
@@ -112,13 +117,12 @@ public class WholeSpace implements Serializable {
     }
     
     /**
-     * 
-     * @param nameSpace
+     * 現在アクティブな名前空間を指定する.
+     * @param nameSpace アクティブにする名前空間
      */
     public void setCurrentNameSpace(NameSpace nameSpace) {
         currentNameSpace = nameSpace;
         BaseFunctions.getInstance().addTo(nameSpace);
     }
-    
     
 }

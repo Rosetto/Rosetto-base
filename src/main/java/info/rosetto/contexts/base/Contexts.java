@@ -30,7 +30,7 @@ public class Contexts {
      * このコンテキストでスクリプト解釈に使用されるパーサー.
      */
     private RosettoParser parser;
-
+    
     /**
      * 初期化が済んでいるかどうか.
      */
@@ -40,7 +40,6 @@ public class Contexts {
      * コンストラクタは非公開.
      */
     private Contexts() {}
-    
     
     /**
      * Contextsを初期化して使用可能な状態にする.<br>
@@ -72,11 +71,14 @@ public class Contexts {
         return instance.isInitialized;
     }
     
+    /**
+     * 初期化済みでない場合にIllegalStateExceptionを投げる.
+     */
     private static void initializedCheck() {
         if(!instance.isInitialized)
             throw new IllegalStateException("Contexts not initialized yet");
     }
-
+    
     /**
      * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.
      * @param key 値を取得する変数名
@@ -198,7 +200,7 @@ public class Contexts {
     public static void include(String nameSpace) {
         getCurrentNameSpace().include(getNameSpace(nameSpace));
     }
-
+    
     /**
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
@@ -248,7 +250,7 @@ public class Contexts {
     public static NameSpace getNameSpace(String name) {
         return instance.wholeSpace.getNameSpace(name);
     }
-
+    
     /**
      * 現在アクティブな名前空間を取得する.
      * @return 現在アクティブな名前空間

@@ -119,20 +119,36 @@ public class NameSpace implements Serializable {
         }
     }
     
+    /**
+     * 指定した変数がロックされているかどうかを取得する.
+     * @param key 対象とする変数名
+     * @return 変数がロックされているかどうか
+     */
     public boolean isSealed(String key) {
         return sealedKeys.contains(key);
     }
     
+    /**
+     * 指定した変数をロックし、編集不能にする.
+     * @param key ロックする変数名
+     */
     public void seal(String key) {
         sealedKeys.add(key);
     }
     
+    /**
+     * 指定した変数のロックを解除し、編集可能にする.
+     * @param key ロックを解除する変数名
+     */
     public void unSeal(String key) {
         sealedKeys.remove(key);
     }
-
+    
+    /**
+     * この名前空間の完全名を取得する.
+     * @return この名前空間の完全名
+     */
     public String getName() {
         return name;
     }
-    
 }
