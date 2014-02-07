@@ -5,6 +5,7 @@ package info.rosetto.contexts.base;
 
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class WholeSpace implements Serializable {
      * @return
      */
     public RosettoValue get(String nameSpace, String varName) {
-        if(!nameSpaces.containsKey(nameSpace)) return null;
+        if(!nameSpaces.containsKey(nameSpace)) return Values.NULL;
         return nameSpaces.get(nameSpace).get(varName);
     }
     

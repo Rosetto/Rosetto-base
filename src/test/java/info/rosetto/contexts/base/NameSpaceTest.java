@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import info.rosetto.exceptions.VariableSealedException;
+import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;
@@ -56,15 +57,14 @@ public class NameSpaceTest {
     }
     
     @Test
-    public void getAndSutValueTest() throws Exception {
+    public void getAndSetValueTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
         sut.set("bar", Values.create("baz"));
         assertThat(sut.get("bar").asString(), is("baz"));
-        assertThat(sut.get("foo.bar").asString(), is("baz"));
         
         //存在しないキーはnull
-        assertThat(sut.get("some not found key"), is(nullValue()));
+        assertThat(sut.get("some not found key"), is((RosettoValue)Values.NULL));
         
         //nullキーでsutするとエラー
         try {
@@ -74,7 +74,7 @@ public class NameSpaceTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         //nullキーでgetするとnull
-        assertThat(sut.get(null), is(nullValue()));
+        assertThat(sut.get(null), is((RosettoValue)Values.NULL));
         //空文字でputするとエラー
         try {
             sut.set("", Values.create("bar"));
@@ -83,7 +83,7 @@ public class NameSpaceTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         //空文字でgetするとnull
-        assertThat(sut.get(""), is(nullValue()));
+        assertThat(sut.get(""), is((RosettoValue)Values.NULL));
         
         //キーにdotを含むとエラー（パッケージ階層と区別するため）
         try {
@@ -122,11 +122,6 @@ public class NameSpaceTest {
         assertThat(sut.get("bar").asString(), is("baz"));
         assertThat(sut.get("hoge").asString(), is("fuga"));
         assertThat(sut.get("piyo").asInt(), is(100));
-        
-        //完全名での参照も可能
-        assertThat(sut.get("foo.bar").asString(), is("baz"));
-        assertThat(sut.get("foo.hoge").asString(), is("fuga"));
-        assertThat(sut.get("foo.piyo").asString(), is("100"));
         
         //sealされた変数はrequireしてもseal
         assertThat(sut.isSealed("hoge"), is(false));

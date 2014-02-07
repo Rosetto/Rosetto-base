@@ -31,7 +31,6 @@ public class NameSpaceObservatory extends ObjectObservatory<String, VariableObse
                     o.valueChanged(nameSpace, variableName, newValue);
                 }
         }
-        
     }
     
     /**

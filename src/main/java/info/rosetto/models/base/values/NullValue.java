@@ -6,7 +6,12 @@ package info.rosetto.models.base.values;
 import info.rosetto.exceptions.NotConvertibleException;
 
 /**
- * nullに相当する値を示す値.取得しようとした対象が存在しなかった場合等を示す.<br>
+ * 値ではあるが、評価できない値.<br>
+ * 値を返す必要があるが、返すべき値が存在しない場合等に返る.<br>
+ * <br>
+ * 実行時に動的に値を返すかどうか決まるような関数の返値にはNullを用いる.<br>
+ * 常に値を返さないと決まっている関数の場合はVoidを用いる方がよい.<br>
+ * <br>
  * どの値にも変換できない. getValueはnullになる.
  * @author tohhy
  */
@@ -22,6 +27,11 @@ public class NullValue implements RosettoValue {
      * コンストラクタは公開しない.
      */
     private NullValue() {}
+    
+    @Override
+    public String toString() {
+        return "NullValue";
+    }
     
     @Override
     public boolean equals(Object obj) {

@@ -6,6 +6,7 @@ package info.rosetto.contexts.base;
 import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.RosettoLogger;
+import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -63,18 +64,19 @@ public class NameSpace implements Serializable {
     
     /**
      * 指定名の変数を取得する.<br>
-     * 指定名の変数が存在しない場合、キーにnullを指定した場合はnullが返る.
+     * 指定名の変数が存在しない場合、キーにnullを指定した場合はNullValueが返る.
      * @param key 取得する変数名
      * @return 指定名の変数の値
      */
     public RosettoValue get(String key) {
-        if(key == null) return null;
-        if(variables.containsKey(key))
-            return variables.get(key);
-        if(!key.contains(".")) return null;
-        String nameSpace = key.substring(0, key.lastIndexOf("."));
+        if(key == null) return Values.NULL;
+        if(key.startsWith("!")) return Contexts.getAbsolute(key.substring(1));
+        
+        if(!key.contains(".")) {
+            return variables.containsKey(key) ? variables.get(key) : Values.NULL;
+        }
+        String nameSpace = this.name + "." + key.substring(0, key.lastIndexOf("."));
         String varName = key.substring(key.lastIndexOf(".") + 1);
-        if(nameSpace.equals(this.name)) return variables.get(varName);
         return Contexts.getWholeSpace().get(nameSpace, varName);
     }
     

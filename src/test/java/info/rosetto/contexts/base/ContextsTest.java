@@ -2,6 +2,7 @@ package info.rosetto.contexts.base;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
@@ -62,7 +63,7 @@ public class ContextsTest {
         Contexts.initialize();
         
         //存在しない変数の値はnull
-        assertThat(Contexts.get("foobar"), is(nullValue()));
+        assertThat(Contexts.get("foobar"), is((RosettoValue)Values.NULL));
         
         //値をセットする
         Contexts.set("foobar", Values.create("baz"));
@@ -84,7 +85,7 @@ public class ContextsTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         //nullキーでgetするとnull
-        assertThat(Contexts.get(null), is(nullValue()));
+        assertThat(Contexts.get(null), is((RosettoValue)Values.NULL));
         
         //空文字キーでsetするとエラー
         try {
@@ -94,7 +95,7 @@ public class ContextsTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         //空文字のキーは常に存在しないのでnull
-        assertThat(Contexts.get(""), is(nullValue()));
+        assertThat(Contexts.get(""), is((RosettoValue)Values.NULL));
         
         //nullvalueでsetするとエラー
         try {
@@ -117,9 +118,9 @@ public class ContextsTest {
             }
         });
         Contexts.set("org.example.bar", "not function value");
-        assertThat(Contexts.getAsFunction("org.example.foo").getName(), is("func"));
-        assertThat(Contexts.getAsFunction("org.example.bar"), is(nullValue()));
-        assertThat(Contexts.getAsFunction("org.example.not-found-value"), is(nullValue()));
+        assertThat(Contexts.getAsFunction("!org.example.foo").getName(), is("func"));
+        assertThat(Contexts.getAsFunction("!org.example.bar"), is(BaseFunctions.pass));
+        assertThat(Contexts.getAsFunction("!org.example.not-found-value"), is(BaseFunctions.pass));
     }
     
     @Test
@@ -128,17 +129,17 @@ public class ContextsTest {
         
         //名前空間指定付きで登録、この段階では絶対参照しかできない
         Contexts.set("org.example.foo", "bar");
-        assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
-        assertThat(Contexts.get("foo"), is(nullValue()));
+        assertThat(Contexts.get("!org.example.foo").asString(), is("bar"));
+        assertThat(Contexts.get("foo"), is((RosettoValue)Values.NULL));
         
         //名前空間がcurrentになれば見えるようになる
         Contexts.setCurrentNameSpace("org.example");
-        assertThat(Contexts.get("org.example.foo").asString(), is("bar"));
+        assertThat(Contexts.get("!org.example.foo").asString(), is("bar"));
         assertThat(Contexts.get("foo").asString(), is("bar"));
         
         //dotで終わる変数名は不可
         try {
-            Contexts.set("org.example.foobar.", "baz");
+            Contexts.set("!org.example.foobar.", "baz");
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -258,16 +259,16 @@ public class ContextsTest {
         foo.set("bar", Values.create(100L));
         foo.set("baz", Values.create(false));
         
-        assertThat(Contexts.get("foo.bar").asLong(), is(100L));
-        assertThat(Contexts.get("foo.baz").asBool(), is(false));
-        assertThat(Contexts.get("hoge.bar"), is(nullValue()));
-        assertThat(Contexts.get("hoge.baz"), is(nullValue()));
+        assertThat(Contexts.get("!foo.bar").asLong(), is(100L));
+        assertThat(Contexts.get("!foo.baz").asBool(), is(false));
+        assertThat(Contexts.get("!hoge.bar"), is((RosettoValue)Values.NULL));
+        assertThat(Contexts.get("!hoge.baz"), is((RosettoValue)Values.NULL));
         
          Contexts.refer("foo", "hoge");
-         assertThat(Contexts.get("foo.bar").asLong(), is(100L));
-         assertThat(Contexts.get("foo.baz").asBool(), is(false));
-         assertThat(Contexts.get("hoge.bar").asLong(), is(100L));
-         assertThat(Contexts.get("hoge.baz").asBool(), is(false));
+         assertThat(Contexts.get("!foo.bar").asLong(), is(100L));
+         assertThat(Contexts.get("!foo.baz").asBool(), is(false));
+         assertThat(Contexts.get("!hoge.bar").asLong(), is(100L));
+         assertThat(Contexts.get("!hoge.baz").asBool(), is(false));
     }
     
     
@@ -279,14 +280,14 @@ public class ContextsTest {
         NameSpace foo = Contexts.getNameSpace("foo.bar.baz");
         foo.set("hoge", Values.create(12.345));
         foo.set("fuga", Values.create("piyo"));
-        assertThat(Contexts.get("foo.bar.baz.hoge").asDouble(), is(12.345));
-        assertThat(Contexts.get("foo.bar.baz.fuga").asString(), is("piyo"));
-        assertThat(Contexts.get("hoge"), is(nullValue()));
-        assertThat(Contexts.get("fuga"), is(nullValue()));
+        assertThat(Contexts.get("!foo.bar.baz.hoge").asDouble(), is(12.345));
+        assertThat(Contexts.get("!foo.bar.baz.fuga").asString(), is("piyo"));
+        assertThat(Contexts.get("hoge"), is((RosettoValue)Values.NULL));
+        assertThat(Contexts.get("fuga"), is((RosettoValue)Values.NULL));
         
         Contexts.include("foo.bar.baz");
-        assertThat(Contexts.get("foo.bar.baz.hoge").asDouble(), is(12.345));
-        assertThat(Contexts.get("foo.bar.baz.fuga").asString(), is("piyo"));
+        assertThat(Contexts.get("!foo.bar.baz.hoge").asDouble(), is(12.345));
+        assertThat(Contexts.get("!foo.bar.baz.fuga").asString(), is("piyo"));
         assertThat(Contexts.get("hoge").asDouble(), is(12.345));
         assertThat(Contexts.get("fuga").asString(), is("piyo"));
     }

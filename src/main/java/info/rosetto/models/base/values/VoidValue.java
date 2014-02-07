@@ -6,8 +6,13 @@ package info.rosetto.models.base.values;
 import info.rosetto.exceptions.NotConvertibleException;
 
 /**
- * 返り値がなかったことを表す値.<br>
- * どの値にも変換できない. getValueはnullになる.
+ * 「なにもない」「値ではない」ことを表す仮想的な値.<br>
+ * 関数の返り値がなかった場合などに返される.<br>
+ * <br>
+ * Voidを返す関数は必ずVoidを返す.実行時に動的に返り値がVoidかどうか決まるような関数は定義してはいけない.
+ * そうした場合はNullを用いる.<br>
+ * <br>
+ * どの値にも変換できない. getValueはUnsupportedOperationExceptionをスローする.
  * @author tohhy
  */
 public class VoidValue implements RosettoValue {
@@ -23,6 +28,11 @@ public class VoidValue implements RosettoValue {
     private VoidValue() {}
     
     @Override
+    public String toString() {
+        return "VoidValue";
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         if(obj instanceof VoidValue) {
             return true;
@@ -36,12 +46,11 @@ public class VoidValue implements RosettoValue {
     }
     
     /**
-     * nullを返す.
-     * @return null
+     * UnsupportedOperationExceptionをスローする.
      */
     @Override
     public Object getValue() {
-        return null;
+        throw new UnsupportedOperationException("this value is void");
     }
     
     /**

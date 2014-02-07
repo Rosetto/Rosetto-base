@@ -3,9 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
+import info.rosetto.contexts.base.ActionObservatory;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.functions.base.BaseFunctions;
+import info.rosetto.models.base.blocks.Macro;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
@@ -30,7 +32,7 @@ public class ActionCall implements RosettoValue {
      * このアクションが実行する対象の変数名.
      */
     @Nonnull
-    private final String functionName;
+    private final String callName;
     
     /**
      * 実行時の引数リスト.
@@ -69,7 +71,7 @@ public class ActionCall implements RosettoValue {
     public ActionCall(String functionName, List<RosettoArgument> args) {
         if(functionName == null)
             throw new IllegalArgumentException("関数オブジェクトがnullです");
-        this.functionName = functionName;
+        this.callName = functionName;
         this.args = (args != null) ? new RosettoArguments(args) : RosettoArguments.EMPTY;
     }
     
@@ -81,7 +83,7 @@ public class ActionCall implements RosettoValue {
     public ActionCall(String functionName, RosettoArguments args) {
         if(functionName == null)
             throw new IllegalArgumentException("関数オブジェクトがnullです");
-        this.functionName = functionName;
+        this.callName = functionName;
         this.args = (args != null) ? args : RosettoArguments.EMPTY;
     }
     
@@ -94,8 +96,8 @@ public class ActionCall implements RosettoValue {
      * この関数呼び出しを表現する正規記法のタグに再度変換する.
      */
     public String toTag() {
-        if(args.getSize() == 0) return "[" + functionName + "]";
-        return "[" + functionName + " " + args.getStringArgs() + "]";
+        if(args.getSize() == 0) return "[" + callName + "]";
+        return "[" + callName + " " + args.getStringArgs() + "]";
     }
     
     /**
@@ -103,7 +105,7 @@ public class ActionCall implements RosettoValue {
      * @return このFunctionCallで呼び出される関数名
      */
     public String getFunctionName() {
-        return functionName;
+        return callName;
     }
     
     /**
@@ -123,11 +125,11 @@ public class ActionCall implements RosettoValue {
      * @return 評価した結果
      */
     public RosettoValue evaluate() {
-        String functionName = this.getFunctionName();
-        RosettoValue v = Contexts.get(functionName);
+        String varName = this.getFunctionName();
+        RosettoValue v = Contexts.get(varName);
         
-        if(v == null) {
-            RosettoLogger.warning("実行可能な対象 " + functionName + "がコンテキスト中に見つかりません");
+        if(v == Values.NULL) {
+            RosettoLogger.warning("実行可能な対象 " + varName + "がコンテキスト中に見つかりません");
             return Values.VOID;
         }
         
@@ -135,19 +137,20 @@ public class ActionCall implements RosettoValue {
             RosettoFunction f = (RosettoFunction) v;
             RosettoArguments args = this.getArgs();
             RosettoValue result = f.execute(args);
-//            Observatories.getAction().functionExecuted(this);
+            ActionObservatory.getInstance().functionExecuted(f, args, result);
             return result;
         }
         
-//        if(v.getType() == ValueType.MACRO) {
-//            MacroBlock macro = (MacroBlock) v;
+        if(v.getType() == ValueType.MACRO) {
+            Macro macro = (Macro) v;
+            //TODO
 //            Contexts.getProgress().getWhole()
 //            .pushScenario(macro.create(args));
 //            return true;
-//        }
+        }
         
         //それでもなければ何もしない
-        RosettoLogger.warning("変数 " + functionName + "は実行不可能です");
+        RosettoLogger.warning("変数 " + varName + "は実行不可能です");
         return Values.VOID;
     }
 
@@ -170,20 +173,10 @@ public class ActionCall implements RosettoValue {
     public String asString(String defaultValue) {
         return evaluate().asString(defaultValue);
     }
-
+    
     @Override
     public boolean asBool() throws NotConvertibleException {
         return evaluate().asBool();
-    }
-
-    @Override
-    public int asInt() throws NotConvertibleException {
-        return evaluate().asInt();
-    }
-    
-    @Override
-    public double asDouble() throws NotConvertibleException {
-        return evaluate().asDouble();
     }
     
     @Override
@@ -192,22 +185,32 @@ public class ActionCall implements RosettoValue {
     }
     
     @Override
+    public int asInt() throws NotConvertibleException {
+        return evaluate().asInt();
+    }
+    
+    @Override
     public int asInt(int defaultValue) {
         return evaluate().asInt(defaultValue);
     }
     
     @Override
-    public double asDouble(double defaultValue) {
-        return evaluate().asDouble(defaultValue);
-    }
-
-    @Override
     public long asLong() throws NotConvertibleException {
         return evaluate().asLong();
     }
-
+    
     @Override
     public long asLong(long defaultValue) {
         return evaluate().asLong(defaultValue);
+    }
+    
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        return evaluate().asDouble();
+    }
+    
+    @Override
+    public double asDouble(double defaultValue) {
+        return evaluate().asDouble(defaultValue);
     }
 }

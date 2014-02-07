@@ -41,15 +41,15 @@ public class BaseFunctionsTest {
             }
         };
         FunctionPackage pak = new FunctionPackage(f);
-        assertThat(Contexts.get("foo.test"), is(nullValue()));
+        assertThat(Contexts.get("foo.test"), is((RosettoValue)Values.NULL));
         
         pak.addTo(Contexts.getNameSpace("foo"));
-        assertThat(Contexts.get("foo.test"), is((RosettoValue)f));
-        assertThat(Contexts.get("bar.test"), is(nullValue()));
+        assertThat(Contexts.get("!foo.test"), is((RosettoValue)f));
+        assertThat(Contexts.get("bar.test"), is((RosettoValue)Values.NULL));
         
         assertThat(BaseFunctions.refer.execute("ns=foo as=bar"), is((RosettoValue)Values.VOID));
-        assertThat(Contexts.get("foo.test"), is((RosettoValue)f));
-        assertThat(Contexts.get("bar.test"), is((RosettoValue)f));
+        assertThat(Contexts.get("!foo.test"), is((RosettoValue)f));
+        assertThat(Contexts.get("!bar.test"), is((RosettoValue)f));
     }
     
     @Test
@@ -65,7 +65,7 @@ public class BaseFunctionsTest {
         FunctionPackage pak = new FunctionPackage(f);
         pak.addTo(Contexts.getNameSpace("foo"));
         
-        assertThat(Contexts.get("test"), is(nullValue()));
+        assertThat(Contexts.get("test"), is((RosettoValue)Values.NULL));
         
         assertThat(BaseFunctions.include.execute("ns=foo"), is((RosettoValue)Values.VOID));
         
@@ -77,15 +77,15 @@ public class BaseFunctionsTest {
     public void setTest() throws Exception {
         assertThat(BaseFunctions.set.execute("foo bar"), is((RosettoValue)Values.VOID));
         assertThat(Contexts.get("foo").asString(), is("bar"));
-        assertThat(Contexts.get("story.foo").asString(), is("bar"));
+        assertThat(Contexts.get("!story.foo").asString(), is("bar"));
         
         assertThat(BaseFunctions.set.execute("bar.baz 100"), is((RosettoValue)Values.VOID));
         assertThat(Contexts.get("bar.baz").asInt(), is(100));
-        assertThat(Contexts.get("story.bar.baz").asInt(), is(100));
+        assertThat(Contexts.get("!story.bar.baz").asInt(), is(100));
         
         assertThat(BaseFunctions.set.execute("hoge 1.234 ns=fuga"), is((RosettoValue)Values.VOID));
-        assertThat(Contexts.get("fuga.hoge").asDouble(), is(1.234));
-        assertThat(Contexts.get("story.fuga.hoge"), is(nullValue()));
+        assertThat(Contexts.get("!fuga.hoge").asDouble(), is(1.234));
+        assertThat(Contexts.get("!story.fuga.hoge"), is((RosettoValue)Values.NULL));
         
     }
 

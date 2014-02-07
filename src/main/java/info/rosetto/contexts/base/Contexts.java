@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
@@ -83,7 +84,18 @@ public class Contexts {
      */
     public static RosettoValue get(String key) {
         initializedCheck();
-        if(key == null) return null;
+        if(key == null) return Values.NULL;
+        return instance.wholeSpace.getCurrentNameSpace().get(key);
+    }
+    
+    /**
+     * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.
+     * @param key 値を取得する変数名
+     * @return 取得した値、変数が存在しなければnull
+     */
+    public static RosettoValue getAbsolute(String key) {
+        initializedCheck();
+        if(key == null) return Values.NULL;
         int lastDotIndex = key.lastIndexOf(".");
         if(lastDotIndex > 0) {
             return instance.wholeSpace.getNameSpace(key.substring(0, lastDotIndex))
@@ -95,14 +107,14 @@ public class Contexts {
     
     /**
      * 現在アクティブな名前空間から指定した変数に保存されている値を探し、それが関数であれば取得する.<br>
-     * 値が関数でない場合、存在しない場合はnullが返る.
+     * 値が関数でない場合、存在しない場合はBaseFunctions.passが返る.
      * @param key 値を取得する変数名
-     * @return 取得した値が関数でないか、変数が存在しなければnull
+     * @return 取得した関数. 値が関数でないか、変数が存在しなければBaseFunctions.pass
      * TODO マクロへの対応
      */
     public static RosettoFunction getAsFunction(String key) {
         RosettoValue v = get(key);
-        return (v instanceof RosettoFunction) ? (RosettoFunction)v : null;
+        return (v instanceof RosettoFunction) ? (RosettoFunction)v : BaseFunctions.pass;
     }
     
     /**

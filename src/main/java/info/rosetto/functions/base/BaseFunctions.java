@@ -93,7 +93,7 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 
+     * 現在アクティブな名前空間を指定する.
      */
     public static final RosettoFunction namespace = new RosettoFunction("namespace",
             "ns") {
@@ -110,7 +110,7 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 
+     * 現在の名前空間の指定した変数に指定した値をセットする.
      */
     public static final RosettoFunction set = new RosettoFunction("set",
             "key", "value", "ns=") {
@@ -127,7 +127,11 @@ public class BaseFunctions extends FunctionPackage {
             }
             
             if(ns != null) {
-                Contexts.set(key, value);
+                if(key.contains(".")) {
+                    Contexts.set(ns.getName() + "." + key, value);
+                } else {
+                    ns.set(key, value);
+                }
             }
             
             return Values.VOID;
