@@ -50,8 +50,6 @@ public class TextUtils {
         return escapeForRegex(start) + "(.*?)" + escapeForRegex(end);
     }
     
-    
-    
     /**
      * 指定したcharが指定したString中にいくつ含まれているかを返す.
      */
