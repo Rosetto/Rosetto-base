@@ -1,7 +1,10 @@
-package info.rosetto.contexts.base;
+package info.rosetto.contexts.observers;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import info.rosetto.contexts.base.Contexts;
+import info.rosetto.contexts.observers.VariableObservatory;
+import info.rosetto.contexts.observers.VariableObserver;
 import info.rosetto.models.base.values.RosettoValue;
 
 import org.junit.Before;

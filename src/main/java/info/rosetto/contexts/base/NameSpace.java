@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.contexts.observers.VariableObservatory;
 import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.RosettoLogger;

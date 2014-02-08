@@ -12,7 +12,7 @@ import info.rosetto.utils.base.Values;
 /**
  * Rosettoの実行中の状態全体を保持するコンテキスト.<br>
  * RosettoPlayerが再生にあたって必要とする情報は全てこのクラスのシングルトンインスタンスから取得される.<br>
- * このクラスのinitializeメソッドが呼び出されることでRosettoが動作を開始する.
+ * このクラスのinitializeメソッドが呼び出されることでRosettoが動作可能な状態になる.
  * @author tohhy
  */
 public class Contexts {
@@ -22,14 +22,14 @@ public class Contexts {
     private static final Contexts instance = new Contexts();
     
     /**
-     * 全ての名前空間.
+     * 全ての名前空間を保持するインスタンス.
      */
     private WholeSpace wholeSpace;
     
     /**
-     * このコンテキストでスクリプト解釈に使用されるパーサー.
+     * Rosettoのシステム状態を保持するインスタンス.
      */
-    private RosettoParser parser;
+    private SystemContext system;
     
     /**
      * 初期化が済んでいるかどうか.
@@ -50,7 +50,7 @@ public class Contexts {
             throw new IllegalStateException("Contexts already initialized");
         
         instance.wholeSpace = new WholeSpace();
-        
+        instance.system = new SystemContext();
         instance.isInitialized = true;
     }
     
@@ -59,7 +59,7 @@ public class Contexts {
      */
     public static void dispose() {
         instance.wholeSpace = null;
-        instance.parser = null;
+        instance.system = null;
         instance.isInitialized = false;
     }
     
@@ -225,27 +225,27 @@ public class Contexts {
     
     /**
      * 現在のコンテキストで利用するパーサーを取得する.
-     * @return
+     * @return 現在のコンテキストで利用するパーサー
      */
     public static RosettoParser getParser() {
         initializedCheck();
-        return instance.parser;
+        return instance.system.getParser();
     }
     
     /**
      * 現在のコンテキストで利用するパーサーを変更する.
-     * @param parser
+     * @param parser 現在のコンテキストで利用するパーサー
      */
     public static void setParser(RosettoParser parser) {
         initializedCheck();
-        instance.parser = parser;
+        instance.system.setParser(parser);
     }
     
     /**
      * 指定名の名前空間を取得する.<br>
      * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
-     * @param name
-     * @return
+     * @param name 取得する名前空間
+     * @return 取得した名前空間
      */
     public static NameSpace getNameSpace(String name) {
         return instance.wholeSpace.getNameSpace(name);

@@ -31,16 +31,17 @@ public class WholeSpace implements Serializable {
     private NameSpace currentNameSpace;
     
     /**
-     * 
+     * パッケージ内でのみ生成.
      */
-    public WholeSpace() {
+    WholeSpace() {
         setCurrentNameSpace(createNameSpace("story"));
     }
     
     /**
-     * 名前空間付きの絶対指定で値を取得する.
-     * @param key
-     * @return
+     * 指定した名前空間の指定したキーに存在する値を取得する.
+     * @param nameSpace 指定する名前空間
+     * @param key 取得する変数名
+     * @return 取得した値
      */
     public RosettoValue get(String nameSpace, String varName) {
         if(!nameSpaces.containsKey(nameSpace)) return Values.NULL;
@@ -51,8 +52,8 @@ public class WholeSpace implements Serializable {
      * 指定名の名前空間を取得する.<br>
      * 名前空間のインスタンスが存在しない場合は新しく空の名前空間を生成し、
      * rosetto.baseの関数群をUseした状態にして取得する.
-     * @param name 
-     * @return
+     * @param name 取得する名前空間の完全名
+     * @return 取得した、あるいは生成した名前空間
      */
     public NameSpace getNameSpace(String name) {
         if(!nameSpaces.containsKey(name))
