@@ -12,8 +12,7 @@ import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
 /**
- * Rosettoの基本的な関数.<br>
- * 名前空間の生成時に自動的にuseされる.
+ * Rosettoの基本的な関数.
  * @author tohhy
  */
 public class BaseFunctions extends FunctionPackage {
@@ -56,7 +55,7 @@ public class BaseFunctions extends FunctionPackage {
     /**
      * 指定したパッケージに含まれる全変数を、指定名のパッケージとして参照できるようにする.<br>
      * 例えば以下のようにした場合は、rosetto.text.brをtext.brのようにして呼び出せるようになる.<br>
-     * [refer package=rosetto.text as=text]
+     * [refer ns=rosetto.text as=text]
      */
     public static final RosettoFunction refer = new RosettoFunction("refer",
             "ns", "as") {

@@ -34,7 +34,8 @@ public class WholeSpace implements Serializable {
      * パッケージ内でのみ生成.
      */
     WholeSpace() {
-        setCurrentNameSpace(createNameSpace("story"));
+        putNameSpace(new StorySpace());
+        setCurrentNameSpace("story");
     }
     
     /**
@@ -62,29 +63,37 @@ public class WholeSpace implements Serializable {
     }
     
     /**
-     * 
-     * @param name
-     * @return
+     * 指定名の名前空間を生成する.
+     * @param name 生成する名前空間の完全名
+     * @return 生成した名前空間
      */
     public NameSpace createNameSpace(String name) {
         NameSpace space = new NameSpace(name);
-        nameSpaces.put(name, space);
+        putNameSpace(space);
         return space;
     }
     
     /**
-     * 
-     * @param name
-     * @return
+     * WholeSpaceに指定した名前空間を追加する.
+     * @param ns 追加する名前空間
+     */
+    private void putNameSpace(NameSpace ns) {
+        nameSpaces.put(ns.getName(), ns);
+    }
+    
+    /**
+     * 指定名のパッケージが含まれているかどうかを返す.
+     * @param name 対象とするパッケージ
+     * @return 指定名のパッケージが含まれているかどうか
      */
     public boolean containsNameSpace(String name) {
         return nameSpaces.containsKey(name);
     }
     
     /**
-     * 
-     * @param packageName
-     * @param referName
+     * 指定したパッケージを指定したエイリアスで参照できるようにする.
+     * @param packageName 参照可能にするパッケージ
+     * @param referName 参照名
      */
     public void refer(String packageName, String referName) {
         nameSpaces.put(referName, nameSpaces.get(packageName));
