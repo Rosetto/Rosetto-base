@@ -48,16 +48,6 @@ public class FunctionPackage {
     }
     
     /**
-     * このパッケージが保持する関数を全て指定した名前空間に追加する.
-     * @param space
-     */
-    public void addTo(NameSpace space) {
-        for(RosettoFunction f : functions) {
-            space.set(f.getName(), f);
-        }
-    }
-    
-    /**
      * このパッケージが保有する関数のリストを返す.
      * @return
      */

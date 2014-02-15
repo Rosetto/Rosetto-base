@@ -118,9 +118,9 @@ public class ContextsTest {
             }
         });
         Contexts.set("org.example.bar", "not function value");
-        assertThat(Contexts.getAsFunction("!org.example.foo").getName(), is("func"));
-        assertThat(Contexts.getAsFunction("!org.example.bar"), is(BaseFunctions.pass));
-        assertThat(Contexts.getAsFunction("!org.example.not-found-value"), is(BaseFunctions.pass));
+        assertThat(Contexts.getFunction("!org.example.foo").getName(), is("func"));
+        assertThat(Contexts.getFunction("!org.example.bar"), is(BaseFunctions.pass));
+        assertThat(Contexts.getFunction("!org.example.not-found-value"), is(BaseFunctions.pass));
     }
     
     @Test
@@ -230,7 +230,7 @@ public class ContextsTest {
         assertThat(Contexts.getCurrentNameSpace().getName(), is("story"));
         
         //変更できる
-        WholeSpace ws = new WholeSpace();
+        VariableContext ws = new VariableContext();
         ws.createNameSpace("foo");
         ws.createNameSpace("bar");
         ws.setCurrentNameSpace("foo");

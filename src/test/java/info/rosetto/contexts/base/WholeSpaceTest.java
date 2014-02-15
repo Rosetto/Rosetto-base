@@ -11,7 +11,7 @@ public class WholeSpaceTest {
 
     @Test
     public void getAndSetCurrentNameSpaceTest() throws Exception {
-        WholeSpace sut = new WholeSpace();
+        VariableContext sut = new VariableContext();
         
         //デフォルトの名前空間は'story'
         assertThat(sut.getCurrentNameSpace().getName(), is("story"));
@@ -51,7 +51,7 @@ public class WholeSpaceTest {
     
     @Test
     public void getNameSpaceTest() throws Exception {
-        WholeSpace sut = new WholeSpace();
+        VariableContext sut = new VariableContext();
         //初期状態ではstoryのみ
         assertThat(sut.getCreatedNameSpaceCount(), is(1));
         //storyをgetしても変化なし
@@ -78,12 +78,5 @@ public class WholeSpaceTest {
         assertThat(sut.getCreatedNameSpaceCount(), is(2));
     }
     
-    @Test
-    public void baseFunctionTest() throws Exception {
-        WholeSpace sut = new WholeSpace();
-        assertThat(
-                (RosettoFunction)sut.getCurrentNameSpace().get("pass"), 
-                is(BaseFunctions.pass));
-    }
 
 }

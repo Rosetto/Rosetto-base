@@ -4,6 +4,7 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.functions.base.BaseFunctions;
+import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
@@ -22,9 +23,14 @@ public class Contexts {
     private static final Contexts instance = new Contexts();
     
     /**
-     * 全ての名前空間を保持するインスタンス.
+     * 全てのグローバル変数を保持するインスタンス.
      */
-    private WholeSpace wholeSpace;
+    private VariableContext globalVars;
+    
+    /**
+     * すべての関数を保持するインスタンス.
+     */
+    private FunctionContext functions;
     
     /**
      * Rosettoのシステム状態を保持するインスタンス.
@@ -49,7 +55,8 @@ public class Contexts {
         if(instance.isInitialized)
             throw new IllegalStateException("Contexts already initialized");
         
-        instance.wholeSpace = new WholeSpace();
+        instance.globalVars = new VariableContext();
+        instance.functions = new FunctionContext();
         instance.system = new SystemContext();
         instance.isInitialized = true;
     }
@@ -58,7 +65,8 @@ public class Contexts {
      * Contextsを破棄して使用不可能な状態にする.
      */
     public static void dispose() {
-        instance.wholeSpace = null;
+        instance.globalVars = null;
+        instance.functions = null;
         instance.system = null;
         instance.isInitialized = false;
     }
@@ -80,14 +88,16 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.
+     * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.<br>
+     * 通常、現在アクティブな名前空間からの相対参照になる.絶対参照を行う場合はkeyの頭に!を付加する.
      * @param key 値を取得する変数名
      * @return 取得した値、変数が存在しなければnull
      */
     public static RosettoValue get(String key) {
         initializedCheck();
         if(key == null) return Values.NULL;
-        return instance.wholeSpace.getCurrentNameSpace().get(key);
+        if(key.startsWith("!")) return getAbsolute(key.substring(1));
+        return instance.globalVars.getCurrentNameSpace().get(key);
     }
     
     /**
@@ -100,23 +110,11 @@ public class Contexts {
         if(key == null) return Values.NULL;
         int lastDotIndex = key.lastIndexOf(".");
         if(lastDotIndex > 0) {
-            return instance.wholeSpace.getNameSpace(key.substring(0, lastDotIndex))
+            return instance.globalVars.getNameSpace(key.substring(0, lastDotIndex))
                     .get(key.substring(lastDotIndex+1));
         } else {
-            return instance.wholeSpace.getCurrentNameSpace().get(key);
+            return instance.globalVars.getCurrentNameSpace().get(key);
         }
-    }
-    
-    /**
-     * 現在アクティブな名前空間から指定した変数に保存されている値を探し、それが関数であれば取得する.<br>
-     * 値が関数でない場合、存在しない場合はBaseFunctions.passが返る.
-     * @param key 値を取得する変数名
-     * @return 取得した関数. 値が関数でないか、変数が存在しなければBaseFunctions.pass
-     * TODO マクロへの対応
-     */
-    public static RosettoFunction getAsFunction(String key) {
-        RosettoValue v = get(key);
-        return (v instanceof RosettoFunction) ? (RosettoFunction)v : BaseFunctions.pass;
     }
     
     /**
@@ -133,10 +131,10 @@ public class Contexts {
         int lastDotIndex = key.lastIndexOf(".");
         if(lastDotIndex > 0) {
             String packageName = key.substring(0, lastDotIndex);
-            NameSpace ns = instance.wholeSpace.getNameSpace(packageName);
+            NameSpace ns = instance.globalVars.getNameSpace(packageName);
             ns.set(key.substring(lastDotIndex+1), value);
         } else {
-            instance.wholeSpace.getCurrentNameSpace().set(key, value);
+            instance.globalVars.getCurrentNameSpace().set(key, value);
         }
     }
     
@@ -186,11 +184,39 @@ public class Contexts {
     }
     
     /**
+     * 関数コンテキストから指定名の関数を取得する.
+     * 値が関数でない場合、存在しない場合はBaseFunctions.passが返る.
+     * @param key 値を取得する変数名
+     * @return 取得した関数. 値が関数でないか、変数が存在しなければBaseFunctions.pass
+     * TODO マクロへの対応
+     */
+    public static RosettoFunction getFunction(String key) {
+        RosettoValue v = instance.functions.get(key);
+        return (v instanceof RosettoFunction) ? (RosettoFunction)v : BaseFunctions.pass;
+    }
+    
+    public static void defineFunction(RosettoFunction func) {
+        initializedCheck();
+        instance.functions.define(func);
+    }
+
+    public static void importPackage(FunctionPackage p, String packageName) {
+        initializedCheck();
+        instance.functions.importPackage(p, packageName);
+    }
+    
+    public static void usePackage(String packageName) {
+        initializedCheck();
+        instance.functions.usePackage(packageName);
+    }
+    
+
+    /**
      * 指定名の名前空間の全変数を現在の名前空間から参照可能にする.
      * @param nameSpace 現在の名前空間から参照可能にする名前空間
      */
     public static void refer(String nameSpace, String referName) {
-        instance.wholeSpace.refer(nameSpace, referName);
+        instance.globalVars.refer(nameSpace, referName);
     }
     
     /**
@@ -205,9 +231,9 @@ public class Contexts {
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
      */
-    public static WholeSpace getWholeSpace() {
+    public static VariableContext getWholeSpace() {
         initializedCheck();
-        return instance.wholeSpace;
+        return instance.globalVars;
     }
     
     /**
@@ -216,11 +242,11 @@ public class Contexts {
      * シリアライズしたWholeSpaceをこのメソッドでセットするとその時点のゲーム状態をロードできる.
      * @param wholeSpace 新しく指定する名前空間全体のインスタンス
      */
-    public static void setWholeSpace(WholeSpace wholeSpace) {
+    public static void setWholeSpace(VariableContext wholeSpace) {
         initializedCheck();
         if(wholeSpace == null)
             throw new IllegalArgumentException("wholespace must not be null");
-        instance.wholeSpace = wholeSpace;
+        instance.globalVars = wholeSpace;
     }
     
     /**
@@ -248,7 +274,7 @@ public class Contexts {
      * @return 取得した名前空間
      */
     public static NameSpace getNameSpace(String name) {
-        return instance.wholeSpace.getNameSpace(name);
+        return instance.globalVars.getNameSpace(name);
     }
     
     /**
@@ -257,7 +283,7 @@ public class Contexts {
      */
     public static NameSpace getCurrentNameSpace() {
         initializedCheck();
-        return instance.wholeSpace.getCurrentNameSpace();
+        return instance.globalVars.getCurrentNameSpace();
     }
     
     /**
@@ -266,6 +292,6 @@ public class Contexts {
      */
     public static void setCurrentNameSpace(String name) {
         initializedCheck();
-        instance.wholeSpace.setCurrentNameSpace(name);
+        instance.globalVars.setCurrentNameSpace(name);
     }
 }

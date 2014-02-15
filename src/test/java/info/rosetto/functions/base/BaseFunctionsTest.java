@@ -19,7 +19,7 @@ public class BaseFunctionsTest {
         Contexts.dispose();
         Contexts.initialize();
     }
-
+    
     @Test
     public void getInstanceTest() throws Exception {
          assertThat(BaseFunctions.getInstance(), is(notNullValue()));
@@ -28,48 +28,6 @@ public class BaseFunctionsTest {
     @Test
     public void passTest() throws Exception {
         assertThat(BaseFunctions.pass.execute(), is((RosettoValue)Values.VOID));
-    }
-    
-    @Test
-    public void referTest() throws Exception {
-        RosettoFunction f = new RosettoFunction("test") {
-            private static final long serialVersionUID = 1005332135613281500L;
-
-            @Override
-            protected RosettoValue run(ExpandedArguments args) {
-                return null;
-            }
-        };
-        FunctionPackage pak = new FunctionPackage(f);
-        assertThat(Contexts.get("foo.test"), is((RosettoValue)Values.NULL));
-        
-        pak.addTo(Contexts.getNameSpace("foo"));
-        assertThat(Contexts.get("!foo.test"), is((RosettoValue)f));
-        assertThat(Contexts.get("bar.test"), is((RosettoValue)Values.NULL));
-        
-        assertThat(BaseFunctions.refer.execute("ns=foo as=bar"), is((RosettoValue)Values.VOID));
-        assertThat(Contexts.get("!foo.test"), is((RosettoValue)f));
-        assertThat(Contexts.get("!bar.test"), is((RosettoValue)f));
-    }
-    
-    @Test
-    public void includeTest() throws Exception {
-        RosettoFunction f = new RosettoFunction("test") {
-            private static final long serialVersionUID = 1005332135613281500L;
-
-            @Override
-            protected RosettoValue run(ExpandedArguments args) {
-                return null;
-            }
-        };
-        FunctionPackage pak = new FunctionPackage(f);
-        pak.addTo(Contexts.getNameSpace("foo"));
-        
-        assertThat(Contexts.get("test"), is((RosettoValue)Values.NULL));
-        
-        assertThat(BaseFunctions.include.execute("ns=foo"), is((RosettoValue)Values.VOID));
-        
-        assertThat(Contexts.get("test"), is((RosettoValue)f));
     }
     
     

@@ -7,8 +7,7 @@ import info.rosetto.functions.base.BaseFunctions;
 
 /**
  * Rosetto起動時のデフォルトの名前空間.<br>
- * 一般的なノベルゲームはすべてこの名前空間をcurrentとして作成されることを想定.<br>
- * あらかじめbase等の関数を保持する.
+ * 一般的なノベルゲームはすべてこの名前空間をcurrentとして作成されることを想定.
  * @author tohhy
  */
 public class StorySpace extends NameSpace {
@@ -20,7 +19,6 @@ public class StorySpace extends NameSpace {
      */
     StorySpace() {
         super("story");
-        BaseFunctions.getInstance().addTo(this);
     }
 
 }

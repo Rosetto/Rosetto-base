@@ -17,7 +17,7 @@ import java.util.Map;
  * WholeSpaceをシリアライズすることでゲーム上の状態が完全に保存できるように実装する.
  * @author tohhy
  */
-public class WholeSpace implements Serializable {
+public class VariableContext implements Serializable {
     private static final long serialVersionUID = -8911679659186174490L;
 
     /**
@@ -33,7 +33,7 @@ public class WholeSpace implements Serializable {
     /**
      * パッケージ内でのみ生成.
      */
-    WholeSpace() {
+    VariableContext() {
         putNameSpace(new StorySpace());
         setCurrentNameSpace("story");
     }
@@ -132,7 +132,6 @@ public class WholeSpace implements Serializable {
      */
     public void setCurrentNameSpace(NameSpace nameSpace) {
         currentNameSpace = nameSpace;
-        BaseFunctions.getInstance().addTo(nameSpace);
     }
     
 }
