@@ -4,6 +4,7 @@
  * それ以外のシステムの状態を表すSystemContextからなり、
  * それらにはContextsクラスをファサードとしてアクセスするようになっている.<br>
  * セーブデータに保持するようなゲーム情報はVariableContextに、
+ * 実行しうる値の定義はActionContextに、
  * システム上で一時的に用いるような情報はSystemContextにすべてまとめて保持できるように設計する.
  */
 package info.rosetto.contexts.base;

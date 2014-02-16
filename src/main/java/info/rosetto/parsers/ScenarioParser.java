@@ -9,7 +9,7 @@ package info.rosetto.parsers;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.ParserModel;
+import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
@@ -30,7 +30,7 @@ import org.frows.lilex.token.Token;
  * ScenarioParser.parse()から設定ファイルに合わせたサブクラスで初期化される.
  * @author tohhy
  */
-public class ScenarioParser extends Tokenizer implements ParserModel {
+public class ScenarioParser extends Tokenizer implements RosettoParser {
     /**
      * 正規記法のタグ全体にマッチする正規表現
      */

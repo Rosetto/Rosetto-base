@@ -4,7 +4,7 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.engine.EngineModel;
-import info.rosetto.models.base.parser.ParserModel;
+import info.rosetto.models.base.parser.RosettoParser;
 
 /**
  * Rosettoのシステム状態を示すインスタンス.
@@ -15,10 +15,11 @@ public class SystemContext {
     /**
      * このコンテキストでスクリプト解釈に使用されるパーサー.
      */
-    private ParserModel parser;
+    private RosettoParser parser;
     
     /**
-     * このコンテキストでのエンジンの設定等.
+     * このコンテキストでのエンジンの設定等を格納したモデル.<br>
+     * ファイルのロード方式等、プレイヤーの動作に関わる環境設定等を保持する.
      */
     private EngineModel engine;
     
@@ -32,7 +33,7 @@ public class SystemContext {
      * システムが現在利用しているパーサーのインスタンスを取得する.
      * @return システムが現在利用しているパーサーのインスタンス
      */
-    public ParserModel getParser() {
+    public RosettoParser getParser() {
         return parser;
     }
     
@@ -40,24 +41,24 @@ public class SystemContext {
      * システムが利用するパーサーのインスタンスを指定する.
      * @param parser システムが利用するパーサーのインスタンス
      */
-    public void setParser(ParserModel parser) {
+    public void setParser(RosettoParser parser) {
         this.parser = parser;
     }
-
+    
     /**
-     * 
-     * @return
+     * システムが利用するエンジンのモデルを取得する.
+     * @return システムが利用するエンジンのモデル
      */
     public EngineModel getEngine() {
         return engine;
     }
-
+    
     /**
-     * 
-     * @param engine
+     * システムが利用するエンジンのモデルを指定する.
+     * @param engine システムが利用するエンジンのモデル
      */
     public void setEngine(EngineModel engine) {
         this.engine = engine;
     }
-
+    
 }

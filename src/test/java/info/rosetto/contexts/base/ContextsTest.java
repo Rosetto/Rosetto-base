@@ -8,7 +8,7 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.ParserModel;
+import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoValue;
@@ -138,7 +138,7 @@ public class ContextsTest {
     public void getAndSetParserTest() throws Exception {
         Contexts.initialize();
         
-        Contexts.setParser(new ParserModel() {
+        Contexts.setParser(new RosettoParser() {
             @Override
             public Scenario parseScript(String script) {
                 return new Scenario(new Unit("TestParser"));

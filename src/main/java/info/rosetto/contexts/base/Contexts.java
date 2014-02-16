@@ -8,7 +8,7 @@ import info.rosetto.models.base.engine.EngineModel;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.namespace.NameSpace;
-import info.rosetto.models.base.parser.ParserModel;
+import info.rosetto.models.base.parser.RosettoParser;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
@@ -185,7 +185,7 @@ public class Contexts {
      */
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
-        instance.functions.defineFunction(func);
+        instance.functions.defineAction(func);
     }
     
     /**
@@ -243,7 +243,7 @@ public class Contexts {
      * 現在のコンテキストで利用するパーサーを取得する.
      * @return 現在のコンテキストで利用するパーサー
      */
-    public static ParserModel getParser() {
+    public static RosettoParser getParser() {
         initializedCheck();
         return instance.system.getParser();
     }
@@ -252,7 +252,7 @@ public class Contexts {
      * 現在のコンテキストで利用するパーサーを変更する.
      * @param parser 現在のコンテキストで利用するパーサー
      */
-    public static void setParser(ParserModel parser) {
+    public static void setParser(RosettoParser parser) {
         initializedCheck();
         instance.system.setParser(parser);
     }

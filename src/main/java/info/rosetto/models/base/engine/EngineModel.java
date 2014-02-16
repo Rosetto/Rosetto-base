@@ -1,7 +1,15 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.engine;
 
 import java.util.List;
 
+/**
+ * ファイルのロード方式等、プレイヤーの動作に関わる環境設定等を保持する.
+ * @author tohhy
+ *
+ */
 public interface EngineModel {
 
     /**

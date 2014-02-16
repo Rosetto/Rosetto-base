@@ -49,9 +49,11 @@ public class ActionContext implements Serializable {
      * @return 取得したアクション
      */
     public RosettoAction get(String functionName) {
-        RosettoValue v = current.get(functionName);
-        if(v==null || !(v instanceof RosettoFunction)) return Values.NULL;
-        return (RosettoFunction) v;
+        int lastDot = functionName.lastIndexOf('.');
+        RosettoValue v = (lastDot == -1) ? 
+                current.get(functionName) 
+                : get(functionName.substring(0, lastDot), functionName.substring(lastDot+1));
+        return (RosettoAction) v;
     }
     
     /**
@@ -61,12 +63,25 @@ public class ActionContext implements Serializable {
      * @return 取得した値
      */
     public RosettoAction get(String nameSpace, String varName) {
-        if(!nameSpaces.containsKey(nameSpace)) return BaseFunctions.pass;
+        if(!nameSpaces.containsKey(nameSpace)) return Values.NULL;
         return (RosettoFunction)nameSpaces.get(nameSpace).get(varName);
     }
     
-    public void defineFunction(RosettoAction f) {
+    /**
+     * 
+     * @param f
+     */
+    public void defineAction(RosettoAction f) {
         current.set(f.getName(), f);
+    }
+    
+    /**
+     * 
+     * @param f
+     * @param packageName
+     */
+    public void defineAction(RosettoAction f, String packageName) {
+        getNameSpace(packageName).set(f.getName(), f);
     }
     
     /**
@@ -90,36 +105,6 @@ public class ActionContext implements Serializable {
     }
 
     /**
-     * 指定名の名前空間を生成する.
-     * @param name 生成する名前空間の完全名
-     * @return 生成した名前空間
-     */
-    private NameSpace createNameSpace(String name) {
-        NameSpace space = new NameSpace(name);
-        putNameSpace(space);
-        return space;
-    }
-
-    /**
-     * 指定名の名前空間を取得する.
-     * @param name 取得する名前空間の完全名
-     * @return 取得した、あるいは生成した名前空間
-     */
-    private NameSpace getNameSpace(String name) {
-        if(!nameSpaces.containsKey(name))
-            createNameSpace(name);
-        return nameSpaces.get(name);
-    }
-    
-    /**
-     * WholeSpaceに指定した名前空間を追加する.
-     * @param ns 追加する名前空間
-     */
-    private void putNameSpace(NameSpace ns) {
-        nameSpaces.put(ns.getName(), ns);
-    }
-    
-    /**
      * 指定名のパッケージが含まれているかどうかを返す.
      * @param name 対象とするパッケージ
      * @return 指定名のパッケージが含まれているかどうか
@@ -129,18 +114,21 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * このインスタンス中に実体として生成された名前空間の数を返す.
-     * @return このインスタンス中に実体として生成された名前空間の数
+     * 指定名の名前空間を取得する.存在しなければ生成する.
+     * @param name 取得する名前空間の完全名
+     * @return 取得した、あるいは生成した名前空間
      */
-    public int getCreatedNameSpaceCount() {
-        return nameSpaces.size();
+    private NameSpace getNameSpace(String name) {
+        if(!nameSpaces.containsKey(name))
+            putNameSpace(new NameSpace(name));
+        return nameSpaces.get(name);
     }
     
     /**
-     * 現在アクティブな名前空間を取得する.
-     * @return 現在アクティブな名前空間
+     * WholeSpaceに指定した名前空間を追加する.
+     * @param ns 追加する名前空間
      */
-    public NameSpace getCurrentNameSpace() {
-        return current;
+    private void putNameSpace(NameSpace ns) {
+        nameSpaces.put(ns.getName(), ns);
     }
 }
