@@ -6,6 +6,8 @@ package info.rosetto.models.base.values;
 import info.rosetto.models.base.blocks.Macro;
 import info.rosetto.models.base.function.RosettoFunction;
 
+import java.util.List;
+
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.
  * @author tohhy
@@ -47,6 +49,10 @@ public enum ValueType {
      * 浮動小数点数を示す型.
      */
     DOUBLE(double.class),
+    /**
+     * リストを表す型.
+     */
+    LIST(List.class),
     /**
      * 任意のオブジェクトを示す型.
      */

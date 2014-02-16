@@ -136,7 +136,7 @@ public class ActionCall implements RosettoValue {
         String varName = this.getFunctionName();
         RosettoValue v = Contexts.getFunction(varName);
         
-        if(v == Values.NULL) {
+        if(v == Values.NULL || v == BaseFunctions.pass) {
             RosettoLogger.warning("実行可能な対象 " + varName + "がコンテキスト中に見つかりません");
             return Values.VOID;
         }
@@ -150,11 +150,7 @@ public class ActionCall implements RosettoValue {
         }
         
         if(v.getType() == ValueType.MACRO) {
-//            Macro macro = (Macro) v;
             //TODO
-//            Contexts.getProgress().getWhole()
-//            .pushScenario(macro.create(args));
-//            return true;
         }
         
         //それでもなければ何もしない

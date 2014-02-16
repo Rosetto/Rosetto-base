@@ -30,7 +30,7 @@ public class Contexts {
     /**
      * すべての関数を保持するインスタンス.
      */
-    private FunctionContext functions;
+    private ActionContext functions;
     
     /**
      * Rosettoのシステム状態を保持するインスタンス.
@@ -56,7 +56,7 @@ public class Contexts {
             throw new IllegalStateException("Contexts already initialized");
         
         instance.globalVars = new VariableContext();
-        instance.functions = new FunctionContext();
+        instance.functions = new ActionContext();
         instance.system = new SystemContext();
         instance.isInitialized = true;
     }

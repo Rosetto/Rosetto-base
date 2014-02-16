@@ -13,10 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 関数やマクロを保持するコンテキスト.
+ * 関数やマクロなどの実行可能な対象を保持するコンテキスト.<br>
+ * 変数の記憶域とは別の名前空間をもつ.
  * @author tohhy
  */
-public class FunctionContext implements Serializable {
+public class ActionContext implements Serializable {
     private static final long serialVersionUID = -2299445118074812605L;
 
     /**
@@ -32,7 +33,7 @@ public class FunctionContext implements Serializable {
     /**
      * パッケージ内でのみ生成.
      */
-    FunctionContext() {
+    ActionContext() {
         importPackage(BaseFunctions.getInstance(), "rosetto.base");
         usePackage("rosetto.base");
     }
