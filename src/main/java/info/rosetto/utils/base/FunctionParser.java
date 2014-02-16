@@ -36,7 +36,7 @@ public class FunctionParser {
         //それ以外なら
         String funcName = null;
         ArrayList<RosettoArgument> result = new ArrayList<RosettoArgument>();
-        String[] splited = ArgumentsUtils.splitStringArgs(functionCall);
+        String[] splited = ParserUtils.splitStringArgs(functionCall);
         for(String str : splited) {
             if(funcName == null) {
                 funcName = str;

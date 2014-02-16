@@ -5,6 +5,7 @@ package info.rosetto.parsers;
 
 import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.utils.base.ArgumentsUtils;
+import info.rosetto.utils.base.ParserUtils;
 
 /**
  * 単一のタグを異なるタグに変換するコンバーター.
@@ -28,7 +29,7 @@ public abstract class TagConverter {
      * @return 生成したRosettoAction
      */
     public ActionCall toRosettoTag(String tagName, String attrs) {
-        return toRosettoTag(tagName, ArgumentsUtils.splitStringArgs(attrs));
+        return toRosettoTag(tagName, ParserUtils.splitStringArgs(attrs));
     }
     
     /**

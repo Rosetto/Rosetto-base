@@ -1,19 +1,18 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.RosettoParser;
+import info.rosetto.models.base.parser.ParserModel;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
-
-import java.io.File;
-import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -139,55 +138,30 @@ public class ContextsTest {
     public void getAndSetParserTest() throws Exception {
         Contexts.initialize();
         
-        Contexts.setParser(new RosettoParser() {
+        Contexts.setParser(new ParserModel() {
             @Override
-            public Scenario parseString(String script) {
+            public Scenario parseScript(String script) {
                 return new Scenario(new Unit("TestParser"));
-            }
-            @Override
-            public Scenario parseFile(URL url) {
-                return null;
             }
             @Override
             public ArgumentSyntax getArgumentSyntax() {
                 return null;
             }
-            @Override
-            public Scenario parseFile(File file) {
-                return null;
-            }
         });
-        assertThat(Contexts.getParser().parseString("foobar")
+        assertThat(Contexts.getParser().parseScript("foobar")
                 .getUnitAt(0).getContent(), is("TestParser"));
         
-    }
-    
-    
-    @Test
-    public void getAndSetNameSpaceTest() throws Exception {
-        Contexts.initialize();
-        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(0));
-        //getで存在しない名前空間を指定すると生成される
-        Contexts.getNameSpace("some.not.found.namespace");
-        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(1));
-        //既に存在するならそのまま
-        Contexts.getNameSpace("some.not.found.namespace");
-        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(1));
     }
     
     @Test
     public void getAndSetWholeSpaceTest() throws Exception {
         Contexts.initialize();
         
-        //デフォルトの全体名前空間は空
-        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(0));
-        
         //変更できる
         VariableContext ws = new VariableContext();
         ws.createNameSpace("foo");
         ws.createNameSpace("bar");
         Contexts.setVariableContext(ws);
-        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(2));
         assertThat(Contexts.getVariableContext().containsNameSpace("foo"), is(true));
         assertThat(Contexts.getVariableContext().containsNameSpace("bar"), is(true));
         

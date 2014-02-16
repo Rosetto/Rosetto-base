@@ -1,8 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.contexts.base;
+package info.rosetto.models.base.namespace;
 
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.contexts.observers.VariableObservatory;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.system.RosettoLogger;
@@ -24,11 +25,6 @@ import java.util.Set;
  */
 public class NameSpace implements Serializable {
     private static final long serialVersionUID = 5454239542524847421L;
-    
-    /**
-     * ルートの名前空間.nameは空文字.
-     */
-    static final NameSpace ROOT = new NameSpace();
     
     /**
      * この名前空間の名称.
@@ -68,6 +64,14 @@ public class NameSpace implements Serializable {
         this.name = "";
     }
     
+    /**
+     * ルート用の特殊な名前空間を生成する.nameは空文字になる.
+     * @return ルートの名前空間
+     */
+    public static NameSpace createRootSpace() {
+        return new NameSpace();
+    }
+
     @Override
     public String toString() {
         return "NameSpace:" + name + 

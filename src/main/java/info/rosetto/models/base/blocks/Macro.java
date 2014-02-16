@@ -44,7 +44,7 @@ public class Macro extends Block {
      */
     public Scenario toScenario(RosettoArguments contextArgs) {
         contextArgs = (contextArgs == null) ? RosettoArguments.EMPTY : contextArgs;
-        Scenario s = Contexts.getParser().parseString(getContent());
+        Scenario s = Contexts.getParser().parseScript(getContent());
         return new Scenario(expand(s.getUnits(), contextArgs), ScenarioType.MACRO);
     }
     

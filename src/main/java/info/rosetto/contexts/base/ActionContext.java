@@ -6,6 +6,7 @@ package info.rosetto.contexts.base;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.namespace.NameSpace;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;

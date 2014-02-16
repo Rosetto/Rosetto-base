@@ -7,6 +7,7 @@ package info.rosetto.models.base.function;
 import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.ArgumentsUtils;
+import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
 
@@ -71,7 +72,7 @@ public class RosettoArguments implements Serializable {
         this.stringArgs = args;
         //スペース区切りのキーワード引数を解釈してリストとマップに格納する
         //ダブルクオートで囲まれた値の中にスペースが含まれる場合があるため考慮する
-        String[] splited = ArgumentsUtils.splitStringArgs(args);
+        String[] splited = ParserUtils.splitStringArgs(args);
         for(String str : splited) {
             int equalPosition = str.indexOf("=");
             if(equalPosition == -1) {
@@ -140,7 +141,7 @@ public class RosettoArguments implements Serializable {
             if(removed)
                 requiredArgsCount--;
             //結果にキーワード引数を追加
-            result.put(e.getKey(), ArgumentsUtils.parseArg(e.getValue()));
+            result.put(e.getKey(), ParserUtils.parseArg(e.getValue()));
         }
         
         //非キーワード引数を処理
@@ -158,7 +159,7 @@ public class RosettoArguments implements Serializable {
                 
                 //残った非キーワード引数のみを順に結合してマップへ追加
                 String farg = funcArgs.pollFirst();
-                result.put(farg, ArgumentsUtils.parseArg(s));
+                result.put(farg, ParserUtils.parseArg(s));
             }
             
             int mvarCount = 0;
@@ -182,7 +183,7 @@ public class RosettoArguments implements Serializable {
             }
             for(String s : args) {
                 //残った非キーワード引数を順に結合してマップへ追加
-                result.put(funcArgs.pollFirst(), ArgumentsUtils.parseArg(s));
+                result.put(funcArgs.pollFirst(), ParserUtils.parseArg(s));
             }
         }
         return result;

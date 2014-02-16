@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.models.base.namespace.NameSpace;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
@@ -11,20 +12,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Rosettoが認識している全ての名前空間.<br>
+ * Rosetto中の全てのグローバル変数を格納するコンテキスト.<br>
  * 実質的にRosettoが認識する全てのゲーム状態と等しくなる.<br>
- * WholeSpaceをシリアライズすることでゲーム上の状態が完全に保存できるように実装する.
+ * VariableContextをシリアライズすることでゲーム上の状態が完全に保存できるように実装する.
  * @author tohhy
  */
 public class VariableContext implements Serializable {
     private static final long serialVersionUID = -8911679659186174490L;
-
+    
     /**
      * このインスタンスが保有する全ての名前空間の一覧.
      */
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
-    private final NameSpace rootSpace = NameSpace.ROOT;
+    /**
+     * ルートの名前空間.
+     */
+    private final NameSpace rootSpace = NameSpace.createRootSpace();
     
     /**
      * パッケージ内でのみ生成.
@@ -127,12 +131,5 @@ public class VariableContext implements Serializable {
         nameSpaces.put(referName, nameSpaces.get(packageName));
     }
     
-    /**
-     * このインスタンス中に実体として生成された名前空間の数を返す.
-     * @return このインスタンス中に実体として生成された名前空間の数
-     */
-    public int getCreatedNameSpaceCount() {
-        return nameSpaces.size();
-    }
 
 }

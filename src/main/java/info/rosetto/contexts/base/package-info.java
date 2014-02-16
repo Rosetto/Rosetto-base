@@ -1,6 +1,6 @@
 /**
  * Rosettoが保持する基本的なゲーム状態を扱うクラスを含むパッケージ.<br>
- * グローバル変数を保持するVariableContextと、関数を保持するFunctionContext、
+ * グローバル変数を保持するVariableContextと、関数やマクロを保持するActionContext、
  * それ以外のシステムの状態を表すSystemContextからなり、
  * それらにはContextsクラスをファサードとしてアクセスするようになっている.<br>
  * セーブデータに保持するようなゲーム情報はVariableContextに、

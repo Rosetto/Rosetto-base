@@ -1,4 +1,4 @@
-package info.rosetto.models.environment;
+package info.rosetto.models.base.engine;
 
 import java.io.Serializable;
 
