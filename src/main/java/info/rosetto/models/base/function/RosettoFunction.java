@@ -3,8 +3,8 @@ package info.rosetto.models.base.function;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
+import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
-import info.rosetto.utils.base.RosettoLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;

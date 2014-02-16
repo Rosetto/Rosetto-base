@@ -9,8 +9,8 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
-import info.rosetto.utils.base.RosettoLogger;
 import info.rosetto.utils.base.Values;
 
 import java.util.List;

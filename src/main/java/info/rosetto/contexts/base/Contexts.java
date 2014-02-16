@@ -183,7 +183,7 @@ public class Contexts {
      */
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
-        instance.functions.define(func);
+        instance.functions.defineFunction(func);
     }
     
     /**

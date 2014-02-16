@@ -6,7 +6,9 @@ package info.rosetto.contexts.base;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -14,12 +16,12 @@ import java.util.Map;
 
 /**
  * 関数やマクロなどの実行可能な対象を保持するコンテキスト.<br>
- * 変数の記憶域とは別の名前空間をもつ.
+ * グローバル変数の記憶域とは異なる名前空間を独自に持つ.
  * @author tohhy
  */
 public class ActionContext implements Serializable {
     private static final long serialVersionUID = -2299445118074812605L;
-
+    
     /**
      * 関数コンテキストが保有する全ての名前空間の一覧.
      */
@@ -28,24 +30,26 @@ public class ActionContext implements Serializable {
     /**
      * 現在ロードされている関数を表す名前空間.
      */
-    private final NameSpace currentNameSpace = new NameSpace("functions-current");
+    private final NameSpace current = new NameSpace("functions-current");
     
     /**
-     * パッケージ内でのみ生成.
+     * パッケージ内でのみ生成.<br>
+     * 生成時にbaseパッケージがimportされ、useされる.
      */
     ActionContext() {
-        importPackage(BaseFunctions.getInstance(), "rosetto.base");
-        usePackage("rosetto.base");
+        importPackage(BaseFunctions.getInstance(), "base");
+        usePackage("base");
     }
     
     /**
-     * currentから指定名の関数を取得する.
-     * @param functionName
-     * @return
+     * currentから指定名のアクションを取得する.<br>
+     * 指定名のアクションが存在しない場合はNullValueが返る.
+     * @param functionName 関数コンテキストから取得するアクションの名称
+     * @return 取得したアクション
      */
-    public RosettoFunction get(String functionName) {
-        RosettoValue v = currentNameSpace.get(functionName);
-        if(v==null || !(v instanceof RosettoFunction)) return BaseFunctions.pass;
+    public RosettoAction get(String functionName) {
+        RosettoValue v = current.get(functionName);
+        if(v==null || !(v instanceof RosettoFunction)) return Values.NULL;
         return (RosettoFunction) v;
     }
     
@@ -55,13 +59,13 @@ public class ActionContext implements Serializable {
      * @param key 取得する変数名
      * @return 取得した値
      */
-    public RosettoFunction get(String nameSpace, String varName) {
+    public RosettoAction get(String nameSpace, String varName) {
         if(!nameSpaces.containsKey(nameSpace)) return BaseFunctions.pass;
         return (RosettoFunction)nameSpaces.get(nameSpace).get(varName);
     }
     
-    public void define(RosettoFunction f) {
-        currentNameSpace.set(f.getName(), f);
+    public void defineFunction(RosettoAction f) {
+        current.set(f.getName(), f);
     }
     
     /**
@@ -81,7 +85,7 @@ public class ActionContext implements Serializable {
      */
     public void usePackage(String packageName) {
         NameSpace pkg = getNameSpace(packageName);
-        if(pkg != null) currentNameSpace.include(pkg);
+        if(pkg != null) current.include(pkg);
     }
 
     /**
@@ -136,6 +140,6 @@ public class ActionContext implements Serializable {
      * @return 現在アクティブな名前空間
      */
     public NameSpace getCurrentNameSpace() {
-        return currentNameSpace;
+        return current;
     }
 }

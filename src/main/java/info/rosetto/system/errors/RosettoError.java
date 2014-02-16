@@ -10,6 +10,7 @@ package info.rosetto.system.errors;
 public enum RosettoError {
     E1000_GLOBAL_VAR_NOT_FOUND(1000),
     
+    E7000_NULL_ACTION_CALLED(7000);
     ;
     private final int errorCode;
     

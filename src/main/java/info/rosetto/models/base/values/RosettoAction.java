@@ -3,10 +3,12 @@ package info.rosetto.models.base.values;
 import info.rosetto.models.base.function.RosettoArguments;
 
 /**
- * 関数やマクロなど、返り値を伴う実行が可能な値を示すインタフェース.
+ * 関数やマクロなど、返り値を伴う実行が可能なRosettoValueを示すインタフェース.
  * @author tohhy
  */
-public interface RosettoAction {
+public interface RosettoAction extends RosettoValue {
+    
+    public String getName();
     
     /**
      * このアクションを引数なしで実行する.

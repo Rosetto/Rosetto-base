@@ -2,7 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package info.rosetto.utils.base;
+package info.rosetto.system;
+
+import info.rosetto.system.errors.ErrorMessages;
+import info.rosetto.system.errors.RosettoError;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -72,6 +75,14 @@ public class RosettoLogger {
      */
     public static void severe(String body) {
         instance.severe(body);
+    }
+    
+    /**
+     * ゲーム中で予期しない動作が発生する可能性がある例外発生等に付加するログ.
+     * @param error 出力するエラー
+     */
+    public static void warning(RosettoError error) {
+        instance.warning(ErrorMessages.get(error));
     }
     
     /**

@@ -3,6 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
+import info.rosetto.models.base.function.RosettoArguments;
+import info.rosetto.system.RosettoLogger;
+import info.rosetto.system.errors.RosettoError;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
 /**
@@ -15,7 +18,7 @@ import info.rosetto.system.exceptions.NotConvertibleException;
  * どの値にも変換できない. getValueはnullになる.
  * @author tohhy
  */
-public class NullValue implements RosettoValue {
+public class NullValue implements RosettoValue, RosettoAction {
     private static final long serialVersionUID = -5537257042851037526L;
     
     /**
@@ -142,5 +145,22 @@ public class NullValue implements RosettoValue {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
+    }
+
+    @Override
+    public String getName() {
+        return "NULL";
+    }
+    
+    @Override
+    public RosettoValue execute() {
+        RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
+        return this;
+    }
+    
+    @Override
+    public RosettoValue execute(RosettoArguments args) {
+        RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
+        return this;
     }
 }

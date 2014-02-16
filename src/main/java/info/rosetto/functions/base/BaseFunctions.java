@@ -12,7 +12,8 @@ import info.rosetto.models.base.values.ValueType;
 import info.rosetto.utils.base.Values;
 
 /**
- * Rosettoの基本的な関数.
+ * Rosettoの基本的な関数.<br>
+ * 初期状態でimportとuseが自動的に行われる.
  * @author tohhy
  */
 public class BaseFunctions extends FunctionPackage {
@@ -69,7 +70,8 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 指定したグローバル変数に指定した値をセットする.
+     * 指定したグローバル変数に指定した値をセットする.<br>
+     * 通常は$記号を使ったエイリアスで呼び出す.
      */
     public static final RosettoFunction getglobal = new RosettoFunction("getglobal",
             "key") {
@@ -84,7 +86,7 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 指定したパッケージの関数を利用可能にする.
+     * 指定したパッケージの関数を直接利用可能にする.
      */
     public static final RosettoFunction use = new RosettoFunction("use",
             "package") {
