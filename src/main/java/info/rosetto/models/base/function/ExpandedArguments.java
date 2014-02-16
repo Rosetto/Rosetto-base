@@ -29,6 +29,11 @@ public class ExpandedArguments {
                 new TreeMap<String, RosettoValue>(args.parse(func)));
     }
     
+    @Override
+    public String toString() {
+        return kwargs.toString();
+    }
+    
     /**
      * 指定引数名にマッピングされた引数値を取得する.
      * 指定引数が存在しない場合はnull

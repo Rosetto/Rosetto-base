@@ -47,7 +47,9 @@ public class ArgumentsUtils {
                     parsed.put(ob, v);
                 }
             }
-            return parsed.get(0);
+            RosettoValue result = parsed.get(0);
+            if(result instanceof ActionCall) result = ((ActionCall)result).evaluate();
+            return result;
         }
         
         private ActionCall parseRegion(int start, int end) {

@@ -46,6 +46,10 @@ public class ListValue implements RosettoValue {
         return list.size();
     }
     
+    public List<RosettoValue> getList() {
+        return Collections.unmodifiableList(list);
+    }
+
     @Override
     public ValueType getType() {
         return ValueType.LIST;
