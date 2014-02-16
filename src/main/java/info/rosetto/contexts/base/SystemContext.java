@@ -16,6 +16,8 @@ public class SystemContext {
      */
     private RosettoParser parser;
     
+    
+    
     /**
      * パッケージ内でのみ生成.
      */

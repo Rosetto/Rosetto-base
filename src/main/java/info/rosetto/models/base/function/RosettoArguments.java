@@ -66,8 +66,8 @@ public class RosettoArguments implements Serializable {
     }
     
     /**
-     * 文字列形式の引数リストを受け取って引数リストオブジェクトを生成する.
-     * @param args 文字列形式の引数リスト
+     * 引数のリストを受け取って引数リストオブジェクトを生成する.
+     * @param args 引数のリスト
      */
     public RosettoArguments(List<RosettoArgument> args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
@@ -137,21 +137,6 @@ public class RosettoArguments implements Serializable {
         this.kwargs.putAll(kwargs);
     }
     
-    /**
-     * この属性リストが展開すべき引数を含んでいれば、この属性リストの複製を作成した上でそれを展開して返す.
-     * 展開すべき引数がなければこの属性リスト自身をそのまま返す.
-     * @param macroCallAttrs マクロ呼び出し時の属性マップ
-     * @param macroArgPrefix マクロ展開引数（マクロの実行時に与えられた引数で置き換える引数）の接頭詞
-     */
-    public RosettoArguments createExpandedArgs(RosettoArguments contextArgs, ArgumentSyntax syntax) {
-        if(containsExpandableKey(syntax)) {
-            ArrayList<RosettoValue> expandArgs = new ArrayList<RosettoValue>(this.args);
-            TreeMap<String, RosettoValue> expandKwargs = new TreeMap<String, RosettoValue>(this.kwargs);
-            expandMacroKeys(expandArgs, expandKwargs, contextArgs, syntax);
-            return new RosettoArguments(expandArgs, expandKwargs);
-        }
-        return this;
-    }
     
     /**
      * 指定した関数を用いてこの引数リストをパースする.

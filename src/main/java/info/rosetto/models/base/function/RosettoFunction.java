@@ -51,6 +51,7 @@ public abstract class RosettoFunction implements RosettoValue {
         if(name == null)
             throw new IllegalArgumentException("name must not be null");
         this.name = name;
+        if(args == null) return;
         for(String s : args) {
             this.args.add(s);
         }

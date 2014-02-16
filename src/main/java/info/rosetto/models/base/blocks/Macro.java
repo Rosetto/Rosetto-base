@@ -57,8 +57,7 @@ public class Macro extends Block {
     private static List<Unit> expand(List<Unit> units, RosettoArguments contextArgs) {
         List<Unit> result = new ArrayList<Unit>();
         for(Unit u:units) {
-            RosettoArguments expanded = u.getAction().getArgs()
-            .createExpandedArgs(contextArgs, Contexts.getParser().getArgumentSyntax());
+            RosettoArguments expanded = u.getAction().getArgs();//TODO
             result.add(new Unit(u.getContent(), 
                     new ActionCall(u.getAction().getFunctionName(), expanded)));
         }
