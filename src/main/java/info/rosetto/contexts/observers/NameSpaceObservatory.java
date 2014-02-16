@@ -11,7 +11,7 @@ import java.util.Set;
 import org.frows.observatories.ObjectObservatory;
 
 /**
- * 単一の名前空間を観測するObservatory.
+ * 単一の名前空間以下の変数の変更を観測するObservatory.
  * @author tohhy
  */
 public class NameSpaceObservatory extends ObjectObservatory<String, VariableObserver> 

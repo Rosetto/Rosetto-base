@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
@@ -25,17 +24,24 @@ public class VariableContext implements Serializable {
      */
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
-    /**
-     * 現在アクティブな名前空間.
-     */
-    private NameSpace currentNameSpace;
+    private final NameSpace rootSpace = NameSpace.ROOT;
     
     /**
      * パッケージ内でのみ生成.
      */
-    VariableContext() {
-        putNameSpace(new StorySpace());
-        setCurrentNameSpace("story");
+    VariableContext() {}
+    
+    /**
+     * 指定したキーに存在する値を取得する.
+     * @param key 絶対参照のキー
+     * @return 指定したキーに存在する値
+     */
+    public RosettoValue get(String key) {
+        int lastDot = key.lastIndexOf('.');
+        if(lastDot == -1) return rootSpace.get(key);
+        String nameSpace = key.substring(0, lastDot);
+        String varName = key.substring(lastDot + 1);
+        return get(nameSpace, varName);
     }
     
     /**
@@ -45,6 +51,10 @@ public class VariableContext implements Serializable {
      * @return 取得した値
      */
     public RosettoValue get(String nameSpace, String varName) {
+        if(nameSpace == null || nameSpace.length() == 0)
+            throw new IllegalArgumentException("nameSpace must not be empty");
+        if(varName == null || varName.length() == 0)
+            throw new IllegalArgumentException("varName must not be empty");
         if(!nameSpaces.containsKey(nameSpace)) return Values.NULL;
         return nameSpaces.get(nameSpace).get(varName);
     }
@@ -71,6 +81,24 @@ public class VariableContext implements Serializable {
         NameSpace space = new NameSpace(name);
         putNameSpace(space);
         return space;
+    }
+    
+    /**
+     * 指定したキーに指定した値を設定する.
+     * @param key 絶対参照のキー
+     * @param value 設定する値
+     */
+    public void define(String key, RosettoValue value) {
+        if(key == null || key.length() == 0)
+            throw new IllegalArgumentException("key must not be empty");
+        int lastDot = key.lastIndexOf('.');
+        if(lastDot == -1) {
+            rootSpace.set(key, value);
+            return;
+        }
+        String nameSpace = key.substring(0, lastDot);
+        String varName = key.substring(lastDot + 1);
+        getNameSpace(nameSpace).set(varName, value);
     }
     
     /**
@@ -106,32 +134,5 @@ public class VariableContext implements Serializable {
     public int getCreatedNameSpaceCount() {
         return nameSpaces.size();
     }
-    
-    /**
-     * 現在アクティブな名前空間を取得する.
-     * @return 現在アクティブな名前空間
-     */
-    public NameSpace getCurrentNameSpace() {
-        return currentNameSpace;
-    }
-    
-    /**
-     * 指定名の名前空間をアクティブな名前空間にする.
-     * @param name アクティブにする名前空間の完全名
-     */
-    public void setCurrentNameSpace(String name) {
-        if(name == null || name.length() == 0)
-            throw new IllegalArgumentException("name must not be empty");
-        setCurrentNameSpace(containsNameSpace(name) ? 
-                getNameSpace(name) : createNameSpace(name));
-    }
-    
-    /**
-     * 現在アクティブな名前空間を指定する.
-     * @param nameSpace アクティブにする名前空間
-     */
-    public void setCurrentNameSpace(NameSpace nameSpace) {
-        currentNameSpace = nameSpace;
-    }
-    
+
 }

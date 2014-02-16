@@ -33,17 +33,14 @@ public class BaseFunctionsTest {
     
     @Test
     public void setTest() throws Exception {
-        assertThat(BaseFunctions.set.execute("foo bar"), is((RosettoValue)Values.VOID));
+        assertThat(BaseFunctions.def.execute("foo bar"), is((RosettoValue)Values.VOID));
         assertThat(Contexts.get("foo").asString(), is("bar"));
-        assertThat(Contexts.get("!story.foo").asString(), is("bar"));
         
-        assertThat(BaseFunctions.set.execute("bar.baz 100"), is((RosettoValue)Values.VOID));
+        assertThat(BaseFunctions.def.execute("bar.baz 100"), is((RosettoValue)Values.VOID));
         assertThat(Contexts.get("bar.baz").asInt(), is(100));
-        assertThat(Contexts.get("!story.bar.baz").asInt(), is(100));
         
-        assertThat(BaseFunctions.set.execute("hoge 1.234 ns=fuga"), is((RosettoValue)Values.VOID));
-        assertThat(Contexts.get("!fuga.hoge").asDouble(), is(1.234));
-        assertThat(Contexts.get("!story.fuga.hoge"), is((RosettoValue)Values.NULL));
+        assertThat(BaseFunctions.def.execute("fuga.hoge 1.234"), is((RosettoValue)Values.VOID));
+        assertThat(Contexts.get("fuga.hoge").asDouble(), is(1.234));
         
     }
 

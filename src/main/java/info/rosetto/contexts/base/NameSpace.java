@@ -24,7 +24,12 @@ import java.util.Set;
  */
 public class NameSpace implements Serializable {
     private static final long serialVersionUID = 5454239542524847421L;
-
+    
+    /**
+     * ルートの名前空間.nameは空文字.
+     */
+    static final NameSpace ROOT = new NameSpace();
+    
     /**
      * この名前空間の名称.
      */
@@ -56,6 +61,13 @@ public class NameSpace implements Serializable {
         this.name = name;
     }
     
+    /**
+     * rootの名前空間作成用.
+     */
+    private NameSpace() {
+        this.name = "";
+    }
+    
     @Override
     public String toString() {
         return "NameSpace:" + name + 
@@ -71,7 +83,6 @@ public class NameSpace implements Serializable {
      */
     public RosettoValue get(String key) {
         if(key == null) return Values.NULL;
-        if(key.startsWith("!")) return Contexts.getAbsolute(key.substring(1));
         
         if(!key.contains(".")) {
             return variables.containsKey(key) ? variables.get(key) : Values.NULL;

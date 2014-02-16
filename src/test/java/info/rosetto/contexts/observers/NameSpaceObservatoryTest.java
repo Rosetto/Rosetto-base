@@ -23,7 +23,7 @@ public class NameSpaceObservatoryTest {
     @Test
     public void notifyTest() throws Exception {
         final StringBuilder sb = new StringBuilder();
-        NameSpaceObservatory.getInstance().addObserver("story", 
+        NameSpaceObservatory.getInstance().addObserver("hoge", 
                 new VariableObserver() {
             @Override
             public void valueChanged(String nameSpace, String variableName,
@@ -32,15 +32,15 @@ public class NameSpaceObservatoryTest {
                 .append(newValue.asString(""));
             }
         });
-        Contexts.set("foo", "bar");
-        assertThat(sb.toString(), is("story.foo:bar"));
+        Contexts.set("hoge.foo", "bar");
+        assertThat(sb.toString(), is("hoge.foo:bar"));
         
         sb.delete(0, sb.length());
         Contexts.set("this.is.test", 12345);
         assertThat(sb.toString(), is(""));
         
-        Contexts.set("story.characters.hoge.name", "fuga");
-        assertThat(sb.toString(), is("story.characters.hoge.name:fuga"));
+        Contexts.set("hoge.characters.hoge.name", "fuga");
+        assertThat(sb.toString(), is("hoge.characters.hoge.name:fuga"));
     }
 
 }

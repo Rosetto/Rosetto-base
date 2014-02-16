@@ -89,32 +89,13 @@ public class Contexts {
     
     /**
      * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.<br>
-     * 通常、現在アクティブな名前空間からの相対参照になる.絶対参照を行う場合はkeyの頭に!を付加する.
      * @param key 値を取得する変数名
      * @return 取得した値、変数が存在しなければnull
      */
     public static RosettoValue get(String key) {
         initializedCheck();
         if(key == null) return Values.NULL;
-        if(key.startsWith("!")) return getAbsolute(key.substring(1));
-        return instance.globalVars.getCurrentNameSpace().get(key);
-    }
-    
-    /**
-     * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.
-     * @param key 値を取得する変数名
-     * @return 取得した値、変数が存在しなければnull
-     */
-    public static RosettoValue getAbsolute(String key) {
-        initializedCheck();
-        if(key == null) return Values.NULL;
-        int lastDotIndex = key.lastIndexOf(".");
-        if(lastDotIndex > 0) {
-            return instance.globalVars.getNameSpace(key.substring(0, lastDotIndex))
-                    .get(key.substring(lastDotIndex+1));
-        } else {
-            return instance.globalVars.getCurrentNameSpace().get(key);
-        }
+        return instance.globalVars.get(key);
     }
     
     /**
@@ -122,19 +103,20 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, RosettoValue value) {
+    public static void define(String key, RosettoValue value) {
         initializedCheck();
         if(key == null || key.length() == 0)
             throw new IllegalArgumentException("key must not be empty");
         if(key.endsWith("."))
             throw new IllegalArgumentException("name must not end with dot");
+        
         int lastDotIndex = key.lastIndexOf(".");
         if(lastDotIndex > 0) {
             String packageName = key.substring(0, lastDotIndex);
             NameSpace ns = instance.globalVars.getNameSpace(packageName);
             ns.set(key.substring(lastDotIndex+1), value);
         } else {
-            instance.globalVars.getCurrentNameSpace().set(key, value);
+            instance.globalVars.define(key, value);
         }
     }
     
@@ -144,7 +126,7 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void set(String key, boolean value) {
-        set(key, Values.create(value));
+        define(key, Values.create(value));
     }
     
     /**
@@ -153,7 +135,7 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void set(String key, int value) {
-        set(key, Values.create(value));
+        define(key, Values.create(value));
     }
     
     /**
@@ -162,7 +144,7 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void set(String key, long value) {
-        set(key, Values.create(value));
+        define(key, Values.create(value));
     }
     
     /**
@@ -171,7 +153,7 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void set(String key, double value) {
-        set(key, Values.create(value));
+        define(key, Values.create(value));
     }
     
     /**
@@ -180,7 +162,7 @@ public class Contexts {
      * @param value 設定する値
      */
     public static void set(String key, String value) {
-        set(key, Values.create(value));
+        define(key, Values.create(value));
     }
     
     /**
@@ -208,23 +190,6 @@ public class Contexts {
     public static void usePackage(String packageName) {
         initializedCheck();
         instance.functions.usePackage(packageName);
-    }
-    
-
-    /**
-     * 指定名の名前空間の全変数を現在の名前空間から参照可能にする.
-     * @param nameSpace 現在の名前空間から参照可能にする名前空間
-     */
-    public static void refer(String nameSpace, String referName) {
-        instance.globalVars.refer(nameSpace, referName);
-    }
-    
-    /**
-     * 指定名の名前空間の全変数を現在の名前空間に読み込む.
-     * @param nameSpace 現在の名前空間に変数を読み込む名前空間
-     */
-    public static void include(String nameSpace) {
-        getCurrentNameSpace().include(getNameSpace(nameSpace));
     }
     
     /**
@@ -276,22 +241,5 @@ public class Contexts {
     public static NameSpace getNameSpace(String name) {
         return instance.globalVars.getNameSpace(name);
     }
-    
-    /**
-     * 現在アクティブな名前空間を取得する.
-     * @return 現在アクティブな名前空間
-     */
-    public static NameSpace getCurrentNameSpace() {
-        initializedCheck();
-        return instance.globalVars.getCurrentNameSpace();
-    }
-    
-    /**
-     * 指定名の名前空間を新しくアクティブにする.
-     * @param name 新しくアクティブにする名前空間の名称
-     */
-    public static void setCurrentNameSpace(String name) {
-        initializedCheck();
-        instance.globalVars.setCurrentNameSpace(name);
-    }
+
 }

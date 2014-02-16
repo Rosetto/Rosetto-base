@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.functions.base.BaseFunctions;
 
 /**
  * Rosetto起動時のデフォルトの名前空間.<br>

@@ -31,7 +31,7 @@ public class VariableObservatoryTest {
             }
         });
         Contexts.set("foo", "bar");
-        assertThat(sb.toString(), is("story.foo:bar"));
+        assertThat(sb.toString(), is(".foo:bar"));
         
         sb.delete(0, sb.length());
         Contexts.set("this.is.test", 12345);
@@ -41,7 +41,7 @@ public class VariableObservatoryTest {
     @Test
     public void addNameSpaceObserverTest() throws Exception {
         final StringBuilder sb = new StringBuilder();
-        VariableObservatory.getInstance().addNameSpaceObserver("story", 
+        VariableObservatory.getInstance().addNameSpaceObserver("hoge", 
                 new VariableObserver() {
             @Override
             public void valueChanged(String nameSpace, String variableName,
@@ -51,8 +51,8 @@ public class VariableObservatoryTest {
             }
         });
         //指定している名前空間には反応
-        Contexts.set("foo", "bar");
-        assertThat(sb.toString(), is("story.foo:bar"));
+        Contexts.set("hoge.foo", "bar");
+        assertThat(sb.toString(), is("hoge.foo:bar"));
         
         //指定外の名前空間には反応しない
         sb.delete(0, sb.length());
