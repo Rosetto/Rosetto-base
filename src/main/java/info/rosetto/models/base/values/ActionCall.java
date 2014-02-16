@@ -63,6 +63,15 @@ public class ActionCall implements RosettoValue {
     }
     
     /**
+     * 指定引数で指定関数を呼び出すActionCallを生成する.
+     * @param functionName 呼び出す関数名
+     * @param args 適用する引数
+     */
+    public ActionCall(String functionName, String[] args) {
+        this(functionName, new RosettoArguments(args));
+    }
+    
+    /**
      * 指定引数で指定関数を呼び出すFunctionCallを生成する.
      * @param functionName 呼び出す関数名
      * @param args 適用する引数
@@ -125,7 +134,7 @@ public class ActionCall implements RosettoValue {
      */
     public RosettoValue evaluate() {
         String varName = this.getFunctionName();
-        RosettoValue v = Contexts.get(varName);
+        RosettoValue v = Contexts.getFunction(varName);
         
         if(v == Values.NULL) {
             RosettoLogger.warning("実行可能な対象 " + varName + "がコンテキスト中に見つかりません");

@@ -4,15 +4,109 @@
 
 package info.rosetto.utils.base;
 
+import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.RosettoValue;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 /**
  * 引数解釈に必要な処理を集めたユーティリティクラス.
  * @author tohhy
  */
 public class ArgumentsUtils {
+    
+    private static class ArgParser {
+        Stack<Integer> obIndex = new Stack<Integer>();
+        Map<Integer, Integer> coress = new HashMap<Integer, Integer>();
+        Map<Integer, ActionCall> parsed = new HashMap<Integer, ActionCall>();
+        private final String argStr;
+        
+        public ArgParser(String argStr) {
+            this.argStr = argStr;
+        }
+        
+        public RosettoValue parse() {
+            if(!argStr.startsWith("[")) return Values.create(argStr);
+            int strLen = argStr.length();
+            
+            for(int i=0; i<strLen; i++) {
+                char c = argStr.charAt(i);
+                
+                if(c == '[') {
+                    obIndex.push(i);
+                } else if(c == ']') {
+                    if(obIndex.isEmpty()) throw new IllegalArgumentException("");
+                    int ob = obIndex.pop();
+                    coress.put(ob, i);
+                    ActionCall v = parseRegion(ob, i);
+                    parsed.put(ob, v);
+                }
+            }
+            return parsed.get(0);
+        }
+        
+        private ActionCall parseRegion(int start, int end) {
+            List<String> result = new ArrayList<String>();
+            StringBuilder buf = new StringBuilder();
+            for(int i=start+1; i<end; i++) {
+                char c = argStr.charAt(i);
+                
+                if(c == '[') {
+                    //ここまでのbuf内容を追加してクリア
+                    if(buf.length() > 0) {
+                        result.add(buf.toString());
+                        buf = new StringBuilder();
+                    }
+                    //パース済みのactioncallをresultに追加
+                    result.add(parsed.get(i).asString());
+                    //対応する括弧までスキップ
+                    i = coress.get(i);
+                } else if(c == ']') {
+                    throw new IllegalArgumentException("");
+                } else if(c == ' ') {
+                    //ここまでのbuf内容を追加してクリア
+                    if(buf.length() > 0) {
+                        result.add(buf.toString());
+                        buf = new StringBuilder();
+                    }
+                } else {
+                    buf.append(c);
+                }
+            }
+            //残っていればここまでのbuf内容を追加
+            if(buf.length() > 0) result.add(buf.toString());
+            
+            if(result.size() == 0) {
+                return ActionCall.EMPTY;
+            } else if(result.size() == 1) {
+                return new ActionCall(result.get(0));
+            } else {
+                String[] args = new String[result.size()-1];
+                for(int i=1; i<result.size(); i++) {
+                    args[i-1] = result.get(i);
+                }
+                return new ActionCall(result.get(0), args);
+            }
+            
+        }
+    }
+    
+    
+    /**
+     * 文字列の引数をパースしてRosettoValueに変換する.
+     * @param argStr
+     * @return
+     */
+    public static RosettoValue parseArg(String argStr) {
+        return new ArgParser(argStr).parse();
+    }
+    
+    
     
     /**
      * mapの属性値がダブルクオートで囲まれていれば外す.

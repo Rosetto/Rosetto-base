@@ -1,12 +1,8 @@
 package info.rosetto.models.base.function;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
@@ -17,10 +13,8 @@ import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
-
+@SuppressWarnings("serial")
 public class RosettoArgumentsTest {
-    private static final ArgumentSyntax SYNTAX = 
-            new ArgumentSyntax("%", "*", '|', '-');
     
     @Before
     public void setUp() {
@@ -38,12 +32,27 @@ public class RosettoArgumentsTest {
     }
     
     @Test
+    public void 括弧付きの文字列からインスタンス化() throws Exception {
+        RosettoArguments sut1 = new RosettoArguments("a [b] (c)");
+        assertThat(sut1.getSize(), is(3));
+        
+        RosettoArguments sut2 = new RosettoArguments("a [b c] (d e)");
+        assertThat(sut2.getSize(), is(3));
+        
+        RosettoArguments sut3 = new RosettoArguments("a [b [c]] (d (e))");
+        assertThat(sut3.getSize(), is(3));
+        
+        RosettoArguments sut4 = new RosettoArguments("a [b [c (d)]] (e (f [g (h)]))");
+        assertThat(sut4.getSize(), is(3));
+    }
+    
+    @Test
     public void インスタンス化の際に属性値を囲んでいるダブルクオートは外される() throws Exception {
         String test = " \"foo\" bar=baz hoge=\"fuga\" ika=\"tako and tako\"";
         RosettoArguments sut = new RosettoArguments(test);
-        assertThat(sut.get("hoge").asString(), is("fuga"));
-        assertThat(sut.get("ika").asString(), is("tako and tako"));
-        assertThat(sut.get(0).asString(), is("foo"));
+        assertThat(sut.get("hoge"), is("fuga"));
+        assertThat(sut.get("ika"), is("tako and tako"));
+        assertThat(sut.get(0), is("foo"));
     }
     
     @Test
@@ -139,7 +148,7 @@ public class RosettoArgumentsTest {
     @Test
     public void getで指定キーに関連づけられた値が返る() throws Exception {
         RosettoArguments sut = new RosettoArguments("%1 2=2 3=3");
-        assertThat(sut.get("2").asString(), is("2"));
+        assertThat(sut.get("2"), is("2"));
         assertThat(sut.get("5"), is(nullValue()));
     }
 
