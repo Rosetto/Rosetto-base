@@ -37,7 +37,7 @@ public class BaseFunctions extends FunctionPackage {
      * コンストラクタは公開しない.
      */
     private BaseFunctions() {
-        super(pass, getglobal, def);
+        super(pass, getglobal, def, use);
     }
     
     /**
@@ -80,6 +80,21 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue key = args.get("key");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return Contexts.get(key.asString());
+        }
+    };
+    
+    /**
+     * 指定したパッケージの関数を利用可能にする.
+     */
+    public static final RosettoFunction use = new RosettoFunction("use",
+            "package") {
+        private static final long serialVersionUID = 4075950193187972686L;
+        
+        @Override
+        protected RosettoValue run(ExpandedArguments args) {
+            RosettoValue pkg = args.get("package");
+            Contexts.usePackage(pkg.asString());
+            return Values.VOID;
         }
     };
 

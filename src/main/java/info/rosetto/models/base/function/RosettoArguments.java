@@ -57,15 +57,10 @@ public class RosettoArguments implements Serializable {
      */
     public RosettoArguments(List<RosettoArgument> args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
-        for(RosettoArgument a : args) {
-            if(a.getKey() == null) {
-                this.args.add(a.getValue());
-            } else {
-                this.kwargs.put(a.getKey(), a.getValue());
-            }
-        }
+        initializeArgs(args);
         this.stringArgs = createStringArgs(this.args, this.kwargs);
     }
+    
     /**
      * 文字列形式の引数リストを受け取って引数リストオブジェクトを生成する.
      * @param args 文字列形式の引数リスト
@@ -258,6 +253,16 @@ public class RosettoArguments implements Serializable {
      */
     public String get(String key) {
         return kwargs.get(key);
+    }
+
+    private void initializeArgs(List<RosettoArgument> args) {
+        for(RosettoArgument a : args) {
+            if(a.getKey() == null) {
+                this.args.add(a.getValue());
+            } else {
+                this.kwargs.put(a.getKey(), a.getValue());
+            }
+        }
     }
 
     /**

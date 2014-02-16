@@ -5,8 +5,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.system.exceptions.VariableSealedException;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;

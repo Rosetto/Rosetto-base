@@ -4,8 +4,8 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.contexts.observers.VariableObservatory;
-import info.rosetto.exceptions.VariableSealedException;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.system.exceptions.VariableSealedException;
 import info.rosetto.utils.base.RosettoLogger;
 import info.rosetto.utils.base.Values;
 

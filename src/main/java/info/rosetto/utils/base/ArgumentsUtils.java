@@ -5,6 +5,7 @@
 package info.rosetto.utils.base;
 
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
 
 import java.util.ArrayList;
@@ -30,8 +31,15 @@ public class ArgumentsUtils {
             this.argStr = argStr;
         }
         
+        private RosettoValue rawValue() {
+            if(argStr.startsWith("(") && argStr.endsWith(")")) {
+                return new ListValue(argStr.substring(1, argStr.length()-1).split(" "));
+            }
+            return Values.create(argStr);
+        }
+        
         public RosettoValue parse() {
-            if(!argStr.startsWith("[")) return Values.create(argStr);
+            if(!argStr.startsWith("[")) return rawValue();
             int strLen = argStr.length();
             
             for(int i=0; i<strLen; i++) {

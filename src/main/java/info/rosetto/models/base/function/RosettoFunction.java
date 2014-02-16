@@ -1,8 +1,9 @@
 package info.rosetto.models.base.function;
 
-import info.rosetto.exceptions.NotConvertibleException;
+import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
+import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.RosettoLogger;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public abstract class RosettoFunction implements RosettoValue {
+public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     private static final long serialVersionUID = 4377270634098291404L;
 
     /**
@@ -69,6 +70,14 @@ public abstract class RosettoFunction implements RosettoValue {
     
 
     /**
+     * 引数なしでこの関数を実行する.
+     * execute(RosettoArguments.EMPTY)と同じ.
+     */
+    public RosettoValue execute() {
+        return execute(RosettoArguments.EMPTY);
+    }
+    
+    /**
      * この関数を実行する.
      * @param args 実行時引数
      */
@@ -79,6 +88,7 @@ public abstract class RosettoFunction implements RosettoValue {
         logFunctionExecuted(this);
         return result;
     }
+    
     
     /**
      * この関数を実行する.
@@ -93,14 +103,6 @@ public abstract class RosettoFunction implements RosettoValue {
         }
         logFunctionExecuted(this);
         return result;
-    }
-    
-    /**
-     * 引数なしでこの関数を実行する.
-     * execute(RuntimeArguments.EMPTY)と同じ.
-     */
-    public RosettoValue execute() {
-        return execute(RosettoArguments.EMPTY);
     }
     
     /**

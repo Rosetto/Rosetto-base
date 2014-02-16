@@ -4,9 +4,9 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import info.rosetto.exceptions.NotConvertibleException;
 import info.rosetto.models.base.values.IntValue;
 import info.rosetto.models.base.values.ValueType;
+import info.rosetto.system.exceptions.NotConvertibleException;
 
 import org.junit.Test;
 

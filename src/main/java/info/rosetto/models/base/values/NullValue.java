@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
-import info.rosetto.exceptions.NotConvertibleException;
+import info.rosetto.system.exceptions.NotConvertibleException;
 
 /**
  * 値ではあるが、評価できない値.<br>

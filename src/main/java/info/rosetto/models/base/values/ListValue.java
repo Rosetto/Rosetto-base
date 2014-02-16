@@ -4,7 +4,7 @@
 
 package info.rosetto.models.base.values;
 
-import info.rosetto.exceptions.NotConvertibleException;
+import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
 
 import java.util.Collections;
@@ -29,6 +29,11 @@ public class ListValue implements RosettoValue {
     public ListValue(RosettoValue...values) {
         for(RosettoValue v : values) 
             list.add(v);
+    }
+    
+    public ListValue(String...values) {
+        for(String s : values) 
+            list.add(Values.create(s));
     }
     
     public RosettoValue first() {
