@@ -34,18 +34,43 @@ public class ArgumentsUtils {
     public static String[] splitStringArgs(String args) {
         ArrayList<String> result = new ArrayList<String>();
         String param = "";
+        int sbCount = 0;
+        int rbCount = 0;
         for(String str : args.split(" ")) {
             //キーも値もなければ飛ばす
             if(str.length() == 0) continue;
             param += str;
+            
+            //括弧の開きをカウント
+            int sb = TextUtils.containsCount(str, '[');
+            int rb = TextUtils.containsCount(str, '(');
+            //括弧の閉じをカウント
+            int csb = TextUtils.containsCount(str, ']');
+            int crb = TextUtils.containsCount(str, ')');
+            //開きの残りを計算
+            sbCount += sb-csb;
+            rbCount += rb-crb;
+            //負の値になっていれば0に丸める
+            if(sbCount < 0) sbCount = 0;
+            if(rbCount < 0) rbCount = 0;
+            
+            //奇数個のダブルクオートを含むならスペースを補って次の文字列と連結
             if(TextUtils.containsCount(param, '\"') % 2 != 0) {
-                //奇数個のダブルクオートを含むならスペースを補って次の文字列と連結
                 param = param + " ";
                 continue;
             }
+            
+            //括弧の開きが残っているならスペースを補って次の文字列と連結
+            if(sbCount > 0 || rbCount > 0) {
+                param = param + " ";
+                continue;
+            }
+            //ここまで到達できればここまでの内容をひとつの引数とする
             result.add(param);
             param = "";
         }
+        if(sbCount > 0 || rbCount > 0)
+            throw new IllegalArgumentException("bracket not closed");
         return result.toArray(new String[result.size()]);
     }
 
