@@ -89,7 +89,7 @@ public class NameSpace implements Serializable {
         }
         String nameSpace = this.name + "." + key.substring(0, key.lastIndexOf("."));
         String varName = key.substring(key.lastIndexOf(".") + 1);
-        return Contexts.getWholeSpace().get(nameSpace, varName);
+        return Contexts.getVariableContext().get(nameSpace, varName);
     }
     
     /**

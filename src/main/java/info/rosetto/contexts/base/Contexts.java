@@ -88,7 +88,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間から指定した変数に保存されている値を取得する.<br>
+     * 指定したグローバル変数に保存されている値を取得する.<br>
      * @param key 値を取得する変数名
      * @return 取得した値、変数が存在しなければnull
      */
@@ -99,7 +99,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -121,7 +121,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -130,7 +130,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -139,7 +139,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -148,7 +148,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -157,7 +157,7 @@ public class Contexts {
     }
     
     /**
-     * 現在アクティブな名前空間の指定した変数に指定した値を設定する.
+     * 指定したグローバル変数に指定した値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -177,16 +177,29 @@ public class Contexts {
         return (v instanceof RosettoFunction) ? (RosettoFunction)v : BaseFunctions.pass;
     }
     
+    /**
+     * 指定した関数を関数コンテキストに追加する.
+     * @param func 関数コンテキストに追加する関数
+     */
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
         instance.functions.define(func);
     }
-
+    
+    /**
+     * 指定した関数パッケージを読み込み、絶対参照で呼び出せるようにする.
+     * @param p 読み込む関数パッケージ
+     * @param packageName 読み込んだ関数パッケージにつける名称
+     */
     public static void importPackage(FunctionPackage p, String packageName) {
         initializedCheck();
         instance.functions.importPackage(p, packageName);
     }
     
+    /**
+     * 指定した関数パッケージを関数コンテキストに読み込み、含まれる関数をすべて直接参照可能にする.
+     * @param packageName 読み込むパッケージの名称
+     */
     public static void usePackage(String packageName) {
         initializedCheck();
         instance.functions.usePackage(packageName);
@@ -196,7 +209,7 @@ public class Contexts {
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
      */
-    public static VariableContext getWholeSpace() {
+    public static VariableContext getVariableContext() {
         initializedCheck();
         return instance.globalVars;
     }
@@ -205,15 +218,25 @@ public class Contexts {
      * このContextが保持する名前空間全体のインスタンスを指定したインスタンスに入れ替える.<br>
      * ゲーム中の状態を示す変数は全てWholeSpaceから取り出されるため、
      * シリアライズしたWholeSpaceをこのメソッドでセットするとその時点のゲーム状態をロードできる.
-     * @param wholeSpace 新しく指定する名前空間全体のインスタンス
+     * @param variableContext 新しく指定する名前空間全体のインスタンス
      */
-    public static void setWholeSpace(VariableContext wholeSpace) {
+    public static void setVariableContext(VariableContext variableContext) {
         initializedCheck();
-        if(wholeSpace == null)
+        if(variableContext == null)
             throw new IllegalArgumentException("wholespace must not be null");
-        instance.globalVars = wholeSpace;
+        instance.globalVars = variableContext;
     }
     
+    /**
+     * 指定名の名前空間を取得する.<br>
+     * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
+     * @param name 取得する名前空間
+     * @return 取得した名前空間
+     */
+    public static NameSpace getNameSpace(String name) {
+        return instance.globalVars.getNameSpace(name);
+    }
+
     /**
      * 現在のコンテキストで利用するパーサーを取得する.
      * @return 現在のコンテキストで利用するパーサー
@@ -230,16 +253,6 @@ public class Contexts {
     public static void setParser(RosettoParser parser) {
         initializedCheck();
         instance.system.setParser(parser);
-    }
-    
-    /**
-     * 指定名の名前空間を取得する.<br>
-     * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
-     * @param name 取得する名前空間
-     * @return 取得した名前空間
-     */
-    public static NameSpace getNameSpace(String name) {
-        return instance.globalVars.getNameSpace(name);
     }
 
 }

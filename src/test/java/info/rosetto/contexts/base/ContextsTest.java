@@ -59,23 +59,29 @@ public class ContextsTest {
     }
     
     @Test
-    public void getAndSetValueTest() throws Exception {
+    public void getAndDefineValueTest() throws Exception {
         Contexts.initialize();
         
         //存在しない変数の値はnull
         assertThat(Contexts.get("foobar"), is((RosettoValue)Values.NULL));
         
+        assertThat(Contexts.get("hoge.fuga"), is((RosettoValue)Values.NULL));
+        
         //値をセットする
-        Contexts.define("foobar", Values.create("baz"));
+        Contexts.define("foobar", "baz");
         assertThat(Contexts.get("foobar").asString(), is("baz"));
+        
+        Contexts.define("hoge.fuga", 100);
+        assertThat(Contexts.get("hoge.fuga").asInt(), is(100));
         
         //値を上書きする
         Contexts.define("foobar", true);
         assertThat(Contexts.get("foobar").asBool(), is(true));
-        Contexts.define("foobar", 100L);
-        assertThat(Contexts.get("foobar").asLong(), is(100L));
-        assertThat(Contexts.get("foobar").asInt(), is(100));
-        assertThat(Contexts.get("foobar").asDouble(), is(100.0));
+        
+        Contexts.define("hoge.fuga", 100L);
+        assertThat(Contexts.get("hoge.fuga").asLong(), is(100L));
+        assertThat(Contexts.get("hoge.fuga").asInt(), is(100));
+        assertThat(Contexts.get("hoge.fuga").asDouble(), is(100.0));
         
         //nullキーでsetするとエラー
         try {
@@ -100,6 +106,14 @@ public class ContextsTest {
         //nullvalueでsetするとエラー
         try {
             Contexts.define("fuga", (RosettoValue)null);
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
+        
+        //dotで終わるキーでsetするとエラー
+        try {
+            Contexts.define("foo.", Values.create("hoge"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -152,13 +166,13 @@ public class ContextsTest {
     @Test
     public void getAndSetNameSpaceTest() throws Exception {
         Contexts.initialize();
-        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(0));
+        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(0));
         //getで存在しない名前空間を指定すると生成される
         Contexts.getNameSpace("some.not.found.namespace");
-        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(1));
+        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(1));
         //既に存在するならそのまま
         Contexts.getNameSpace("some.not.found.namespace");
-        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(1));
+        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(1));
     }
     
     @Test
@@ -166,20 +180,20 @@ public class ContextsTest {
         Contexts.initialize();
         
         //デフォルトの全体名前空間は空
-        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(0));
+        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(0));
         
         //変更できる
         VariableContext ws = new VariableContext();
         ws.createNameSpace("foo");
         ws.createNameSpace("bar");
-        Contexts.setWholeSpace(ws);
-        assertThat(Contexts.getWholeSpace().getCreatedNameSpaceCount(), is(2));
-        assertThat(Contexts.getWholeSpace().containsNameSpace("foo"), is(true));
-        assertThat(Contexts.getWholeSpace().containsNameSpace("bar"), is(true));
+        Contexts.setVariableContext(ws);
+        assertThat(Contexts.getVariableContext().getCreatedNameSpaceCount(), is(2));
+        assertThat(Contexts.getVariableContext().containsNameSpace("foo"), is(true));
+        assertThat(Contexts.getVariableContext().containsNameSpace("bar"), is(true));
         
         //nullセットでエラー
         try {
-            Contexts.setWholeSpace(null);
+            Contexts.setVariableContext(null);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));

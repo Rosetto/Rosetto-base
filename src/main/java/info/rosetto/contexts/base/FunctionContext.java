@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ * 関数やマクロを保持するコンテキスト.
  * @author tohhy
  */
 public class FunctionContext implements Serializable {
