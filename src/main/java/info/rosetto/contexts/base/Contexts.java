@@ -125,7 +125,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, boolean value) {
+    public static void define(String key, boolean value) {
         define(key, Values.create(value));
     }
     
@@ -134,7 +134,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, int value) {
+    public static void define(String key, int value) {
         define(key, Values.create(value));
     }
     
@@ -143,7 +143,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, long value) {
+    public static void define(String key, long value) {
         define(key, Values.create(value));
     }
     
@@ -152,7 +152,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, double value) {
+    public static void define(String key, double value) {
         define(key, Values.create(value));
     }
     
@@ -161,7 +161,7 @@ public class Contexts {
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
-    public static void set(String key, String value) {
+    public static void define(String key, String value) {
         define(key, Values.create(value));
     }
     

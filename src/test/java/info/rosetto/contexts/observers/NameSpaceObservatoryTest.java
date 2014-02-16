@@ -32,14 +32,14 @@ public class NameSpaceObservatoryTest {
                 .append(newValue.asString(""));
             }
         });
-        Contexts.set("hoge.foo", "bar");
+        Contexts.define("hoge.foo", "bar");
         assertThat(sb.toString(), is("hoge.foo:bar"));
         
         sb.delete(0, sb.length());
-        Contexts.set("this.is.test", 12345);
+        Contexts.define("this.is.test", 12345);
         assertThat(sb.toString(), is(""));
         
-        Contexts.set("hoge.characters.hoge.name", "fuga");
+        Contexts.define("hoge.characters.hoge.name", "fuga");
         assertThat(sb.toString(), is("hoge.characters.hoge.name:fuga"));
     }
 

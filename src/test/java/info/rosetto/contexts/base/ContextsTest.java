@@ -70,9 +70,9 @@ public class ContextsTest {
         assertThat(Contexts.get("foobar").asString(), is("baz"));
         
         //値を上書きする
-        Contexts.set("foobar", true);
+        Contexts.define("foobar", true);
         assertThat(Contexts.get("foobar").asBool(), is(true));
-        Contexts.set("foobar", 100L);
+        Contexts.define("foobar", 100L);
         assertThat(Contexts.get("foobar").asLong(), is(100L));
         assertThat(Contexts.get("foobar").asInt(), is(100));
         assertThat(Contexts.get("foobar").asDouble(), is(100.0));

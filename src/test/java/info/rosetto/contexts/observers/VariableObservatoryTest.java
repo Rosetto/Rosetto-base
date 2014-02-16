@@ -30,11 +30,11 @@ public class VariableObservatoryTest {
                 .append(newValue.asString(""));
             }
         });
-        Contexts.set("foo", "bar");
+        Contexts.define("foo", "bar");
         assertThat(sb.toString(), is(".foo:bar"));
         
         sb.delete(0, sb.length());
-        Contexts.set("this.is.test", 12345);
+        Contexts.define("this.is.test", 12345);
         assertThat(sb.toString(), is("this.is.test:12345"));
     }
     
@@ -51,12 +51,12 @@ public class VariableObservatoryTest {
             }
         });
         //指定している名前空間には反応
-        Contexts.set("hoge.foo", "bar");
+        Contexts.define("hoge.foo", "bar");
         assertThat(sb.toString(), is("hoge.foo:bar"));
         
         //指定外の名前空間には反応しない
         sb.delete(0, sb.length());
-        Contexts.set("this.is.test", 12345);
+        Contexts.define("this.is.test", 12345);
         assertThat(sb.toString(), is(""));
     }
 
