@@ -10,7 +10,6 @@ import info.rosetto.utils.base.Values;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * ローカル変数を保持するスコープ.<br>
@@ -43,13 +42,19 @@ public class Scope {
      * @param func 実行する関数
      */
     public Scope(RosettoArguments args, RosettoFunction func, Scope parent) {
-        this.vars = new TreeMap<String, RosettoValue>(args.parse(func, parent));
+        Map<String, RosettoValue> parsed = args.parse(func, parent);
+        this.vars = new HashMap<String, RosettoValue>(parsed);
         this.parent = parent;
     }
 
     public boolean hasParent() {
         return parent != null;
     }
+    
+    public Scope getParent() {
+        return parent;
+    }
+    
     /**
      * 指定キーにマッピングされた値を取得する.
      * 指定キーが存在しない場合はValues.NULLが返る.

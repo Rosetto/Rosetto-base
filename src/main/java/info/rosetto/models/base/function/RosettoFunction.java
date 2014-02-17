@@ -90,6 +90,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     protected abstract RosettoValue run(Scope functionScope);
     
+    
+    /**
+     * 特殊関数では評価順を変える等の処理をする.
+     * @param args
+     * @param parentScope
+     * @return
+     */
+    protected Scope createScope(RosettoArguments args, Scope parentScope) {
+        return new Scope(args, this, parentScope);
+    }
 
     /**
      * 引数なしでこの関数を実行する.
@@ -123,7 +133,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         if(args != null) {
             rargs = new RosettoArguments(args);
         }
-        result = run(new Scope(rargs, this, parentScope));
+        result = run(createScope(rargs, parentScope));
         ActionObservatory.getInstance().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;

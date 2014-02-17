@@ -12,6 +12,7 @@ import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.ArgumentSyntax;
@@ -154,6 +155,10 @@ public class ContextsTest {
             }
             @Override
             public Scenario parseScript(List<String> scriptLines) {
+                return null;
+            }
+            @Override
+            public ActionCall parseActionCall(String actionCall) {
                 return null;
             }
         });

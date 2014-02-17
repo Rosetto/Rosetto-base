@@ -38,7 +38,7 @@ public class BaseFunctions extends FunctionPackage {
      * コンストラクタは公開しない.
      */
     private BaseFunctions() {
-        super(pass, getglobal, def, use);
+        super(pass, getglobal, def, getlocal, set, use);
     }
     
     /**
@@ -70,7 +70,7 @@ public class BaseFunctions extends FunctionPackage {
     };
     
     /**
-     * 指定したグローバル変数に指定した値をセットする.<br>
+     * 指定したキーで表されるグローバル変数を取得する.<br>
      * 通常は$記号を使ったエイリアスで呼び出す.
      */
     public static final RosettoFunction getglobal = new RosettoFunction("getglobal",
@@ -82,6 +82,38 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue key = args.get("key");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return Contexts.get(key.asString());
+        }
+    };
+    
+    /**
+     * ローカル変数に指定した値をセットする.
+     */
+    public static final RosettoFunction set = new RosettoFunction("set",
+            "key", "value") {
+        private static final long serialVersionUID = 4075950193187972686L;
+        
+        @Override
+        protected RosettoValue run(Scope args) {
+            String key = args.get("key").asString("");
+            RosettoValue value = args.get("value");
+            args.getParent().set(key, value);
+            return Values.VOID;
+        }
+    };
+    
+    /**
+     * 指定したキーで表されるローカル変数を取得する.<br>
+     * 通常は@記号を使ったエイリアスで呼び出す.
+     */
+    public static final RosettoFunction getlocal = new RosettoFunction("getlocal",
+            "**key**") {
+        private static final long serialVersionUID = 4075950193187972686L;
+        
+        @Override
+        protected RosettoValue run(Scope args) {
+            RosettoValue key = args.get("**key**");
+            if(key.getType() == ValueType.NULL) return Values.NULL;
+            return args.get(key.asString());
         }
     };
     

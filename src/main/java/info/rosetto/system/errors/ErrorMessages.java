@@ -10,16 +10,10 @@ package info.rosetto.system.errors;
  */
 public class ErrorMessages {
     
-    private static ErrorMessages instance;
+    private static ErrorMessages instance = new ErrorMessages();
     
     private final ErrorMessagesJA errorMessages = ErrorMessagesJA.getInstance();
     
-    public static ErrorMessages getInstance() {
-        if(instance == null) {
-            instance = new ErrorMessages();
-        }
-        return instance;
-    }
     
     public static String get(int errorCode) {
         String s = instance.errorMessages.get(errorCode);

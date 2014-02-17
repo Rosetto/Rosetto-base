@@ -3,7 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
+import info.rosetto.functions.base.ArithmeticFunctions;
 import info.rosetto.functions.base.BaseFunctions;
+import info.rosetto.functions.base.FunctionalFunctions;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoAction;
@@ -39,7 +41,10 @@ public class ActionContext implements Serializable {
      */
     ActionContext() {
         importPackage(BaseFunctions.getInstance(), "base");
+        importPackage(ArithmeticFunctions.getInstance(), "arithmetic");
+        importPackage(FunctionalFunctions.getInstance(), "functional");
         usePackage("base");
+        usePackage("arithmetic");
     }
     
     /**

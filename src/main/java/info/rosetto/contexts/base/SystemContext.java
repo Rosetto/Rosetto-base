@@ -5,6 +5,7 @@ package info.rosetto.contexts.base;
 
 import info.rosetto.models.state.engine.EngineModel;
 import info.rosetto.models.state.parser.Parser;
+import info.rosetto.parsers.rosetto.RosettoParser;
 
 /**
  * Rosettoのシステム状態を示すインスタンス.
@@ -15,7 +16,7 @@ public class SystemContext {
     /**
      * このコンテキストでスクリプト解釈に使用されるパーサー.
      */
-    private Parser parser;
+    private Parser parser = new RosettoParser();
     
     /**
      * このコンテキストでのエンジンの設定等を格納したモデル.<br>

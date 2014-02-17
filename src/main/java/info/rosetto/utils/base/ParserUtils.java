@@ -23,7 +23,6 @@ import java.util.Stack;
  */
 public class ParserUtils {
     
-    
     /**
      * スクリプト文字列をユニット文字列に分割する.<br>
      * タグ部分を末尾にするように行を分割する.

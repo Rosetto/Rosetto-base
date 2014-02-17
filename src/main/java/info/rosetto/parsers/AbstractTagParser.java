@@ -27,7 +27,7 @@ public abstract class AbstractTagParser {
     /**
      * 指定タグをRosettoActionに変換する.
      * 指定文字列が角括弧で囲まれていればそれを外し、
-     * 最初に登場するスペースまでをタグ名、それ以降を引数としてRosettoActionを生成する.
+     * 最初に登場するスペースまでをタグ名、それ以降を引数としてActionCallを生成する.
      * @param tag RosettoActionに変換するタグ
      * @return 変換後のRosettoAction
      */

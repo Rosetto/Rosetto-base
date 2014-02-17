@@ -74,6 +74,14 @@ public class ScenarioParser extends Tokenizer implements Parser {
         this(normalizer, new RosettoTagParser());
     }
     
+    /**
+     * 指定したタグ文字列をActionCallに変換する.
+     * @param tag
+     * @return
+     */
+    public ActionCall parseActionCall(String tag) {
+        return tagParser.parseTag(tag);
+    }
     
     /**
      * 文字列表現のシナリオを解釈してシナリオオブジェクトを作成する.
