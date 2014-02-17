@@ -6,8 +6,6 @@ package info.rosetto.models.base.values;
 import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.function.RosettoFunction;
 
-import java.util.List;
-
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.
  * @author tohhy
@@ -25,6 +23,18 @@ public enum ValueType {
      * 関数やマクロの呼び出しを示す型.
      */
     ACTION_CALL(ActionCall.class),
+    /**
+     * リストを表す型.
+     */
+    LIST(ListValue.class),
+    /**
+     * ハッシュを表す型.
+     */
+    HASH(HashValue.class),
+    /**
+     * 任意のオブジェクトを示す型.
+     */
+    OBJECT(RosettoObject.class),
     /**
      * 関数を示す型.
      */
@@ -49,14 +59,6 @@ public enum ValueType {
      * 浮動小数点数を示す型.
      */
     DOUBLE(double.class),
-    /**
-     * リストを表す型.
-     */
-    LIST(List.class),
-    /**
-     * 任意のオブジェクトを示す型.
-     */
-    OBJECT(Object.class)
     ;
     
     /**

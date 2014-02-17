@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.models.base.parser.Parser;
 import info.rosetto.models.state.engine.EngineModel;
+import info.rosetto.models.state.parser.Parser;
 
 /**
  * Rosettoのシステム状態を示すインスタンス.

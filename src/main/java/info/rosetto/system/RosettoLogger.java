@@ -87,7 +87,7 @@ public class RosettoLogger {
             sb.append(args[i]);
             if(i != args.length-1) sb.append(",");
         }
-        instance.warning(ErrorMessages.get(error) + sb.toString());
+        warning(ErrorMessages.get(error) + sb.toString());
     }
     
     /**

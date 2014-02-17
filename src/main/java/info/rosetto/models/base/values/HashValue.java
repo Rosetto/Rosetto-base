@@ -1,78 +1,52 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.models.base.values;
 
 import info.rosetto.system.exceptions.NotConvertibleException;
-import info.rosetto.utils.base.Values;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * RosettoValueの連続した列を表すRosettoValue.
+ * リストを拡張し、キーと値の組を格納できるようにしたもの.<br>
+ * 以下のようにごちゃ混ぜ(=hash)に値を放り込むことができる.<br>
+ * <br>
+ * {foo=10 bar=100 2 6 a=1 9 3}<br>
+ * <br>
+ * Rosetto中ではこのハッシュは以下のように整理される.<br>
+ * <br>
+ * kwargs {foo=10, bar=100, a=1}<br>
+ * args (2,6,9,3)<br>
+ * <br>
+ * 先にキーワードを持つものが抽出されてマップとして保持され、その後に残りの要素がリストとして保持される.
  * @author tohhy
  */
-public class ListValue implements RosettoValue {
-    private static final long serialVersionUID = -5778537199758610111L;
-    /**
-     * 
-     */
+public class HashValue implements RosettoValue {
+    private static final long serialVersionUID = -2799398352971209558L;
+    
+    private final Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
     private final List<RosettoValue> list = new LinkedList<RosettoValue>();
     
-    public ListValue(List<RosettoValue> values) {
-        list.addAll(values);
-    }
-    
-    public ListValue(RosettoValue...values) {
-        for(RosettoValue v : values) 
-            list.add(v);
-    }
-    
-    public ListValue(String...values) {
-        for(String s : values) 
-            list.add(Values.create(s));
-    }
-    
-    public RosettoValue first() {
-        if(list.size() == 0) return Values.NULL;
-        return list.get(0);
-    }
-    
-    public RosettoValue rest() {
-        if(list.size() == 0 || list.size() == 1) return Values.NULL;
-        if(list.size() == 2) return list.get(1);
-        return new ListValue(list.subList(1, list.size()));
-    }
-    
-    public int getSize() {
-        return list.size();
-    }
-    
-    public List<RosettoValue> getList() {
-        return Collections.unmodifiableList(list);
+    @Override
+    public ValueType getType() {
+        return ValueType.HASH;
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.LIST;
-    }
-    
-    @Override
     public Object getValue() {
-        return Collections.unmodifiableList(list);
+        return this;
     }
-    
     @Override
     public String asString() throws NotConvertibleException {
-        return list.toString();
+        return list.toString() + map.toString();
     }
     
     @Override
     public String asString(String defaultValue) {
-        return list.toString();
+        return list.toString() + map.toString();
     }
     
     @Override

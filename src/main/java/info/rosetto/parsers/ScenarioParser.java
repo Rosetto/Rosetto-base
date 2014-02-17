@@ -7,13 +7,13 @@
 package info.rosetto.parsers;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.Parser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoAction;
+import info.rosetto.models.state.parser.ArgumentSyntax;
+import info.rosetto.models.state.parser.Parser;
 import info.rosetto.parsers.rosetto.RosettoTagParser;
 import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;

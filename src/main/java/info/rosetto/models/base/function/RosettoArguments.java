@@ -4,9 +4,8 @@
 
 package info.rosetto.models.base.function;
 
-import info.rosetto.models.base.parser.ArgumentSyntax;
 import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.utils.base.ArgumentsUtils;
+import info.rosetto.models.state.parser.ArgumentSyntax;
 import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;

@@ -1,4 +1,4 @@
-package info.rosetto.models.base.parser;
+package info.rosetto.models.state.parser;
 
 import info.rosetto.models.base.scenario.Scenario;
 

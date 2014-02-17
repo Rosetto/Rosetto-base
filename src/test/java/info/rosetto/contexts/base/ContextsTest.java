@@ -11,12 +11,12 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.Parser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.parser.ArgumentSyntax;
+import info.rosetto.models.state.parser.Parser;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;
