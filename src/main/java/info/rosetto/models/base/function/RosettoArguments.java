@@ -6,6 +6,7 @@ package info.rosetto.models.base.function;
 
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.ArgumentSyntax;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
@@ -103,14 +104,14 @@ public class RosettoArguments implements Serializable {
     
     
     /**
-     * 指定した関数を用いてこの引数リストをパースする.
+     * 指定した関数とスコープを用いてこの引数リストをパースする.
      * キーワードが指定されていない通常引数は指定関数の引数順等を考慮して指定関数に合わせてマッピングされる.
      * 結果は引数名と値のマップに格納されて返される.
      * RosettoFunction中のRuntimeArgumentsから呼ばれる.
      * @param func パースに用いる関数
      * @return 引数名と値のマップ
      */
-    public Map<String, RosettoValue> parse(RosettoFunction func) {
+    public Map<String, RosettoValue> parse(RosettoFunction func, Scope currentScope) {
         if(func == null) throw new IllegalArgumentException("渡された関数がnullです");
         
         Map<String, RosettoValue> result = new HashMap<String, RosettoValue>();
@@ -140,7 +141,7 @@ public class RosettoArguments implements Serializable {
             if(removed)
                 requiredArgsCount--;
             //結果にキーワード引数を追加
-            result.put(e.getKey(), ParserUtils.parseArg(e.getValue()));
+            result.put(e.getKey(), ParserUtils.parseArg(e.getValue(), currentScope));
         }
         
         //非キーワード引数を処理
@@ -158,7 +159,7 @@ public class RosettoArguments implements Serializable {
                 
                 //残った非キーワード引数のみを順に結合してマップへ追加
                 String farg = funcArgs.pollFirst();
-                result.put(farg, ParserUtils.parseArg(s));
+                result.put(farg, ParserUtils.parseArg(s, currentScope));
             }
             
             int mvarCount = 0;
@@ -182,7 +183,7 @@ public class RosettoArguments implements Serializable {
             }
             for(String s : args) {
                 //残った非キーワード引数を順に結合してマップへ追加
-                result.put(funcArgs.pollFirst(), ParserUtils.parseArg(s));
+                result.put(funcArgs.pollFirst(), ParserUtils.parseArg(s, currentScope));
             }
         }
         return result;

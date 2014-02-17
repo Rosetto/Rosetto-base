@@ -30,6 +30,8 @@ public class HashValue implements RosettoValue {
     private final Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
     private final List<RosettoValue> list = new LinkedList<RosettoValue>();
     
+    
+    
     @Override
     public ValueType getType() {
         return ValueType.HASH;

@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.state.namespace;
+package info.rosetto.models.state.variables;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.RosettoValue;

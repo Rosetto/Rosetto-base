@@ -8,6 +8,7 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
@@ -132,7 +133,7 @@ public class ActionCall implements RosettoValue {
      * 変数が見つからない場合や、実行可能な対象でなかった場合は処理が省略されてVoidが返る.
      * @return 評価した結果
      */
-    public RosettoValue evaluate() {
+    public RosettoValue evaluate(Scope parentScope) {
         String varName = this.getFunctionName();
         RosettoValue v = Contexts.getAction(varName);
         
@@ -144,7 +145,7 @@ public class ActionCall implements RosettoValue {
         if(v.getType() == ValueType.FUNCTION) {
             RosettoFunction f = (RosettoFunction) v;
             RosettoArguments args = this.getArgs();
-            RosettoValue result = f.execute(args);
+            RosettoValue result = f.execute(args, parentScope);
             ActionObservatory.getInstance().functionExecuted(f, args, result);
             return result;
         }
@@ -168,53 +169,129 @@ public class ActionCall implements RosettoValue {
         return this;
     }
     
+    public String evalAsString(Scope parentScope) throws NotConvertibleException {
+        return evaluate(parentScope).asString();
+    }
+    
+    public String evalAsString(String defaultValue, Scope parentScope) {
+        return evaluate(parentScope).asString(defaultValue);
+    }
+    
+    public boolean evalAsBool(Scope parentScope) throws NotConvertibleException {
+        return evaluate(parentScope).asBool();
+    }
+    
+    public boolean evalAsBool(boolean defaultValue, Scope parentScope) {
+        return evaluate(parentScope).asBool(defaultValue);
+    }
+    
+    public int evalAsInt(Scope parentScope) throws NotConvertibleException {
+        return evaluate(parentScope).asInt();
+    }
+    
+    public int evalAsInt(int defaultValue, Scope parentScope) {
+        return evaluate(parentScope).asInt(defaultValue);
+    }
+    
+    public long evalAsLong(Scope parentScope) throws NotConvertibleException {
+        return evaluate(parentScope).asLong();
+    }
+    
+    public long evalAsLong(long defaultValue, Scope parentScope) {
+        return evaluate(parentScope).asLong(defaultValue);
+    }
+    
+    public double evalAsDouble(Scope parentScope) throws NotConvertibleException {
+        return evaluate(parentScope).asDouble();
+    }
+    
+    public double evalAsDouble(double defaultValue, Scope parentScope) {
+        return evaluate(parentScope).asDouble(defaultValue);
+    }
+    
+    
     @Override
     public String asString() throws NotConvertibleException {
-        return evaluate().asString();
+        throw new NotConvertibleException();
     }
-    
+
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public String asString(String defaultValue) {
-        return evaluate().asString(defaultValue);
+        return defaultValue;
     }
-    
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
     @Override
     public boolean asBool() throws NotConvertibleException {
-        return evaluate().asBool();
+        return false;
     }
     
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public boolean asBool(boolean defaultValue) {
-        return evaluate().asBool(defaultValue);
+        return false;
     }
     
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
     @Override
     public int asInt() throws NotConvertibleException {
-        return evaluate().asInt();
+        throw new NotConvertibleException();
     }
     
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public int asInt(int defaultValue) {
-        return evaluate().asInt(defaultValue);
+        return defaultValue;
     }
     
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
     @Override
     public long asLong() throws NotConvertibleException {
-        return evaluate().asLong();
+        throw new NotConvertibleException();
     }
     
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public long asLong(long defaultValue) {
-        return evaluate().asLong(defaultValue);
+        return defaultValue;
     }
     
+    /**
+     * NotConvertibleExceptionをスローする.
+     * @throws NotConvertibleException 
+     */
     @Override
     public double asDouble() throws NotConvertibleException {
-        return evaluate().asDouble();
+        throw new NotConvertibleException();
     }
     
+    /**
+     * デフォルト値を返す.
+     * @return defaultValueで指定した値
+     */
     @Override
     public double asDouble(double defaultValue) {
-        return evaluate().asDouble(defaultValue);
+        return defaultValue;
     }
 }

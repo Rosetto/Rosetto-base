@@ -8,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
@@ -17,6 +16,7 @@ import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.ArgumentSyntax;
 import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;
@@ -130,7 +130,7 @@ public class ContextsTest {
         Contexts.defineFunction(new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
             @Override
-            protected RosettoValue run(ExpandedArguments args) {
+            protected RosettoValue run(Scope args) {
                 return Values.VOID;
             }
         });

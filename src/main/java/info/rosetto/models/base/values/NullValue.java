@@ -4,6 +4,7 @@
 package info.rosetto.models.base.values;
 
 import info.rosetto.models.base.function.RosettoArguments;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.errors.RosettoError;
 import info.rosetto.system.exceptions.NotConvertibleException;
@@ -153,19 +154,19 @@ public class NullValue implements RosettoValue, RosettoAction {
     }
     
     @Override
-    public RosettoValue execute() {
+    public RosettoValue execute(Scope parentScope) {
         RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
         return this;
     }
     
     @Override
-    public RosettoValue execute(RosettoArguments args) {
+    public RosettoValue execute(RosettoArguments args, Scope parentScope) {
         RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
         return this;
     }
 
     @Override
-    public RosettoValue execute(String args) {
+    public RosettoValue execute(String args, Scope parentScope) {
         RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
         return null;
     }

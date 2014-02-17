@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
 import java.util.ArrayList;
@@ -16,10 +17,13 @@ import org.junit.Test;
 @SuppressWarnings("serial")
 public class RosettoArgumentsTest {
     
+    private Scope testScope;
+    
     @Before
     public void setUp() {
         Contexts.dispose();
         Contexts.initialize();
+        testScope = new Scope();
     }
     
     @Test
@@ -71,7 +75,7 @@ public class RosettoArgumentsTest {
     public void parseにnull値を渡すとエラー() throws Exception {
         RosettoArguments sut = new RosettoArguments("foo=bar");
         try {
-            sut.parse(null);
+            sut.parse(null, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
@@ -82,10 +86,10 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "arg1", "arg2=dummy", "arg3=v3") {
             @Override
-            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope args) {return Values.VOID;}
         };
         RosettoArguments sut = new RosettoArguments("arg1=v1 v2");
-        Map<String, RosettoValue> result = sut.parse(f);
+        Map<String, RosettoValue> result = sut.parse(f, testScope);
         assertThat(result.get("arg1").asString(), is("v1"));
         assertThat(result.get("arg2").asString(), is("v2"));
         assertThat(result.get("arg3").asString(), is("v3"));
@@ -93,13 +97,13 @@ public class RosettoArgumentsTest {
         RosettoFunction f2 = new RosettoFunction("testfunc", 
                 "file", "volume=", "loop=") {
             @Override
-            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope args) {return Values.VOID;}
         };
         
         RosettoArguments sut2 = new RosettoArguments("storage=foo.mp3");
         
         try {
-            sut2.parse(f2);
+            sut2.parse(f2, testScope);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -112,20 +116,20 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "a", "b", "c") {
             @Override
-            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope args) {return Values.VOID;}
         };
         //これは正常に動作
-        new RosettoArguments("A B C").parse(f);
+        new RosettoArguments("A B C").parse(f, testScope);
         //これは足りないのでエラー
         try {
-            new RosettoArguments("A B").parse(f);
+            new RosettoArguments("A B").parse(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         
         //これは多いのでエラー
         try {
-            new RosettoArguments("A B C D").parse(f);
+            new RosettoArguments("A B C D").parse(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }

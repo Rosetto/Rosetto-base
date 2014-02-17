@@ -7,6 +7,7 @@ package info.rosetto.utils.base;
 import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.variables.Scope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class ParserUtils {
             return Values.create(argStr);
         }
         
-        public RosettoValue parse() {
+        public RosettoValue parse(Scope currentScope) {
             if(!argStr.startsWith("[")) return rawValue();
             int strLen = argStr.length();
             
@@ -89,16 +90,16 @@ public class ParserUtils {
                     if(obIndex.isEmpty()) throw new IllegalArgumentException("");
                     int ob = obIndex.pop();
                     coress.put(ob, i);
-                    ActionCall v = parseRegion(ob, i);
+                    ActionCall v = parseRegion(ob, i, currentScope);
                     parsed.put(ob, v);
                 }
             }
             RosettoValue result = parsed.get(0);
-            if(result instanceof ActionCall) result = ((ActionCall)result).evaluate();
+            if(result instanceof ActionCall) result = ((ActionCall)result).evaluate(currentScope);
             return result;
         }
         
-        private ActionCall parseRegion(int start, int end) {
+        private ActionCall parseRegion(int start, int end, Scope scope) {
             List<String> result = new ArrayList<String>();
             StringBuilder buf = new StringBuilder();
             for(int i=start+1; i<end; i++) {
@@ -111,7 +112,7 @@ public class ParserUtils {
                         buf = new StringBuilder();
                     }
                     //パース済みのactioncallをresultに追加
-                    result.add(parsed.get(i).asString());
+                    result.add(parsed.get(i).evalAsString(scope));
                     //対応する括弧までスキップ
                     i = coress.get(i);
                 } else if(c == ']') {
@@ -150,11 +151,9 @@ public class ParserUtils {
      * @param argStr
      * @return
      */
-    public static RosettoValue parseArg(String argStr) {
-        return new ArgParser(argStr).parse();
+    public static RosettoValue parseArg(String argStr, Scope currentScope) {
+        return new ArgParser(argStr).parse(currentScope);
     }
-    
-    
     
     /**
      * mapの属性値がダブルクオートで囲まれていれば外す.

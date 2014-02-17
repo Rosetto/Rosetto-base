@@ -1,8 +1,10 @@
 package info.rosetto.models.base.function;
 
+import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
@@ -59,6 +61,25 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         }
     }
     
+    /**
+     * 無名のlambda関数を生成する.
+     * @param args
+     */
+    public RosettoFunction(RosettoValue args) {
+        this.name = "";
+        if(args == null) return;
+        if(args.getType() == ValueType.HASH) {
+            
+        } else if(args.getType() == ValueType.LIST) {
+            for(RosettoValue s : ((ListValue)args).getList()) {
+                this.args.add(s.asString());
+            }
+        } else {
+            this.args.add(args.asString());
+        }
+    }
+    
+    
     
     /**
      * この関数の実行内容を定義するメソッド.<br>
@@ -67,25 +88,25 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * そのため、個々の引数も非nullになる.<br>
      * execメソッドが実行される際にこのメソッドが呼び出される.
      */
-    protected abstract RosettoValue run(ExpandedArguments args);
+    protected abstract RosettoValue run(Scope functionScope);
     
 
     /**
      * 引数なしでこの関数を実行する.
      * execute(RosettoArguments.EMPTY)と同じ.
      */
-    public RosettoValue execute() {
-        return execute(RosettoArguments.EMPTY);
+    public RosettoValue execute(Scope parentScope) {
+        return execute(RosettoArguments.EMPTY, parentScope);
     }
     
     /**
      * この関数を実行する.
      * @param args 実行時引数
      */
-    public RosettoValue execute(RosettoArguments args) {
+    public RosettoValue execute(RosettoArguments args, Scope parentScope) {
         if(args == null)
             args = RosettoArguments.EMPTY;
-        RosettoValue result = run(new ExpandedArguments(args, this));
+        RosettoValue result = run(new Scope(args, this, parentScope));
         ActionObservatory.getInstance().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;
@@ -96,24 +117,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * この関数を実行する.
      * @param args 文字列形式の実行時引数
      */
-    public RosettoValue execute(String args) {
+    public RosettoValue execute(String args, Scope parentScope) {
         RosettoValue result = null;
         RosettoArguments rargs = RosettoArguments.EMPTY;
         if(args != null) {
             rargs = new RosettoArguments(args);
         }
-        result = run(new ExpandedArguments(rargs, this));
+        result = run(new Scope(rargs, this, parentScope));
         ActionObservatory.getInstance().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;
-    }
-    
-    /**
-     * 関数実行のログを取る. finerで出力される.
-     * @param func 実行された関数
-     */
-    private static void logFunctionExecuted(RosettoFunction func) {
-        RosettoLogger.finer("function executed: " + func.toString());
     }
     
     /**
@@ -211,6 +224,15 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
+    }
+    
+    
+    /**
+     * 関数実行のログを取る. finerで出力される.
+     * @param func 実行された関数
+     */
+    private static void logFunctionExecuted(RosettoFunction func) {
+        RosettoLogger.finer("function executed: " + func.toString());
     }
     
 }

@@ -9,8 +9,8 @@ import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.engine.EngineModel;
-import info.rosetto.models.state.namespace.NameSpace;
 import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.state.variables.NameSpace;
 import info.rosetto.utils.base.Values;
 
 /**

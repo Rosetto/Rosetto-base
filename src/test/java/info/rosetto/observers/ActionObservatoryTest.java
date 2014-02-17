@@ -3,10 +3,10 @@ package info.rosetto.observers;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.function.ExpandedArguments;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.observers.ActionObserver;
 
@@ -30,12 +30,12 @@ public class ActionObservatoryTest {
         
         RosettoFunction sut = new RosettoFunction("func") {
             @Override
-            protected RosettoValue run(ExpandedArguments args) {
+            protected RosettoValue run(Scope args) {
                 return null;
             }
         };
         assertThat(sb.length(), is(0));
-        sut.execute();
+        sut.execute(new Scope());
         assertThat(sb.length(), is(1));
     }
 
