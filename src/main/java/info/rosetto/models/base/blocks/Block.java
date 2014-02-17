@@ -12,7 +12,7 @@ import org.frows.lilex.token.Token;
 /**
  * スクリプト中の一部分を格納するブロック.
  * 未解釈のシナリオオブジェクトやスクリプトなどを格納する.
- * スクリプト中ではリテラルとして扱われる要素なので、LiteralTokenを継承している.
+ * スクリプト中ではリテラルとして扱われる要素なので、Tokenを継承している.
  * @author tohhy
  */
 @Immutable

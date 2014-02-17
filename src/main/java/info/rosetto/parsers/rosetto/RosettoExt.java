@@ -1,6 +1,6 @@
 package info.rosetto.parsers.rosetto;
 
-import info.rosetto.models.base.engine.AvailableExtensions;
+import info.rosetto.models.state.engine.AvailableExtensions;
 
 /**
  * Rosettoが対応する拡張子の定義.

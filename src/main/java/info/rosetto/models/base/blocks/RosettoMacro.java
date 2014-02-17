@@ -17,7 +17,7 @@ import java.util.List;
  * 単一のマクロを記録するブロック. イミュータブル.
  * @author tohhy
  */
-public class Macro extends Block {
+public class RosettoMacro extends Block {
     private static final long serialVersionUID = 4177216826565925097L;
     
     /**
@@ -30,7 +30,7 @@ public class Macro extends Block {
      * @param name マクロの名称
      * @param body 実行内容
      */
-    public Macro(String name, String body) {
+    public RosettoMacro(String name, String body) {
         super(body);
         if(name == null || name.length() == 0) 
             throw new IllegalArgumentException("name must not be empty");

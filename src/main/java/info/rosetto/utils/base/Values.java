@@ -7,8 +7,17 @@ import info.rosetto.models.base.values.BoolValue;
 import info.rosetto.models.base.values.DoubleValue;
 import info.rosetto.models.base.values.IntValue;
 import info.rosetto.models.base.values.NullValue;
+import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.StringValue;
 import info.rosetto.models.base.values.VoidValue;
+
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
 
 /**
  * Rosetto中の値の生成・操作に関するユーティリティクラス.
@@ -71,4 +80,27 @@ public class Values {
     public static BoolValue create(boolean value) {
         return new BoolValue(value);
     }
+    
+    /**
+     * 指定したJSON表現からRosettoValueを生成する.
+     * @param json
+     * @return
+     * @throws IOException 
+     * @throws JsonParseException 
+     */
+    public static RosettoValue createFromJSON(String json) 
+            throws JsonParseException {
+        try {
+            JsonParser parser = new JsonFactory().createParser(json);
+            
+            while(parser.isClosed()) {
+                JsonToken token = parser.nextToken();
+                if (token == null) break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 }

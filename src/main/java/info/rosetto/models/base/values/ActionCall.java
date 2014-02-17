@@ -4,11 +4,11 @@
 package info.rosetto.models.base.values;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.contexts.observers.ActionObservatory;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
@@ -134,7 +134,7 @@ public class ActionCall implements RosettoValue {
      */
     public RosettoValue evaluate() {
         String varName = this.getFunctionName();
-        RosettoValue v = Contexts.getFunction(varName);
+        RosettoValue v = Contexts.getAction(varName);
         
         if(v == Values.NULL || v == BaseFunctions.pass) {
             RosettoLogger.warning("実行可能な対象 " + varName + "がコンテキスト中に見つかりません");

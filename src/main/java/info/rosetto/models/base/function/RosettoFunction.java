@@ -3,6 +3,7 @@ package info.rosetto.models.base.function;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
+import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
@@ -85,6 +86,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         if(args == null)
             args = RosettoArguments.EMPTY;
         RosettoValue result = run(new ExpandedArguments(args, this));
+        ActionObservatory.getInstance().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;
     }
@@ -92,15 +94,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     
     /**
      * この関数を実行する.
-     * @param args 実行時引数
+     * @param args 文字列形式の実行時引数
      */
     public RosettoValue execute(String args) {
         RosettoValue result = null;
-        if(args == null) {
-            result = run(new ExpandedArguments(RosettoArguments.EMPTY, this));
-        } else {
-            result = run(new ExpandedArguments(new RosettoArguments(args), this));
+        RosettoArguments rargs = RosettoArguments.EMPTY;
+        if(args != null) {
+            rargs = new RosettoArguments(args);
         }
+        result = run(new ExpandedArguments(rargs, this));
+        ActionObservatory.getInstance().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;
     }

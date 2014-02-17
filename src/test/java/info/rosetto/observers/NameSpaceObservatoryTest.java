@@ -1,12 +1,12 @@
-package info.rosetto.contexts.observers;
+package info.rosetto.observers;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.contexts.observers.NameSpaceObservatory;
-import info.rosetto.contexts.observers.VariableObservatory;
-import info.rosetto.contexts.observers.VariableObserver;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.observers.NameSpaceObservatory;
+import info.rosetto.observers.VariableObservatory;
+import info.rosetto.observers.VariableObserver;
 
 import org.junit.Before;
 import org.junit.Test;

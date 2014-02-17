@@ -81,8 +81,13 @@ public class RosettoLogger {
      * ゲーム中で予期しない動作が発生する可能性がある例外発生等に付加するログ.
      * @param error 出力するエラー
      */
-    public static void warning(RosettoError error) {
-        instance.warning(ErrorMessages.get(error));
+    public static void warning(RosettoError error, String...args) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<args.length; i++) {
+            sb.append(args[i]);
+            if(i != args.length-1) sb.append(",");
+        }
+        instance.warning(ErrorMessages.get(error) + sb.toString());
     }
     
     /**

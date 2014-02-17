@@ -4,13 +4,18 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
+import java.util.List;
+
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.ExpandedArguments;
+import info.rosetto.models.base.function.RosettoArgument;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.RosettoParser;
+import info.rosetto.models.base.parser.Parser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.utils.base.Values;
 
@@ -129,8 +134,8 @@ public class ContextsTest {
                 return Values.VOID;
             }
         });
-        assertThat(Contexts.getFunction("func").getName(), is("func"));
-        assertThat(Contexts.getFunction("org.example.not-found-func"), is(BaseFunctions.pass));
+        assertThat(Contexts.getAction("func").getName(), is("func"));
+        assertThat(Contexts.getAction("org.example.not-found-func"), is((RosettoAction)Values.NULL));
     }
     
     
@@ -138,13 +143,17 @@ public class ContextsTest {
     public void getAndSetParserTest() throws Exception {
         Contexts.initialize();
         
-        Contexts.setParser(new RosettoParser() {
+        Contexts.setParser(new Parser() {
             @Override
             public Scenario parseScript(String script) {
                 return new Scenario(new Unit("TestParser"));
             }
             @Override
             public ArgumentSyntax getArgumentSyntax() {
+                return null;
+            }
+            @Override
+            public Scenario parseScript(List<String> scriptLines) {
                 return null;
             }
         });

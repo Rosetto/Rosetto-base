@@ -7,13 +7,13 @@
 package info.rosetto.parsers;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.parser.ArgumentSyntax;
-import info.rosetto.models.base.parser.RosettoParser;
+import info.rosetto.models.base.parser.Parser;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.parsers.rosetto.RosettoTagParser;
 import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
@@ -30,7 +30,7 @@ import org.frows.lilex.token.Token;
  * ScenarioParser.parse()から設定ファイルに合わせたサブクラスで初期化される.
  * @author tohhy
  */
-public class ScenarioParser extends Tokenizer implements RosettoParser {
+public class ScenarioParser extends Tokenizer implements Parser {
     /**
      * 正規記法のタグ全体にマッチする正規表現
      */
@@ -82,9 +82,26 @@ public class ScenarioParser extends Tokenizer implements RosettoParser {
      */
     public Scenario parseScript(String scenarioText) {
         List<String> scenario = asLines(scenarioText);
-        return parseLines(scenario);
+        return parseScript(scenario);
     }
     
+
+    /**
+     * 行ごとに分割されたシナリオスクリプトをパースして通常シナリオを返す.
+     * パースのメイン処理.<br>
+     * normalizer.normalizeでテキストと角括弧形式のタグのみに正規化、
+     * tokenizeでトークンに分割の順で操作が行われる.
+     * @param scenarioLines 行ごとに分割されたシナリオスクリプト
+     * @return パース後のシナリオ
+     */
+    public Scenario parseScript(List<String> scenarioLines) {
+        //テキストと角括弧形式のタグのみに正規化
+        List<String> normalized = normalizer.normalize(scenarioLines);
+        //トークンのリストを作成
+        List<Token> tokens = tokenize(normalized);
+        //シナリオ作成
+        return new Scenario(tokens, ScenarioType.NORMAL);
+    }
 
     @Override
     public ArgumentSyntax getArgumentSyntax() {
@@ -127,23 +144,6 @@ public class ScenarioParser extends Tokenizer implements RosettoParser {
     }
     
     /**
-     * 行ごとに分割されたシナリオスクリプトをパースして通常シナリオを返す.
-     * パースのメイン処理.<br>
-     * normalizer.normalizeでテキストと角括弧形式のタグのみに正規化、
-     * tokenizeでトークンに分割の順で操作が行われる.
-     * @param scenarioLines 行ごとに分割されたシナリオスクリプト
-     * @return パース後のシナリオ
-     */
-    private Scenario parseLines(List<String> scenarioLines) {
-        //テキストと角括弧形式のタグのみに正規化
-        List<String> normalized = normalizer.normalize(scenarioLines);
-        //トークンのリストを作成
-        List<Token> tokens = tokenize(normalized);
-        //シナリオ作成
-        return new Scenario(tokens, ScenarioType.NORMAL);
-    }
-
-    /**
      * ユニットがパース時に実行する関数を持っていれば実行する.
      * @param u
      */
@@ -154,7 +154,7 @@ public class ScenarioParser extends Tokenizer implements RosettoParser {
         //変換処理
         ActionCall action = u.getAction();
         String func = action.getFunctionName();
-        RosettoFunction f = info.rosetto.contexts.base.Contexts.getFunction(func);
+        RosettoAction f = info.rosetto.contexts.base.Contexts.getAction(func);
         if(f != null) {
 //            return f.execOnParse(u);
         }

@@ -163,4 +163,10 @@ public class NullValue implements RosettoValue, RosettoAction {
         RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
         return this;
     }
+
+    @Override
+    public RosettoValue execute(String args) {
+        RosettoLogger.warning(RosettoError.E7000_NULL_ACTION_CALLED);
+        return null;
+    }
 }

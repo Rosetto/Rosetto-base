@@ -3,13 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.engine.EngineModel;
+import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.namespace.NameSpace;
-import info.rosetto.models.base.parser.RosettoParser;
+import info.rosetto.models.base.parser.Parser;
+import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.engine.EngineModel;
+import info.rosetto.models.state.namespace.NameSpace;
 import info.rosetto.utils.base.Values;
 
 /**
@@ -168,15 +169,14 @@ public class Contexts {
     }
     
     /**
-     * 関数コンテキストから指定名の関数を取得する.
+     * アクションコンテキストから指定名のアクションを取得する.
      * 値が関数でない場合、存在しない場合はBaseFunctions.passが返る.
      * @param key 値を取得する変数名
      * @return 取得した関数. 値が関数でないか、変数が存在しなければBaseFunctions.pass
      * TODO マクロへの対応
      */
-    public static RosettoFunction getFunction(String key) {
-        RosettoValue v = instance.functions.get(key);
-        return (v instanceof RosettoFunction) ? (RosettoFunction)v : BaseFunctions.pass;
+    public static RosettoAction getAction(String key) {
+        return instance.functions.get(key);
     }
     
     /**
@@ -186,6 +186,12 @@ public class Contexts {
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
         instance.functions.defineAction(func);
+    }
+    
+    public static void defineMacro(RosettoMacro macro) {
+        initializedCheck();
+        //TODO
+        //instance.functions.defineAction(macro);
     }
     
     /**
@@ -243,7 +249,7 @@ public class Contexts {
      * 現在のコンテキストで利用するパーサーを取得する.
      * @return 現在のコンテキストで利用するパーサー
      */
-    public static RosettoParser getParser() {
+    public static Parser getParser() {
         initializedCheck();
         return instance.system.getParser();
     }
@@ -252,14 +258,14 @@ public class Contexts {
      * 現在のコンテキストで利用するパーサーを変更する.
      * @param parser 現在のコンテキストで利用するパーサー
      */
-    public static void setParser(RosettoParser parser) {
+    public static void setParser(Parser parser) {
         initializedCheck();
         instance.system.setParser(parser);
     }
     
     /**
-     * 現在のコンテキストで利用するパーサーを取得する.
-     * @return 現在のコンテキストで利用するパーサー
+     * 
+     * @return
      */
     public static EngineModel getEngine() {
         initializedCheck();
@@ -267,10 +273,10 @@ public class Contexts {
     }
     
     /**
-     * 現在のコンテキストで利用するパーサーを変更する.
-     * @param parser 現在のコンテキストで利用するパーサー
+     * 
+     * @param parser
      */
-    public static void setParser(EngineModel parser) {
+    public static void setEngine(EngineModel parser) {
         initializedCheck();
         instance.system.setEngine(parser);
     }

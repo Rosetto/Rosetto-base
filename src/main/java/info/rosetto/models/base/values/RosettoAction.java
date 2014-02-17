@@ -22,5 +22,12 @@ public interface RosettoAction extends RosettoValue {
      * @return 実行した結果の返り値
      */
     public RosettoValue execute(RosettoArguments args);
+    
+    /**
+     * このアクションを実行する.
+     * @param args 文字列形式の実行時引数
+     * @return 実行した結果の返り値
+     */
+    public RosettoValue execute(String args);
 
 }

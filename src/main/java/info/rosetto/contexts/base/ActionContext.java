@@ -6,9 +6,9 @@ package info.rosetto.contexts.base;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.namespace.NameSpace;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.namespace.NameSpace;
 import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
@@ -68,17 +68,17 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * 
-     * @param f
+     * 指定した関数をコンテキスト上に定義する.
+     * @param f 定義する関数
      */
     public void defineAction(RosettoAction f) {
         current.set(f.getName(), f);
     }
     
     /**
-     * 
-     * @param f
-     * @param packageName
+     * 指定した関数を指定名のパッケージ上に定義する.
+     * @param f 定義する関数
+     * @param packageName 追加先のパッケージ
      */
     public void defineAction(RosettoAction f, String packageName) {
         getNameSpace(packageName).set(f.getName(), f);
@@ -86,7 +86,7 @@ public class ActionContext implements Serializable {
     
     /**
      * 指定したパッケージを指定名の名前空間上に読み込む.
-     * @param p
+     * @param p 読み込むパッケージ
      */
     public void importPackage(FunctionPackage p, String packageName) {
         NameSpace space = getNameSpace(packageName);
@@ -97,7 +97,7 @@ public class ActionContext implements Serializable {
 
     /**
      * 指定したパッケージに含まれるすべての関数をcurrentにロードして使用可能にする.
-     * @param packageName
+     * @param packageName ロードするパッケージの完全名
      */
     public void usePackage(String packageName) {
         NameSpace pkg = getNameSpace(packageName);

@@ -3,15 +3,23 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.system.errors;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * システムで定義される各種のエラー.
  * @author tohhy
  */
 public enum RosettoError {
     E1000_GLOBAL_VAR_NOT_FOUND(1000),
+    E1100_ACTION_NOT_FOUND(1100),
     
-    E7000_NULL_ACTION_CALLED(7000);
+    E7000_NULL_ACTION_CALLED(7000),
+    
+    
+    
     ;
+    private static final Map<Integer, RosettoError> mapByCode = new HashMap<Integer, RosettoError>();
     private final int errorCode;
     
     private RosettoError(int errorCode) {
@@ -22,9 +30,13 @@ public enum RosettoError {
     public String toString() {
         return String.valueOf(errorCode);
     }
-
+    
     public int getErrorCode() {
         return errorCode;
+    }
+    
+    public static RosettoError getByCode(int code) {
+        return mapByCode.get(code);
     }
 
 }

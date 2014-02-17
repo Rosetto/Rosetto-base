@@ -14,7 +14,7 @@ import org.junit.Test;
 @SuppressWarnings("serial")
 public class ActionContextTest {
     
-
+    
     @Test
     public void getAndDefineTest() throws Exception {
         ActionContext sut = new ActionContext();

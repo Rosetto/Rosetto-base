@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.system.errors;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 言語ごとのエラーメッセージを提供する.
@@ -14,7 +12,7 @@ public class ErrorMessages {
     
     private static ErrorMessages instance;
     
-    private Map<Integer, String> errorMessanges = new HashMap<Integer, String>();
+    private final ErrorMessagesJA errorMessages = ErrorMessagesJA.getInstance();
     
     public static ErrorMessages getInstance() {
         if(instance == null) {
@@ -24,12 +22,12 @@ public class ErrorMessages {
     }
     
     public static String get(int errorCode) {
-        String s = instance.errorMessanges.get(errorCode);
+        String s = instance.errorMessages.get(errorCode);
         return (s != null) ? s : "[error] code = " + errorCode;
     }
     
     public static String get(RosettoError error) {
-        String s = instance.errorMessanges.get(error.getErrorCode());
+        String s = instance.errorMessages.get(error.getErrorCode());
         return (s != null) ? s : "[error]" + error.name();
     }
 

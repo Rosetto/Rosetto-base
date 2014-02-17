@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.function;
 
-import info.rosetto.models.base.namespace.NameSpace;
+import info.rosetto.models.state.namespace.NameSpace;
 
 import java.util.ArrayList;
 import java.util.Collections;

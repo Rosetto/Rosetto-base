@@ -6,8 +6,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.namespace.NameSpace;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.state.namespace.NameSpace;
 import info.rosetto.system.exceptions.VariableSealedException;
 import info.rosetto.utils.base.Values;
 

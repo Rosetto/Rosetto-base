@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.values;
 
-import info.rosetto.models.base.blocks.Macro;
+import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.function.RosettoFunction;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public enum ValueType {
     /**
      * マクロを示す型.
      */
-    MACRO(Macro.class),
+    MACRO(RosettoMacro.class),
     /**
      * 文字列リテラルを示す型.
      */
