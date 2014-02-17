@@ -116,7 +116,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     public RosettoValue execute(RosettoArguments args, Scope parentScope) {
         if(args == null)
             args = RosettoArguments.EMPTY;
-        RosettoValue result = run(new Scope(args, this, parentScope));
+        RosettoValue result = run(createScope(args, parentScope));
         ActionObservatory.getInstance().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;

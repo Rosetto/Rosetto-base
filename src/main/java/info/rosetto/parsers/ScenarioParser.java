@@ -11,12 +11,15 @@ import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoAction;
+import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.ArgumentSyntax;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.parsers.rosetto.RosettoTagParser;
 import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
+import info.rosetto.utils.base.Values;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -75,12 +78,17 @@ public class ScenarioParser extends Tokenizer implements Parser {
     }
     
     /**
-     * 指定したタグ文字列をActionCallに変換する.
-     * @param tag
+     * 指定した文字列をRosettoValueに変換する.
+     * @param element
      * @return
      */
-    public ActionCall parseActionCall(String tag) {
-        return tagParser.parseTag(tag);
+    public RosettoValue parseElement(String element) {
+        if(element.startsWith("[") && element.endsWith("]")) {
+            return tagParser.parseTag(element);
+        } else if(element.startsWith("(") && element.endsWith(")")) {
+            return new ListValue(element.substring(1, element.length()-1).split(" "));
+        }
+        return Values.create(element);
     }
     
     /**

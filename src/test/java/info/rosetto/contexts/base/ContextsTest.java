@@ -158,7 +158,7 @@ public class ContextsTest {
                 return null;
             }
             @Override
-            public ActionCall parseActionCall(String actionCall) {
+            public RosettoValue parseElement(String actionCall) {
                 return null;
             }
         });

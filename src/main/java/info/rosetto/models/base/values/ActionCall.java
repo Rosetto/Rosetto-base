@@ -98,16 +98,10 @@ public class ActionCall implements RosettoValue {
     
     @Override
     public String toString() {
-        return toTag();
+        if(args.getSize() == 0) return "[" + callName + "]";
+        return "[" + callName + " " + args.toString() + "]";
     }
     
-    /**
-     * この関数呼び出しを表現する正規記法のタグに再度変換する.
-     */
-    public String toTag() {
-        if(args.getSize() == 0) return "[" + callName + "]";
-        return "[" + callName + " " + args.getStringArgs() + "]";
-    }
     
     /**
      * このFunctionCallで呼び出される関数名を返す.

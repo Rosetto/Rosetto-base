@@ -54,9 +54,9 @@ public class RosettoArgumentsTest {
     public void インスタンス化の際に属性値を囲んでいるダブルクオートは外される() throws Exception {
         String test = " \"foo\" bar=baz hoge=\"fuga\" ika=\"tako and tako\"";
         RosettoArguments sut = new RosettoArguments(test);
-        assertThat(sut.get("hoge"), is("fuga"));
-        assertThat(sut.get("ika"), is("tako and tako"));
-        assertThat(sut.get(0), is("foo"));
+        assertThat(sut.get("hoge").asString(), is("fuga"));
+        assertThat(sut.get("ika").asString(), is("tako and tako"));
+        assertThat(sut.get(0).asString(), is("foo"));
     }
     
     @Test
@@ -152,7 +152,7 @@ public class RosettoArgumentsTest {
     @Test
     public void getで指定キーに関連づけられた値が返る() throws Exception {
         RosettoArguments sut = new RosettoArguments("%1 2=2 3=3");
-        assertThat(sut.get("2"), is("2"));
+        assertThat(sut.get("2").asString(), is("2"));
         assertThat(sut.get("5"), is(nullValue()));
     }
 

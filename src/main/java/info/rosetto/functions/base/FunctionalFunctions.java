@@ -10,7 +10,6 @@ import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
-import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.Values;
 
 import java.util.LinkedList;
@@ -104,11 +103,11 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected Scope createScope(RosettoArguments args, Scope parentScope) {
-            String list = args.get(0);
-            String actionCall = args.get(1);
+            RosettoValue list = args.get(0);
+            RosettoValue actionCall = args.get(1);
             Scope scope = new Scope();
-            scope.set("args", ParserUtils.parseArg(list, parentScope));
-            scope.set("action", Contexts.getParser().parseActionCall(actionCall));
+            scope.set("args", list);
+            scope.set("action", actionCall);
             return scope;
         }
         

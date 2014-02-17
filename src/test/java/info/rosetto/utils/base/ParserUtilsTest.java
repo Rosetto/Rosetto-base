@@ -2,6 +2,7 @@ package info.rosetto.utils.base;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
@@ -9,10 +10,17 @@ import info.rosetto.models.state.variables.Scope;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class ParserUtilsTest {
 
+    @Before
+    public void setUp() {
+        Contexts.dispose();
+        Contexts.initialize();
+    }
+    
     @Test
     public void 単純なスクリプトのパース() throws Exception {
          List<String> sut1 = ParserUtils.splitScript("");
