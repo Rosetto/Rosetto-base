@@ -11,6 +11,7 @@ import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.utils.base.Values;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,8 +82,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         }
     }
     
-    
-    
     /**
      * この関数の実行内容を定義するメソッド.<br>
      * argsは非nullが保証される.空引数の際にはRuntimeArguments.EMPTYが渡される.<br>
@@ -118,7 +117,12 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     public RosettoValue execute(RosettoArguments args, Scope parentScope) {
         if(args == null)
             args = RosettoArguments.EMPTY;
-        RosettoValue result = run(createScope(args, parentScope), args);
+        RosettoValue result = Values.NULL;
+        try {
+            result = run(createScope(args, parentScope), args);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         ActionObservatory.getInstance().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;
@@ -130,12 +134,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @param args 文字列形式の実行時引数
      */
     public RosettoValue execute(String args, Scope parentScope) {
-        RosettoValue result = null;
         RosettoArguments rargs = RosettoArguments.EMPTY;
         if(args != null) {
             rargs = new RosettoArguments(args);
         }
-        result = run(createScope(rargs, parentScope), rargs);
+        RosettoValue result = Values.NULL;
+        try {
+            result = run(createScope(rargs, parentScope), rargs);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         ActionObservatory.getInstance().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;
