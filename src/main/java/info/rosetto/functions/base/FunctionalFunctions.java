@@ -7,11 +7,9 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -23,7 +21,7 @@ public class FunctionalFunctions extends FunctionPackage {
     private static FunctionalFunctions instance;
     
     private FunctionalFunctions() {
-        super(first, rest, map, range, fn);
+        super(first, rest, map, range);
     }
     
     
@@ -41,7 +39,7 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
-            RosettoValue v = args.get("list");
+            RosettoValue v = scope.get("list");
             if(v instanceof ListValue) {
                 return ((ListValue)v).first();
             }
@@ -55,7 +53,7 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
-            RosettoValue v = args.get("list");
+            RosettoValue v = scope.get("list");
             if(v instanceof ListValue) {
                 return ((ListValue)v).rest();
             }
@@ -69,8 +67,8 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
-            RosettoValue f = args.get("fn");
-            RosettoValue l = args.get("list");
+            RosettoValue f = scope.get("fn");
+            RosettoValue l = scope.get("list");
             RosettoAction fn = (f instanceof RosettoAction) ? 
                     (RosettoFunction) f : Contexts.getAction(f.asString());
             if(fn == BaseFunctions.pass || !(l instanceof ListValue)) return Values.NULL;
@@ -90,8 +88,8 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
-            int start = args.get("start").asInt();
-            int end = args.get("end").asInt();
+            int start = scope.get("start").asInt();
+            int end = scope.get("end").asInt();
             List<RosettoValue> list = new LinkedList<RosettoValue>();
             for(int i=start; i<end; i++) {
                 list.add(Values.create(i));
@@ -100,37 +98,5 @@ public class FunctionalFunctions extends FunctionPackage {
         }
     };
     
-    public static final RosettoFunction fn = new RosettoFunction("fn", 
-            "args", "action") {
-        private static final long serialVersionUID = -411581748747383868L;
-        
-        @Override
-        protected Scope createScope(RosettoArguments args, Scope parentScope) {
-            RosettoValue list = args.get(0);
-            RosettoValue actionCall = args.get(1);
-            Scope scope = new Scope();
-            scope.set("args", list);
-            scope.set("action", actionCall);
-            return scope;
-        }
-        
-        @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
-            RosettoValue argsValue = scope.get("args");
-            RosettoValue actionValue = scope.get("action");
-            if(actionValue.getType() == ValueType.ACTION_CALL) {
-                final ActionCall ac = (ActionCall) actionValue;
-                RosettoFunction f = new RosettoFunction(argsValue) {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    protected RosettoValue run(Scope scope, RosettoArguments args) {
-                        return ac.evaluate(scope);
-                    }
-                };
-                return f;
-            }
-            return Values.NULL;
-        }
-    };
 
 }

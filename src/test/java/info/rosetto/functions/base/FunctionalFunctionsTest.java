@@ -26,11 +26,6 @@ public class FunctionalFunctionsTest {
         testScope = new Scope();
     }
 
-    @Test
-    public void fnTest() {
-        RosettoValue sut1 = FunctionalFunctions.fn.execute("(x) [* [getlocal x] 2]", testScope);
-        assertThat(sut1.getType(), is(ValueType.FUNCTION));
-        assertThat(((RosettoFunction)sut1).execute("2", testScope).asInt(), is(4));
-    }
+
 
 }

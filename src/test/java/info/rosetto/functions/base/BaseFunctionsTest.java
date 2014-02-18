@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -47,6 +49,20 @@ public class BaseFunctionsTest {
                 is((RosettoValue)Values.VOID));
         assertThat(Contexts.get("fuga.hoge").asDouble(), is(1.234));
         
+    }
+    
+    @Test
+    public void fnTest() {
+        RosettoValue sut1 = BaseFunctions.fn.execute("(x) [* @x 2]", testScope);
+        assertThat(sut1.getType(), is(ValueType.FUNCTION));
+        assertThat(((RosettoFunction)sut1).execute("2", testScope).asInt(), is(4));
+    }
+    
+    @Test
+    public void defnTest() {
+        RosettoValue sut1 = BaseFunctions.defn.execute("foo (x) [* @x 2]", testScope);
+        assertThat(sut1.getType(), is(ValueType.FUNCTION));
+        assertThat(Contexts.getAction("foo").execute("2", testScope).asInt(), is(4));
     }
 
 }

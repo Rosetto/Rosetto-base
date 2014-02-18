@@ -7,6 +7,7 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
@@ -39,7 +40,7 @@ public class BaseFunctions extends FunctionPackage {
      * コンストラクタは公開しない.
      */
     private BaseFunctions() {
-        super(pass, getglobal, def, getlocal, set, use);
+        super(pass, getglobal, def, getlocal, set, defn, fn, use);
     }
     
     /**
@@ -102,6 +103,7 @@ public class BaseFunctions extends FunctionPackage {
         }
     };
     
+
     /**
      * 指定したキーで表されるローカル変数を取得する.<br>
      * 通常は@記号を使ったエイリアスで呼び出す.
@@ -115,6 +117,75 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue key = scope.get("**key**");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return scope.get(key.asString());
+        }
+    };
+
+    public static final RosettoFunction defn = new RosettoFunction("defn", 
+            "name", "args", "action") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(RosettoArguments args, Scope parentScope) {
+            RosettoValue name = args.get(0);
+            RosettoValue list = args.get(1);
+            RosettoValue actionCall = args.get(2);
+            Scope scope = new Scope();
+            scope.set("name", name);
+            scope.set("args", list);
+            scope.set("action", actionCall);
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
+            RosettoValue argsValue = scope.get("args");
+            RosettoValue actionValue = scope.get("action");
+            if(actionValue.getType() == ValueType.ACTION_CALL) {
+                final ActionCall ac = (ActionCall) actionValue;
+                RosettoFunction f = new RosettoFunction(scope.get("name").asString(), argsValue) {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    protected RosettoValue run(Scope scope, RosettoArguments args) {
+                        return ac.evaluate(scope);
+                    }
+                };
+                Contexts.defineFunction(f);
+                return f;
+            }
+            return Values.NULL;
+        }
+    };
+
+    public static final RosettoFunction fn = new RosettoFunction("fn", 
+            "args", "action") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(RosettoArguments args, Scope parentScope) {
+            RosettoValue list = args.get(0);
+            RosettoValue actionCall = args.get(1);
+            Scope scope = new Scope();
+            scope.set("args", list);
+            scope.set("action", actionCall);
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
+            RosettoValue argsValue = scope.get("args");
+            RosettoValue actionValue = scope.get("action");
+            if(actionValue.getType() == ValueType.ACTION_CALL) {
+                final ActionCall ac = (ActionCall) actionValue;
+                RosettoFunction f = new RosettoFunction(argsValue) {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    protected RosettoValue run(Scope scope, RosettoArguments args) {
+                        return ac.evaluate(scope);
+                    }
+                };
+                return f;
+            }
+            return Values.NULL;
         }
     };
     

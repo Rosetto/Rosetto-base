@@ -66,10 +66,17 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     
     /**
      * 無名のlambda関数を生成する.
-     * @param args
+     * @param args 引数名リスト
      */
     public RosettoFunction(RosettoValue args) {
-        this.name = "";
+        this("", args);
+    }
+    
+    /**
+     * @param args 引数名リスト
+     */
+    public RosettoFunction(String name, RosettoValue args) {
+        this.name = name;
         if(args == null) return;
         if(args.getType() == ValueType.HASH) {
             

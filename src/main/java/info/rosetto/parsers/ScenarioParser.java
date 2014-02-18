@@ -87,6 +87,10 @@ public class ScenarioParser extends Tokenizer implements Parser {
             return tagParser.parseTag(element);
         } else if(element.startsWith("(") && element.endsWith(")")) {
             return new ListValue(element.substring(1, element.length()-1).split(" "));
+        } else if(element.startsWith("@")) {
+            return new ActionCall("getlocal", element.substring(1));
+        } else if(element.startsWith("$")) {
+            return new ActionCall("getglobal", element.substring(1));
         }
         return Values.create(element);
     }
