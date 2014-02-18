@@ -4,7 +4,6 @@
 package info.rosetto.parsers;
 
 import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.utils.base.ArgumentsUtils;
 import info.rosetto.utils.base.ParserUtils;
 
 /**
@@ -31,18 +30,4 @@ public abstract class TagConverter {
     public ActionCall toRosettoTag(String tagName, String attrs) {
         return toRosettoTag(tagName, ParserUtils.splitStringArgs(attrs));
     }
-    
-    /**
-     * String配列として渡ってきた引数をスペース区切りの文字列引数に変換する.
-     * @param args
-     * @return
-     */
-    public String concatArgs(String[] args) {
-        StringBuilder b = new StringBuilder();
-        for(String s : args) {
-            b.append(s).append(" ");
-        }
-        return b.toString();
-    }
-    
 }

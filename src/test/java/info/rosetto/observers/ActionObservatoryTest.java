@@ -30,7 +30,7 @@ public class ActionObservatoryTest {
         
         RosettoFunction sut = new RosettoFunction("func") {
             @Override
-            protected RosettoValue run(Scope args) {
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {
                 return null;
             }
         };

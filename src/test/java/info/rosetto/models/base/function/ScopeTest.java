@@ -18,8 +18,8 @@ public class ScopeTest {
             "a", "b") {
         
         @Override
-        protected RosettoValue run(Scope args) {
-            return Values.create(args.get("a").asInt() + args.get("b").asInt());
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
+            return Values.create(scope.get("a").asInt() + scope.get("b").asInt());
         }
     };
     
@@ -27,7 +27,7 @@ public class ScopeTest {
             "x", "y") {
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
             return null;
         }
     };

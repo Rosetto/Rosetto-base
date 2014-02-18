@@ -86,7 +86,7 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "arg1", "arg2=dummy", "arg3=v3") {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         RosettoArguments sut = new RosettoArguments("arg1=v1 v2");
         Map<String, RosettoValue> result = sut.parse(f, testScope);
@@ -97,7 +97,7 @@ public class RosettoArgumentsTest {
         RosettoFunction f2 = new RosettoFunction("testfunc", 
                 "file", "volume=", "loop=") {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         
         RosettoArguments sut2 = new RosettoArguments("storage=foo.mp3");
@@ -116,7 +116,7 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "a", "b", "c") {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         //これは正常に動作
         new RosettoArguments("A B C").parse(f, testScope);

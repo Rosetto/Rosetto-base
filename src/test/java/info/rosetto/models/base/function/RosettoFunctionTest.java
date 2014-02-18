@@ -17,7 +17,7 @@ public class RosettoFunctionTest {
     public void インスタンス化テスト() throws Exception {
         RosettoFunction f1 = new RosettoFunction("f1") {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         assertThat(f1.getName(), is("f1"));
         assertThat(f1.getArguments().size(), is(0));
@@ -25,7 +25,7 @@ public class RosettoFunctionTest {
         RosettoFunction f2 = new RosettoFunction("f2",
                 "hoge", "huga", "foo=bar") {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         assertThat(f2.getName(), is("f2"));
         assertThat(f2.getArguments().size(), is(3));
@@ -33,7 +33,7 @@ public class RosettoFunctionTest {
         RosettoFunction f3 = new RosettoFunction("f3", 
                 (String[])null) {
             @Override
-            protected RosettoValue run(Scope args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
         };
         assertThat(f3.getName(), is("f3"));
         assertThat(f3.getArguments().size(), is(0));

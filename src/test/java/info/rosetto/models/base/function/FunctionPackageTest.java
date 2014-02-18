@@ -19,7 +19,7 @@ public class FunctionPackageTest {
         FunctionPackage sut2 = new FunctionPackage(
                 new RosettoFunction("foo") {
                     @Override
-                    protected RosettoValue run(Scope args) {
+                    protected RosettoValue run(Scope functionScope, RosettoArguments args) {
                         return null;
                     }
                 });

@@ -5,6 +5,7 @@ package info.rosetto.functions.base;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.FunctionPackage;
+import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
@@ -48,7 +49,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
             return Values.VOID;
         }
     };
@@ -61,9 +62,9 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
-            String key = args.get("key").asString("");
-            RosettoValue value = args.get("value");
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+            String key = scope.get("key").asString("");
+            RosettoValue value = scope.get("value");
             Contexts.define(key, value);
             return Values.VOID;
         }
@@ -78,8 +79,8 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
-            RosettoValue key = args.get("key");
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+            RosettoValue key = scope.get("key");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return Contexts.get(key.asString());
         }
@@ -93,10 +94,10 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
-            String key = args.get("key").asString("");
-            RosettoValue value = args.get("value");
-            args.getParent().set(key, value);
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+            String key = scope.get("key").asString("");
+            RosettoValue value = scope.get("value");
+            scope.getParent().set(key, value);
             return Values.VOID;
         }
     };
@@ -110,10 +111,10 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
-            RosettoValue key = args.get("**key**");
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+            RosettoValue key = scope.get("**key**");
             if(key.getType() == ValueType.NULL) return Values.NULL;
-            return args.get(key.asString());
+            return scope.get(key.asString());
         }
     };
     
@@ -125,8 +126,8 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope args) {
-            RosettoValue pkg = args.get("package");
+        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+            RosettoValue pkg = scope.get("package");
             Contexts.usePackage(pkg.asString());
             return Values.VOID;
         }

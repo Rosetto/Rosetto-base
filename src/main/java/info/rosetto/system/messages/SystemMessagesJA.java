@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.system.errors;
+package info.rosetto.system.messages;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -11,29 +11,31 @@ import java.util.Map;
  * エラーコードをキーとしたマップで定義する.
  * @author tohhy
  */
-public class ErrorMessagesJA {
+public class SystemMessagesJA {
     
-    public ErrorMessagesJA() {
-        messages.put(RosettoError.E1000_GLOBAL_VAR_NOT_FOUND, 
+    public SystemMessagesJA() {
+        messages.put(SystemMessage.E1000_GLOBAL_VAR_NOT_FOUND, 
                 "指定名のグローバル変数が見つかりません : ");
-        messages.put(RosettoError.E1100_ACTION_NOT_FOUND, 
+        messages.put(SystemMessage.E1100_ACTION_NOT_FOUND, 
                 "指定名の関数またはマクロがコンテキスト中に見つかりません : ");
+        messages.put(SystemMessage.E8000_WRONG_TYPE_ARGUMENT, 
+                "引数の型が一致しません : ");
     }
     
-    private static final ErrorMessagesJA instance = new ErrorMessagesJA();
+    private static final SystemMessagesJA instance = new SystemMessagesJA();
     
-    private final Map<RosettoError, String> messages = 
-            new EnumMap<RosettoError, String>(RosettoError.class);
+    private final Map<SystemMessage, String> messages = 
+            new EnumMap<SystemMessage, String>(SystemMessage.class);
     
-    public static ErrorMessagesJA getInstance() {
+    public static SystemMessagesJA getInstance() {
         return instance;
     }
     
     public String get(int code) {
-        return messages.get(RosettoError.getByCode(code));
+        return messages.get(SystemMessage.getByCode(code));
     }
     
-    public String get(RosettoError error) {
+    public String get(SystemMessage error) {
         return messages.get(error);
     }
 }

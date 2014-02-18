@@ -4,11 +4,11 @@
 
 package info.rosetto.models.base.scenario;
 
+import info.rosetto.parsers.ScriptToken;
+
 import java.io.Serializable;
 
 import javax.annotation.concurrent.Immutable;
-
-import org.frows.lilex.token.Token;
 
 /**
  * ラベルのモデル.Scenarioが保持する.<br>
@@ -16,7 +16,7 @@ import org.frows.lilex.token.Token;
  * @author tohhy
  */
 @Immutable
-public class Label implements Serializable, Token {
+public class Label implements Serializable, ScriptToken {
     private static final long serialVersionUID = 1014810670973539619L;
 
     /**

@@ -37,7 +37,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
             RosettoValue v = args.get("list");
             if(v instanceof ListValue) {
                 return ((ListValue)v).first();
@@ -51,7 +51,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
             RosettoValue v = args.get("list");
             if(v instanceof ListValue) {
                 return ((ListValue)v).rest();
@@ -65,7 +65,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
             RosettoValue f = args.get("fn");
             RosettoValue l = args.get("list");
             RosettoAction fn = (f instanceof RosettoAction) ? 
@@ -75,7 +75,7 @@ public class FunctionalFunctions extends FunctionPackage {
             List<RosettoValue> list = ((ListValue)l).getList();
             List<RosettoValue> result = new LinkedList<RosettoValue>();
             for(RosettoValue v : list) {
-                result.add(fn.execute(v.asString(), args));
+                result.add(fn.execute(v.asString(), scope));
             }
             return new ListValue(result);
         }
@@ -86,7 +86,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope args) {
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
             int start = args.get("start").asInt();
             int end = args.get("end").asInt();
             List<RosettoValue> list = new LinkedList<RosettoValue>();
@@ -112,16 +112,16 @@ public class FunctionalFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope args) {
-            RosettoValue argsValue = args.get("args");
-            RosettoValue actionValue = args.get("action");
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
+            RosettoValue argsValue = scope.get("args");
+            RosettoValue actionValue = scope.get("action");
             if(actionValue.getType() == ValueType.ACTION_CALL) {
                 final ActionCall ac = (ActionCall) actionValue;
                 RosettoFunction f = new RosettoFunction(argsValue) {
                     private static final long serialVersionUID = 1L;
                     @Override
-                    protected RosettoValue run(Scope functionScope) {
-                        return ac.evaluate(functionScope);
+                    protected RosettoValue run(Scope scope, RosettoArguments args) {
+                        return ac.evaluate(scope);
                     }
                 };
                 return f;

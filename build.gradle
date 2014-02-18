@@ -31,7 +31,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
     
     compile 'org.frows:puregds:0.1.4'
-    compile 'org.frows:lilex:0.0.3'
+    compile 'org.frows:lilex:0.0.4'
     compile 'org.frows:observatories:0.0.4'
 }
 

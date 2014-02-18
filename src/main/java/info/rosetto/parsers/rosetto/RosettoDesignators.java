@@ -1,12 +1,13 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers.rosetto;
 
-import info.rosetto.models.base.blocks.ScriptBlock;
 import info.rosetto.parsers.StdDesignators;
 
 import org.frows.lilex.designator.Designators;
 import org.frows.lilex.designator.HeadDesignator;
 import org.frows.lilex.designator.MiddleDesignator;
-import org.frows.lilex.designator.TagDesignator;
 import org.frows.lilex.designator.TailDesignator;
 
 /**
@@ -16,38 +17,6 @@ import org.frows.lilex.designator.TailDesignator;
 public class RosettoDesignators extends Designators {
     
     /**
-     * スクリプト実行指示子
-     */
-    static final TagDesignator EVAL_D = new TagDesignator("[%", "%]", 4000) {
-        
-        @Override
-        protected String processTagContent(String content) {
-            //あらゆる行中指示子をエスケープするのは不可能
-            //ブロックに格納してContextに登録し、実行時にuidで呼び出してevalする
-            ScriptBlock block = new ScriptBlock(content);
-            //TODO
-//            Contexts.getIScript().registerScriptBlock(block);
-            return "[eval uid=" + block.getUid() + "]";
-        }
-    };
-    
-    /**
-     * スクリプト埋め込み指示子
-     */
-    static final TagDesignator EMB_D = new TagDesignator("[%=", "%]", 5000) {
-        
-        @Override
-        protected String processTagContent(String content) {
-            //あらゆる行中指示子をエスケープするのは不可能
-            //ブロックに格納してContextに登録し、実行時にuidで呼び出してevalする
-            ScriptBlock block = new ScriptBlock(content);
-//            Contexts.getIScript().registerScriptBlock(block);
-            //TODO
-            return "[emb uid=" + block.getUid() + "]";
-        }
-    };
-    
-    /**
      * コメント指示子.
      */
     static final MiddleDesignator COMMENT_D = StdDesignators.createMiddleComment(";");
@@ -55,7 +24,7 @@ public class RosettoDesignators extends Designators {
     /**
      * ラベル指示子.
      */
-    static final HeadDesignator LABEL_D = StdDesignators.createHeadLabel("*", ' ' );
+    static final HeadDesignator LABEL_D = StdDesignators.createHeadLabel("*", ' ');
     /**
      * ページング指示子.
      */
@@ -114,11 +83,10 @@ public class RosettoDesignators extends Designators {
             StdDesignators.createTailAddition("/", "[lf]");
 
     public RosettoDesignators() {
-        super(  
-                EVAL_D, EMB_D,
+        super(
                 COMMENT_D,
                 LABEL_D, PAGING_D, CHARA_SELECT_D, CHARA_EDIT_D, ACTOR_EDIT_D,
                 NO_LF_D, NO_W_D);
     }
-
+    
 }

@@ -6,7 +6,6 @@ package info.rosetto.utils.base;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 
@@ -59,7 +58,7 @@ public class ParserUtils {
         return list;
     }
     
-
+    
     private static class ArgParser {
         Stack<Integer> obIndex = new Stack<Integer>();
         Map<Integer, Integer> coress = new HashMap<Integer, Integer>();

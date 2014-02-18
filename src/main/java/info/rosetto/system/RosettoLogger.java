@@ -1,11 +1,10 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.system;
 
-import info.rosetto.system.errors.ErrorMessages;
-import info.rosetto.system.errors.RosettoError;
+import info.rosetto.system.messages.SystemMessage;
+import info.rosetto.system.messages.SystemMessages;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -81,13 +80,13 @@ public class RosettoLogger {
      * ゲーム中で予期しない動作が発生する可能性がある例外発生等に付加するログ.
      * @param error 出力するエラー
      */
-    public static void warning(RosettoError error, String...args) {
+    public static void warning(SystemMessage error, String...args) {
         StringBuilder sb = new StringBuilder();
         for(int i=0; i<args.length; i++) {
             sb.append(args[i]);
             if(i != args.length-1) sb.append(",");
         }
-        warning(ErrorMessages.get(error) + sb.toString());
+        warning(SystemMessages.get(error) + sb.toString());
     }
     
     /**

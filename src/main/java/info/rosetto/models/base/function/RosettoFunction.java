@@ -1,3 +1,6 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.function;
 
 import info.rosetto.models.base.values.ListValue;
@@ -14,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
-
 
 /**
  * Rosettoのスクリプト中の関数を表すオブジェクト.イミュータブル.
@@ -88,7 +90,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * そのため、個々の引数も非nullになる.<br>
      * execメソッドが実行される際にこのメソッドが呼び出される.
      */
-    protected abstract RosettoValue run(Scope functionScope);
+    protected abstract RosettoValue run(Scope scope, RosettoArguments rawArgs);
     
     
     /**
@@ -116,7 +118,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     public RosettoValue execute(RosettoArguments args, Scope parentScope) {
         if(args == null)
             args = RosettoArguments.EMPTY;
-        RosettoValue result = run(createScope(args, parentScope));
+        RosettoValue result = run(createScope(args, parentScope), args);
         ActionObservatory.getInstance().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;
@@ -133,7 +135,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         if(args != null) {
             rargs = new RosettoArguments(args);
         }
-        result = run(createScope(rargs, parentScope));
+        result = run(createScope(rargs, parentScope), rargs);
         ActionObservatory.getInstance().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;

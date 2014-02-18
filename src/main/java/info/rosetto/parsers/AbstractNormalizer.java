@@ -1,8 +1,6 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/.
- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 package info.rosetto.parsers;
 
@@ -45,8 +43,8 @@ public abstract class AbstractNormalizer extends Normalizer {
      * KAGのコマンド行やRosettoのキャラクタ指定（行頭に@）、NScripterの関数などは
      * 文法上の形式が異なっても全て角括弧形式に変換しなくてはいけない.<br>
      * <br>
-     * この変換規則をモデル化したものが指示子(Designator)で、ノーマライザは追加された指示子を一定の順番で適用する。<br>
-     * 優先順位は 行末 ＜ 行頭 ＜ 行中 ＜ タグ型 になっており、優先順位が高いものから順に処理する。<br>
+     * この変換規則をモデル化したものが指示子(Designator)で、ノーマライザは追加された指示子を一定の順番で適用する.<br>
+     * 優先順位は 行末 ＜ 行頭 ＜ 行中 ＜ タグ型 になっており、優先順位が高いものから順に処理する.<br>
      * まずタグ型の変換を全行に適用、次に行中、行頭...という処理を行った結果を返す.
      * @return 正規化した行のリスト
      */
@@ -62,7 +60,7 @@ public abstract class AbstractNormalizer extends Normalizer {
     }
     
     /**
-     * 指示子による変換が行われる前のスクリプトの行のリストが渡される.
+     * 指示子による変換が行われる前のスクリプトの行のリストが渡される.<br>
      * 前処理の必要があれば前処理を行って返すように実装する.
      * @param lines 指示子による変換が行われる前のスクリプトの行のリスト
      * @return 前処理を行った後の行のリスト、処理の必要が無ければlinesをそのまま渡す
@@ -72,8 +70,8 @@ public abstract class AbstractNormalizer extends Normalizer {
     }
     
     /**
-     * 全ての指示子による変換が終わった結果が渡される.
-     * この関数で最終処理を行い、正規化の結果として返す..
+     * 全ての指示子による変換が終わった結果が渡される.<br>
+     * この関数で最終処理を行い、正規化の結果として返す.<br>
      * この関数の返り値は必ずテキストとタグのみからなる正規記法であることを保証しなくてはいけない.
      * @param lines 全ての指示子による変換が終わった結果の行のリスト
      * @return 後処理を行った後の行のリスト、処理の必要が無ければlinesをそのまま渡す
@@ -81,7 +79,6 @@ public abstract class AbstractNormalizer extends Normalizer {
     protected List<String> finishNormalize(List<String> lines) {
         return lines;
     }
-    
     
     /**
      * 与えられた行中のタブ記号を全て取り除いて返す.
@@ -91,7 +88,7 @@ public abstract class AbstractNormalizer extends Normalizer {
     protected String removeTabs(String line) {
         return line.replace("\t", "");
     }
-
+    
     /**
      * 指定した行を角括弧で囲む.
      * @param line 変換する行
@@ -104,6 +101,7 @@ public abstract class AbstractNormalizer extends Normalizer {
     /**
      * エスケープされた左角括弧を特殊文字描画タグに変換する.
      * "[["を"[spchar type=ob]"へ.
+     * TODO 見直し
      * @return 変換したline
      */
     protected String escapeBracket(String line) {
@@ -111,7 +109,7 @@ public abstract class AbstractNormalizer extends Normalizer {
     }
     
     /**
-     * 指定した行が閉じられていない角括弧を持つかどうかを判定する.
+     * 指定した行が閉じられていない角括弧を持つかどうかを判定する.<br>
      * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
      */
     protected boolean hasUnClosedBracket(String line) {
@@ -127,9 +125,9 @@ public abstract class AbstractNormalizer extends Normalizer {
     }
     
     /**
-     * 行中から全てのタグを取り除く.
-     * 角括弧で囲まれている文字列をタグとみなす.
-     * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
+     * 行中から全てのタグを取り除く.<br>
+     * 角括弧で囲まれている文字列をタグとみなす.<br>
+     * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る.<br>
      * ダブルクオートは平叙文には存在せず、タグ内の値を囲むためだけに用いられると仮定する
      * @param line 変換する行
      * @return タグを取り除いた行
@@ -153,7 +151,7 @@ public abstract class AbstractNormalizer extends Normalizer {
     }
     
     /**
-     * その行がタグのみかどうかを返す.
+     * その行がタグのみかどうかを返す.<br>
      * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
      * @param line 判定する行
      * @return その行がタグのみかどうか
@@ -165,6 +163,4 @@ public abstract class AbstractNormalizer extends Normalizer {
         return (line.length() == 0);
     }
     
-    
-
 }

@@ -63,7 +63,7 @@ public class ScenarioParserTest {
     public void createUnitListで空行は無視() throws Exception {
         List<String> list = Arrays.asList(
                 new String[]{"test[br]", "", null, "[if exp=\"test==0\"][end]", "test[p]"});
-        List<Token> result = sut.tokenize(list);
+        List<? extends Token> result = sut.tokenize(list);
         assertThat(result.size(), is(4));
     }
 

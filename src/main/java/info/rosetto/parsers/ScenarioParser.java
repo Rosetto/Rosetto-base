@@ -114,7 +114,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
         //テキストと角括弧形式のタグのみに正規化
         List<String> normalized = normalizer.normalize(scenarioLines);
         //トークンのリストを作成
-        List<Token> tokens = tokenize(normalized);
+        List<? extends Token> tokens = tokenize(normalized);
         //シナリオ作成
         return new Scenario(tokens, ScenarioType.NORMAL);
     }
@@ -148,7 +148,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
      * @return
      */
     @Override
-    public List<Token> tokenize(String normalized) {
+    public List<ScriptToken> tokenize(String normalized) {
         ParserState ps = new ParserState();
         for(String unitStr : ParserUtils.splitScript(normalized)) {
             //テキストをコンパイルしてユニットにする

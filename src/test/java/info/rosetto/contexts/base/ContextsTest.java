@@ -4,21 +4,18 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
-import java.util.List;
-
-import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.function.RosettoArgument;
+import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.ArgumentSyntax;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -131,7 +128,7 @@ public class ContextsTest {
         Contexts.defineFunction(new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
             @Override
-            protected RosettoValue run(Scope args) {
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {
                 return Values.VOID;
             }
         });

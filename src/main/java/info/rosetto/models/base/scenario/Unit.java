@@ -5,20 +5,19 @@
 package info.rosetto.models.base.scenario;
 
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.parsers.ScriptToken;
 
 import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.frows.lilex.token.Token;
-
 /**
  * 前のタグの終わりから次のタグの終わりまでの間を表すシナリオ中の基本単位.
  * @author tohhy
  */
 @Immutable
-public class Unit implements Serializable, Token {
+public class Unit implements Serializable, ScriptToken {
     private static final long serialVersionUID = 4445760452271476373L;
     
     /**
