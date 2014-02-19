@@ -1,9 +1,10 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.models.base.values;
 
+import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.state.parser.Parser;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
 
@@ -11,16 +12,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
- * RosettoValueの連続した列を表すRosettoValue.
+ * Listを表すRosettoValue.
  * @author tohhy
  */
-public class ListValue implements RosettoValue {
+@Immutable
+public class ListValue implements RosettoValue, RosettoList {
     private static final long serialVersionUID = -5778537199758610111L;
-    /**
-     * 
-     */
-    private final List<RosettoValue> list = new LinkedList<RosettoValue>();
+    
+    private final LinkedList<RosettoValue> list = new LinkedList<RosettoValue>();
     
     public ListValue(List<RosettoValue> values) {
         list.addAll(values);
@@ -32,8 +34,17 @@ public class ListValue implements RosettoValue {
     }
     
     public ListValue(String...values) {
+        Parser parser = Contexts.getParser();
         for(String s : values) 
-            list.add(Values.create(s));
+            list.add(parser.parseElement(s));
+    }
+    
+    public int getSize() {
+        return list.size();
+    }
+    
+    public List<RosettoValue> getList() {
+        return Collections.unmodifiableList(list);
     }
     
     public RosettoValue first() {
@@ -47,14 +58,10 @@ public class ListValue implements RosettoValue {
         return new ListValue(list.subList(1, list.size()));
     }
     
-    public int getSize() {
-        return list.size();
+    public RosettoValue getAt(int index) {
+        return list.get(index);
     }
     
-    public List<RosettoValue> getList() {
-        return Collections.unmodifiableList(list);
-    }
-
     @Override
     public ValueType getType() {
         return ValueType.LIST;
@@ -75,6 +82,7 @@ public class ListValue implements RosettoValue {
         return list.toString();
     }
     
+
     @Override
     public boolean asBool() throws NotConvertibleException {
         throw new NotConvertibleException();
@@ -114,5 +122,4 @@ public class ListValue implements RosettoValue {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
-
 }

@@ -7,8 +7,10 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.values.HashedList;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoAction;
+import info.rosetto.models.base.values.RosettoList;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
@@ -40,8 +42,8 @@ public class FunctionalFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
             RosettoValue v = scope.get("list");
-            if(v instanceof ListValue) {
-                return ((ListValue)v).first();
+            if(v instanceof RosettoList) {
+                return ((RosettoList)v).first();
             }
             return Values.NULL;
         }
@@ -54,8 +56,8 @@ public class FunctionalFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, RosettoArguments args) {
             RosettoValue v = scope.get("list");
-            if(v instanceof ListValue) {
-                return ((ListValue)v).rest();
+            if(v instanceof RosettoList) {
+                return ((RosettoList)v).rest();
             }
             return Values.NULL;
         }
@@ -71,7 +73,7 @@ public class FunctionalFunctions extends FunctionPackage {
             RosettoValue l = scope.get("list");
             RosettoAction fn = (f instanceof RosettoAction) ? 
                     (RosettoFunction) f : Contexts.getAction(f.asString());
-            if(fn == BaseFunctions.pass || !(l instanceof ListValue)) return Values.NULL;
+            if(fn == BaseFunctions.pass || !(l instanceof HashedList)) return Values.NULL;
             
             List<RosettoValue> list = ((ListValue)l).getList();
             List<RosettoValue> result = new LinkedList<RosettoValue>();

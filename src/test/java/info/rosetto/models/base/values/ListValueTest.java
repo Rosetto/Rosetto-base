@@ -1,7 +1,7 @@
 package info.rosetto.models.base.values;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Test;

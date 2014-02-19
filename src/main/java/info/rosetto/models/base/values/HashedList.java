@@ -1,13 +1,16 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 package info.rosetto.models.base.values;
 
+import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.state.parser.Parser;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.utils.base.TextUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,41 +19,66 @@ import java.util.Map;
  * <br>
  * {foo=10 bar=100 2 6 a=1 9 3}<br>
  * <br>
- * Rosetto中ではこのハッシュは以下のように整理される.<br>
+ * Rosetto中ではこのハッシュドリストは以下のように整理される.<br>
  * <br>
- * kwargs {foo=10, bar=100, a=1}<br>
- * args (2,6,9,3)<br>
+ * Map {foo=10, bar=100, a=1}<br>
+ * List (2,6,9,3)<br>
  * <br>
  * 先にキーワードを持つものが抽出されてマップとして保持され、その後に残りの要素がリストとして保持される.
  * @author tohhy
  */
-public class HashValue implements RosettoValue {
-    private static final long serialVersionUID = -2799398352971209558L;
+public class HashedList implements RosettoValue {
+    private static final long serialVersionUID = -5778537199758610111L;
     
-    private final Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
-    private final List<RosettoValue> list = new LinkedList<RosettoValue>();
+    private final LinkedList<RosettoValue> list;
     
+    private final Map<String, RosettoValue> map;
     
+    public HashedList(String...values) {
+        this.list = new LinkedList<RosettoValue>();
+        this.map = new HashMap<String, RosettoValue>();
+        Parser parser = Contexts.getParser();
+        for(String str : values) {
+            int equalPosition = str.indexOf("=");
+            if(equalPosition == -1) {
+                list.add(parser.parseElement(TextUtils.removeDoubleQuote(str)));
+            } else {
+                String key = str.substring(0, equalPosition);
+                String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
+                map.put(key, parser.parseElement(value));
+            }
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return (list.size() > 0 ? list.toString() : "") + (map.size() > 0 ? map.toString() : "");
+    }
+    
+    public boolean hasMappedValue() {
+        return map != null && map.size() > 0;
+    }
     
     @Override
     public ValueType getType() {
-        return ValueType.HASH;
+        return ValueType.LIST;
     }
-
+    
     @Override
     public Object getValue() {
         return this;
     }
+    
     @Override
     public String asString() throws NotConvertibleException {
-        return list.toString() + map.toString();
+        return toString();
     }
     
     @Override
     public String asString(String defaultValue) {
-        return list.toString() + map.toString();
+        return toString();
     }
-    
+
     @Override
     public boolean asBool() throws NotConvertibleException {
         throw new NotConvertibleException();
@@ -90,5 +118,4 @@ public class HashValue implements RosettoValue {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
-
 }

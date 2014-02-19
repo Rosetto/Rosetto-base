@@ -37,7 +37,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     /**
      * この関数がとる引数のリスト.
      */
-    private final List<String> args = new ArrayList<String>();
+    private final List<String> args;
     
     /**
      * この関数のオブジェクトを指定した名前と引数で生成する.<br>
@@ -58,9 +58,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         if(name == null)
             throw new IllegalArgumentException("name must not be null");
         this.name = name;
-        if(args == null) return;
-        for(String s : args) {
-            this.args.add(s);
+        //引数が空なら空リスト
+        if(args == null) {
+            this.args = new ArrayList<String>(0);
+            return;
+        }
+        //引数があれば最適なリスト
+        int len = args.length;
+        this.args = new ArrayList<String>(len);
+        for(int i=0;i<len;i++) {
+            this.args.add(args[i]);
         }
     }
     
@@ -77,14 +84,18 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     public RosettoFunction(String name, RosettoValue args) {
         this.name = name;
-        if(args == null) return;
-        if(args.getType() == ValueType.HASH) {
-            
-        } else if(args.getType() == ValueType.LIST) {
-            for(RosettoValue s : ((ListValue)args).getList()) {
+        if(args == null) {
+            this.args = new ArrayList<String>(0);
+            return;
+        }
+        if(args.getType() == ValueType.LIST) {
+            ListValue argList = ((ListValue)args);
+            this.args = new ArrayList<String>(argList.getSize());
+            for(RosettoValue s : argList.getList()) {
                 this.args.add(s.asString());
             }
         } else {
+            this.args = new ArrayList<String>(1);
             this.args.add(args.asString());
         }
     }

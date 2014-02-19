@@ -28,9 +28,9 @@ public enum ValueType {
      */
     LIST(ListValue.class),
     /**
-     * ハッシュを表す型.
+     * ハッシュドリストを表す型.
      */
-    HASH(HashValue.class),
+    HASHED_LIST(HashedList.class),
     /**
      * 任意のオブジェクトを示す型.
      */
