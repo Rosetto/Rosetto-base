@@ -73,13 +73,27 @@ public class ListValue implements RosettoValue, RosettoList {
     }
     
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        int len = list.size();
+        int i=0;
+        for(RosettoValue v : list) {
+            sb.append(v.toString());
+            if(i != len-1) sb.append(" ");
+            i++;
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+    
+    @Override
     public String asString() throws NotConvertibleException {
-        return list.toString();
+        return toString();
     }
     
     @Override
     public String asString(String defaultValue) {
-        return list.toString();
+        return toString();
     }
     
 

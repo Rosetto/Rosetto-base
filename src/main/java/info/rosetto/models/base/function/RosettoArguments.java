@@ -6,6 +6,7 @@ package info.rosetto.models.base.function;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.parser.Parser;
@@ -109,14 +110,21 @@ public class RosettoArguments implements Serializable {
     public Map<String, RosettoValue> parse(RosettoFunction func, Scope currentScope) {
         if(func == null) throw new IllegalArgumentException("渡された関数がnullです");
         
+        //結果のマップ
         Map<String, RosettoValue> result = new HashMap<String, RosettoValue>();
+        //関数が持つ引数のリスト
         LinkedList<String> funcArgs = new LinkedList<String>();
+        
+        //関数がいくつ入力必須の引数を持っているか
         int requiredArgsCount = 0;
+        
+        //関数に定義されている全引数についてイテレーション
         for(String s : func.getArguments()) {
             int eqIndex = s.indexOf("=");
-            if(eqIndex < 0) {
+            if(eqIndex == -1) {
                 //名前のみの場合は引数リストに追加
                 funcArgs.add(s);
+                //名前のみなので入力必須
                 requiredArgsCount++;
             } else {
                 //名前とデフォルト値
@@ -128,46 +136,65 @@ public class RosettoArguments implements Serializable {
                 result.put(key, value);
             }
         }
-        //キーワード引数を先に処理
+        
+        //ここから入力とのバインド
+        
+        //キーワード引数入力を先に処理
         for(Entry<String, RosettoValue> e : kwargs.entrySet()) {
             //もしEntryのキーがfuncArgsの値と一致するなら該当のfuncArgを消去
             boolean removed = funcArgs.remove(e.getKey());
             //一致していればカウントを減算
-            if(removed)
-                requiredArgsCount--;
+            if(removed) requiredArgsCount--;
             //結果にキーワード引数を追加
             result.put(e.getKey(), e.getValue());
         }
         
-        //非キーワード引数を処理
-//        String mutableArg = searchMutableArg(args);
-//        if(mutableArg != null) {
-//            //もし可変長引数が含まれていれば
-//            if(requiredArgsCount > args.size() - 1) {
-//                throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
-//                            args.toString() + "|" + func.getArguments());
-//            }
-//            
-//            for(RosettoValue s : args) {
-//                //可変長引数自体は無視
-//                if(s.equals(mutableArg)) continue;
-//                
-//                //残った非キーワード引数のみを順に結合してマップへ追加
-//                String farg = funcArgs.pollFirst();
-//                result.put(farg, s);
-//            }
-//            
-//            int mvarCount = 0;
-//            while(!funcArgs.isEmpty()) {
-//                String farg = funcArgs.pollFirst();
-//                //可変分は mutableArg-n という引数名で渡す
-//                result.put(farg, Values.create(mutableArg + "-" + mvarCount));
-//                mvarCount++;
-//            }
-//            if(funcArgs.size() > 0)
-//                throw new IllegalArgumentException("不明な引数が余ります: " + 
-//                        args.toString() + "|" + func.getArguments());
-//        } else {
+        //非キーワード引数入力を処理
+        String mutableArg = searchMutableArg(funcArgs);
+        if(mutableArg != null) {
+            //もし可変長引数が含まれていれば
+            
+            //引数の要求数が入力の数よりも大きければエラー
+            //可変長引数は要求数に含まないので-1
+            if(requiredArgsCount - 1 > args.size()) {
+                throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
+                            args.toString() + "|" + func.getArguments());
+            }
+            
+            //引数に余りがあれば、それを可変長引数として追加していく
+            //可変長引数のリスト
+            List<RosettoValue> margs = new LinkedList<RosettoValue>();
+            for(int i=0; i<args.size(); i++) {
+                RosettoValue v = args.get(i);
+                if(!funcArgs.isEmpty()) {
+                    //関数側で定義された引数名が空になるまでpopして取りだしていく
+                    String farg = funcArgs.pollFirst();
+                    //可変長引数自体は無視し、直接結びつけない
+                    if(farg.equals(mutableArg)) {
+                        //この時点で空である必要、そうでなければエラー
+                        if(!funcArgs.isEmpty()) {
+                            throw new IllegalArgumentException("mutable args must be last element");
+                        }
+                        //可変長引数に追加
+                        margs.add(v);
+                    }
+                    //引数名に値を結びつけて追加
+                    result.put(farg, v);
+                } else {
+                    //可変長引数に追加
+                    margs.add(v);
+                }
+            }
+            
+            //可変長相当の引数があれば
+            if(margs.size() > 0) {
+                //可変長引数の名前
+                String margName = mutableArg.substring(1);
+                //listvalueとして追加
+                result.put(margName, new ListValue(margs));
+            }
+            
+        } else {
             //含まれていなければ
             if(requiredArgsCount > args.size()) {
                 throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
@@ -186,7 +213,7 @@ public class RosettoArguments implements Serializable {
                     result.put(funcArgs.pollFirst(), value);
                 }
             }
-//        }
+        }
         return result;
     }
     
@@ -204,9 +231,6 @@ public class RosettoArguments implements Serializable {
     public boolean containsKey(String key) {
         return kwargs.containsKey(key);
     }
-
-
-
 
     /**
      * この属性リストに含まれる属性の数を返す.
@@ -237,5 +261,21 @@ public class RosettoArguments implements Serializable {
                 this.kwargs.put(a.getKey(), a.getValue());
             }
         }
+    }
+    
+    /**
+     * 引数中から可変長引数を探して返す.
+     * @return 可変長引数、引数中に可変長引数がなければnull
+     */
+    private String searchMutableArg(List<String> args) {
+        String result = null;
+        for(String s : args) {
+            if(s.startsWith("*") && s.length() >= 2) {
+                if(result != null)
+                    throw new IllegalArgumentException("multiple mutablearg found");
+                result = s;
+            }
+        }
+        return result;
     }
 }

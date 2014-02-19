@@ -11,6 +11,7 @@ import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.values.HashedList;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
@@ -86,6 +87,9 @@ public class ScenarioParser extends Tokenizer implements Parser {
         if(element.startsWith("[") && element.endsWith("]")) {
             return tagParser.parseTag(element);
         } else if(element.startsWith("(") && element.endsWith(")")) {
+            if(element.contains("=")) {
+                return new HashedList(element.substring(1, element.length()-1).split(" "));
+            }
             return new ListValue(element.substring(1, element.length()-1).split(" "));
         } else if(element.startsWith("@")) {
             return new ActionCall("getlocal", element.substring(1));

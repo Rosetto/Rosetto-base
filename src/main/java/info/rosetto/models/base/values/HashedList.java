@@ -59,9 +59,17 @@ public class HashedList implements RosettoValue {
         return map != null && map.size() > 0;
     }
     
+    public RosettoValue get(String mapKey) {
+        return map.get(mapKey);
+    }
+    
+    public RosettoValue getAt(int listIndex) {
+        return list.get(listIndex);
+    }
+    
     @Override
     public ValueType getType() {
-        return ValueType.LIST;
+        return ValueType.HASHED_LIST;
     }
     
     @Override

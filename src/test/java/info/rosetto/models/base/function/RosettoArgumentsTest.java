@@ -136,6 +136,25 @@ public class RosettoArgumentsTest {
     }
     
     @Test
+    public void 可変長引数() throws Exception {
+        RosettoFunction f = new RosettoFunction("testfunc", 
+                "a", "b", "*rest") {
+            @Override
+            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
+        };
+        
+        Map<String, RosettoValue> sut1 = new RosettoArguments("A B C").parse(f, testScope);
+        assertThat(sut1.get("a").asString(), is("A"));
+        assertThat(sut1.get("b").asString(), is("B"));
+        assertThat(sut1.get("rest").asString(), is("(C)"));
+        
+        Map<String, RosettoValue> sut2 = new RosettoArguments("A B C D E F").parse(f, testScope);
+        assertThat(sut2.get("a").asString(), is("A"));
+        assertThat(sut2.get("b").asString(), is("B"));
+        assertThat(sut2.get("rest").asString(), is("(C D E F)"));
+    }
+    
+    @Test
     public void sizeで含まれる属性数が返る() throws Exception {
         RosettoArguments sut1 = new RosettoArguments("hoge fuga=piyo foo=bar");
         assertThat(sut1.getSize(), is(3));

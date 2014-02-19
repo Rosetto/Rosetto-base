@@ -3,6 +3,7 @@ package info.rosetto.utils.base;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.values.HashedList;
 import info.rosetto.models.base.values.ListValue;
 import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
@@ -99,6 +100,11 @@ public class ParserUtilsTest {
         RosettoValue sut1 = ParserUtils.parseArg("(foo bar baz)", new Scope());
         assertThat(sut1.getType(), is(ValueType.LIST));
         assertThat(((ListValue)sut1).first().asString(), is("foo"));
+        
+        RosettoValue sut2 = ParserUtils.parseArg("(foo=bar hoge baz=100 fuga)", new Scope());
+        assertThat(sut2.getType(), is(ValueType.HASHED_LIST));
+        assertThat(((HashedList)sut2).get("foo").asString(), is("bar"));
+        assertThat(((HashedList)sut2).getAt(0).asString(), is("hoge"));
     }
 
 }
