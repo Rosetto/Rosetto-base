@@ -102,8 +102,6 @@ public class ContextsTest {
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
-        //空文字のキーは常に存在しないのでnull
-        assertThat(Contexts.get(""), is((RosettoValue)Values.NULL));
         
         //nullvalueでsetするとエラー
         try {
@@ -169,7 +167,7 @@ public class ContextsTest {
         Contexts.initialize();
         
         //変更できる
-        VariableContext ws = new VariableContext();
+        GlobalVariables ws = new GlobalVariables();
         ws.createNameSpace("foo");
         ws.createNameSpace("bar");
         Contexts.setVariableContext(ws);

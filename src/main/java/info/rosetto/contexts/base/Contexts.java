@@ -28,7 +28,7 @@ public class Contexts {
     /**
      * 全てのグローバル変数を保持するインスタンス.
      */
-    private VariableContext globalVars;
+    private GlobalVariables globalVars;
     
     /**
      * すべての関数を保持するインスタンス.
@@ -58,7 +58,7 @@ public class Contexts {
         if(instance.isInitialized)
             throw new IllegalStateException("Contexts already initialized");
         
-        instance.globalVars = new VariableContext();
+        instance.globalVars = new GlobalVariables();
         instance.functions = new ActionContext();
         instance.system = new SystemContext();
         instance.isInitialized = true;
@@ -217,7 +217,7 @@ public class Contexts {
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
      */
-    public static VariableContext getVariableContext() {
+    public static GlobalVariables getVariableContext() {
         initializedCheck();
         return instance.globalVars;
     }
@@ -228,7 +228,7 @@ public class Contexts {
      * シリアライズしたWholeSpaceをこのメソッドでセットするとその時点のゲーム状態をロードできる.
      * @param variableContext 新しく指定する名前空間全体のインスタンス
      */
-    public static void setVariableContext(VariableContext variableContext) {
+    public static void setVariableContext(GlobalVariables variableContext) {
         initializedCheck();
         if(variableContext == null)
             throw new IllegalArgumentException("wholespace must not be null");
