@@ -13,6 +13,10 @@ import info.rosetto.system.exceptions.NotConvertibleException;
 public class BoolValue implements RosettoValue {
     private static final long serialVersionUID = 1419103880664446476L;
     
+    public static final BoolValue TRUE = new BoolValue(true);
+    
+    public static final BoolValue FALSE = new BoolValue(false);
+    
     /**
      * 
      */
@@ -22,7 +26,7 @@ public class BoolValue implements RosettoValue {
      * 
      * @param value
      */
-    public BoolValue(boolean value) {
+    private BoolValue(boolean value) {
         this.value = value;
     }
     

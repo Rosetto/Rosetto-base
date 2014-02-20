@@ -29,9 +29,10 @@ public interface Parser {
     public RosettoValue parseElement(String element);
     
     /**
-     * 引数解釈のシンタックスを返す.
+     * スペース区切りの要素の連なりを括弧やクオートを考慮してリストに分解する.
+     * @param elements
      * @return
      */
-    public ArgumentSyntax getArgumentSyntax();
+    public List<String> splitElements(String elements);
     
 }

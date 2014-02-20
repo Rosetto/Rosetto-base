@@ -22,6 +22,8 @@ import javax.annotation.concurrent.Immutable;
 public class ListValue implements RosettoValue, RosettoList {
     private static final long serialVersionUID = -5778537199758610111L;
     
+    public static final ListValue EMPTY = new ListValue(new String[0]);
+    
     private final LinkedList<RosettoValue> list = new LinkedList<RosettoValue>();
     
     public ListValue(List<RosettoValue> values) {
@@ -39,6 +41,28 @@ public class ListValue implements RosettoValue, RosettoList {
             list.add(parser.parseElement(s));
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            return ((RosettoValue)obj).asString().equals(this.asString());
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        int len = list.size();
+        int i=0;
+        for(RosettoValue v : list) {
+            sb.append(v.toString());
+            if(i != len-1) sb.append(" ");
+            i++;
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
     public int getSize() {
         return list.size();
     }
@@ -73,24 +97,10 @@ public class ListValue implements RosettoValue, RosettoList {
     }
     
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("(");
-        int len = list.size();
-        int i=0;
-        for(RosettoValue v : list) {
-            sb.append(v.toString());
-            if(i != len-1) sb.append(" ");
-            i++;
-        }
-        sb.append(")");
-        return sb.toString();
-    }
-    
-    @Override
     public String asString() throws NotConvertibleException {
         return toString();
     }
-    
+
     @Override
     public String asString(String defaultValue) {
         return toString();

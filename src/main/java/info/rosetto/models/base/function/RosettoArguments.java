@@ -11,7 +11,6 @@ import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.Scope;
-import info.rosetto.utils.base.ParserUtils;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
 
@@ -68,7 +67,7 @@ public class RosettoArguments implements Serializable {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
         //スペース区切りのキーワード引数を解釈してリストとマップに格納する
         //ダブルクオートで囲まれた値の中にスペースが含まれる場合があるため考慮する
-        String[] splited = ParserUtils.splitStringArgs(args);
+        List<String> splited = Contexts.getParser().splitElements(args);
         Parser parser = Contexts.getParser();
         for(String str : splited) {
             int equalPosition = str.indexOf("=");

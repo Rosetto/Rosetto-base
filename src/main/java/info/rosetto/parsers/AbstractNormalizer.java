@@ -1,10 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.parsers;
-
-import info.rosetto.utils.base.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,89 +75,6 @@ public abstract class AbstractNormalizer extends Normalizer {
      */
     protected List<String> finishNormalize(List<String> lines) {
         return lines;
-    }
-    
-    /**
-     * 与えられた行中のタブ記号を全て取り除いて返す.
-     * @param line 変換する行
-     * @return タブ記号を全て取り除いたline
-     */
-    protected String removeTabs(String line) {
-        return line.replace("\t", "");
-    }
-    
-    /**
-     * 指定した行を角括弧で囲む.
-     * @param line 変換する行
-     * @return 角括弧で囲んだline
-     */
-    protected String addSquareBracket(String line) {
-        return "[".concat(line).concat("]");
-    }
-    
-    /**
-     * エスケープされた左角括弧を特殊文字描画タグに変換する.
-     * "[["を"[spchar type=ob]"へ.
-     * TODO 見直し
-     * @return 変換したline
-     */
-    protected String escapeBracket(String line) {
-        return line.replace("[[", "[spchar type=ob]");
-    }
-    
-    /**
-     * 指定した行が閉じられていない角括弧を持つかどうかを判定する.<br>
-     * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
-     */
-    protected boolean hasUnClosedBracket(String line) {
-        //成立しているタグを全て取り除く
-        line = removeAllTags(line);
-        //括弧の有無を調べる
-        int obIndex = line.indexOf("[");
-        int cbIndex = line.indexOf("]");
-        //左括弧はあるが右括弧がないなら閉じられていない括弧と判断
-        if(obIndex >= 0 && cbIndex == -1) return true;
-        //それ以外なら通常文字列として扱う
-        return false;
-    }
-    
-    /**
-     * 行中から全てのタグを取り除く.<br>
-     * 角括弧で囲まれている文字列をタグとみなす.<br>
-     * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る.<br>
-     * ダブルクオートは平叙文には存在せず、タグ内の値を囲むためだけに用いられると仮定する
-     * @param line 変換する行
-     * @return タグを取り除いた行
-     */
-    protected String removeAllTags(String line) {
-        //括弧の有無を調べる
-        int obIndex = line.indexOf("[");
-        int cbIndex = line.indexOf("]");
-        //左括弧か右括弧がなければそのまま
-        if(obIndex == -1 || cbIndex == -1) return line;
-        //タグ内のダブルクオートで囲まれた要素を取り除いておく
-        line = TextUtils.removeAllDoubleQuotedStrings(line);
-        //ダブルクオート除去後の括弧位置に更新、cbはobより後のものに制限する
-        obIndex = line.indexOf("[");
-        int cb = line.substring(obIndex).indexOf(']');
-        if(cb == -1) return line;
-        cbIndex = cb + obIndex;
-        //どちらも存在し括弧を形成しているならその部分を取り除いて再帰
-        String striped = line.substring(0, obIndex) + line.substring(cbIndex+1);
-        return removeAllTags(striped);
-    }
-    
-    /**
-     * その行がタグのみかどうかを返す.<br>
-     * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
-     * @param line 判定する行
-     * @return その行がタグのみかどうか
-     */
-    protected boolean isTagOnlyLine(String line) {
-        //成立しているタグを全て取り除く
-        line = removeAllTags(line);
-        //この時点で文字長0ならタグのみの行と判断できる
-        return (line.length() == 0);
     }
     
 }

@@ -19,6 +19,7 @@ import info.rosetto.utils.base.Values;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FunctionalFunctions extends FunctionPackage {
     
@@ -104,5 +105,41 @@ public class FunctionalFunctions extends FunctionPackage {
     
     
 
+    public static final RosettoFunction cond = new RosettoFunction("cond", 
+            "*args") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(RosettoArguments args, Scope parentScope) {
+            Map<String, RosettoValue> parsed = args.parse(this, parentScope);
+            Scope scope = new Scope();
+            scope.set("args", parsed.get("args"));
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, RosettoArguments args) {
+            RosettoValue argsValue = scope.get("args");
+            if(argsValue.getType() == ValueType.LIST) {
+                for(RosettoValue v : ((ListValue)argsValue).getList()) {
+                    ListValue l = (ListValue)v;
+                    RosettoValue condition = l.first();
+                    if(condition.asBool() == true) {
+                        RosettoValue actions = l.rest();
+                        RosettoValue result = actions;
+                        if(actions instanceof ListValue)
+                        for(RosettoValue a : ((ListValue)actions).getList()) {
+                            result = a;
+                            if(a instanceof ActionCall)
+                                result = ((ActionCall)a).evaluate(scope);
+                        }
+                        return result;
+                    }
+                    
+                }
+            }
+            return Values.NULL;
+        }
+    };
 
 }

@@ -29,6 +29,7 @@ dependencies {
     
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
+    compile 'org.apache.commons:commons-lang3:3.2.1'
     
     compile 'org.frows:puregds:0.1.4'
     compile 'org.frows:lilex:0.0.4'

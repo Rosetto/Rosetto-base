@@ -8,6 +8,7 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.TextUtils;
+import info.rosetto.utils.base.Values;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ import java.util.Map;
  * 先にキーワードを持つものが抽出されてマップとして保持され、その後に残りの要素がリストとして保持される.
  * @author tohhy
  */
-public class HashedList implements RosettoValue {
+public class HashedList implements RosettoList {
     private static final long serialVersionUID = -5778537199758610111L;
     
     private final LinkedList<RosettoValue> list;
@@ -51,6 +52,14 @@ public class HashedList implements RosettoValue {
     }
     
     @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            return ((RosettoValue)obj).asString().equals(this.asString());
+        }
+        return false;
+    }
+    
+    @Override
     public String toString() {
         return (list.size() > 0 ? list.toString() : "") + (map.size() > 0 ? map.toString() : "");
     }
@@ -63,6 +72,18 @@ public class HashedList implements RosettoValue {
         return map.get(mapKey);
     }
     
+    @Override
+    public RosettoValue first() {
+        return list.get(0);
+    }
+
+    @Override
+    public RosettoValue rest() {
+        if(list.size() == 0 || list.size() == 1) return Values.NULL;
+        if(list.size() == 2) return list.get(1);
+        return new ListValue(list.subList(1, list.size()));
+    }
+
     public RosettoValue getAt(int listIndex) {
         return list.get(listIndex);
     }

@@ -97,6 +97,14 @@ public class ActionCall implements RosettoValue {
     }
     
     @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ActionCall) {
+            return ((ActionCall)obj).toString().equals(this.toString());
+        }
+        return false;
+    }
+    
+    @Override
     public String toString() {
         if(args.getSize() == 0) return "[" + callName + "]";
         return "[" + callName + " " + args.toString() + "]";

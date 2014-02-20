@@ -1,7 +1,7 @@
 package info.rosetto.models.base.values;
 
 
-public interface RosettoList {
+public interface RosettoList extends RosettoValue {
     
 
     public RosettoValue first();

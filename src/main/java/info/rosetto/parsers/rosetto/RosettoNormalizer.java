@@ -4,6 +4,7 @@
 package info.rosetto.parsers.rosetto;
 
 import info.rosetto.parsers.AbstractNormalizer;
+import info.rosetto.parsers.ParseUtils;
 
 /**
  * Rosettoのスクリプトを標準形式に変換する.
@@ -26,7 +27,7 @@ public class RosettoNormalizer extends AbstractNormalizer {
     protected String processMiddleDesignators(String line, String prevLine, String nextLine) {
         //前後のホワイトスペースを除去、括弧のエスケープを処理
         line = line.trim();
-        line = escapeBracket(line);
+        line = ParseUtils.escapeBracket(line);
         
         //コメント等の行中指示子を適用
         line = super.processMiddleDesignators(line, prevLine, nextLine);
@@ -56,7 +57,7 @@ public class RosettoNormalizer extends AbstractNormalizer {
         }
         
         //閉じられていない括弧があれば次の行と連結する
-        if(hasUnClosedBracket(line)) {
+        if(ParseUtils.hasUnClosedBracket(line)) {
             tempLine = line + " ";
             return null;
         }
@@ -76,7 +77,7 @@ public class RosettoNormalizer extends AbstractNormalizer {
         if(line.endsWith("[lf]") || line.endsWith("[br]")) {
             //すでに改行で終わっていれば変更しない
             return line;
-        } else if(isTagOnlyLine(line)) {
+        } else if(ParseUtils.isTagOnlyLine(line)) {
             //タグのみの行は無改行（変更なし）にする
             return line;
         } else {

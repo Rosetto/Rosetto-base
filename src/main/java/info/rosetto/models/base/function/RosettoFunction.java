@@ -28,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     private static final long serialVersionUID = 4377270634098291404L;
-
+    
     /**
      * この関数の名前.
      */

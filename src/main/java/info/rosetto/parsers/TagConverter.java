@@ -4,30 +4,20 @@
 package info.rosetto.parsers;
 
 import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.utils.base.ParserUtils;
 
 /**
- * 単一のタグを異なるタグに変換するコンバーター.
- * TagParser内部でタグごとに作成して用いる.
+ * 単一のタグを異なるタグに変換するコンバーター.<br>
+ * Rosettoとは異なる他文法をパースする際、ElementParser内部でタグごとに作成して用いる.
  * @author tohhy
  */
 public abstract class TagConverter {
     
     /**
-     * 何らかの他文法のタグ名と属性を受け取り、RosettoActionを生成して返す.
+     * 何らかの他文法のタグ名と属性を受け取り、RosettoのActionCallを生成して返す.
      * @param tagName 他文法のタグ名
      * @param attrs 他文法の属性
-     * @return 生成したRosettoAction
+     * @return 生成したRosettoのActionCall
      */
     protected abstract ActionCall toRosettoTag(String tagName, String[] attrs);
     
-    /**
-     * 何らかの他文法のタグ名と属性を受け取り、RosettoActionを生成して返す.
-     * @param tagName 他文法のタグ名
-     * @param attrs 他文法の属性
-     * @return 生成したRosettoAction
-     */
-    public ActionCall toRosettoTag(String tagName, String attrs) {
-        return toRosettoTag(tagName, ParserUtils.splitStringArgs(attrs));
-    }
 }

@@ -3,12 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.utils.base;
 
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.values.BoolValue;
 import info.rosetto.models.base.values.DoubleValue;
 import info.rosetto.models.base.values.IntValue;
 import info.rosetto.models.base.values.NullValue;
 import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.StringValue;
 import info.rosetto.models.base.values.VoidValue;
 
 import java.io.IOException;
@@ -35,12 +35,12 @@ public class Values {
     public static final NullValue NULL = NullValue.INSTANCE;
     
     /**
-     * 指定した文字列を受け取ってStringValueを生成する.
+     * 指定した文字列を受け取ってRosettoValueを生成する.
      * @param value StringValueとして生成する値
      * @return 生成したStringValue
      */
-    public static StringValue create(String value) {
-        return new StringValue(value);
+    public static RosettoValue create(String value) {
+        return Contexts.getParser().parseElement(value);
     }
     
     /**
@@ -78,7 +78,7 @@ public class Values {
      * @return 生成したBoolValue
      */
     public static BoolValue create(boolean value) {
-        return new BoolValue(value);
+        return value ? BoolValue.TRUE : BoolValue.FALSE;
     }
     
     /**

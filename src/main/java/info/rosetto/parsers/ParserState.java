@@ -1,10 +1,10 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.parsers;
 
 import info.rosetto.models.base.scenario.Label;
+import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
 
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class ParserState {
     /**
      * パーサーが保持するユニットやラベルのリスト.
      */
-    private final List<ScriptToken> tokens = new LinkedList<ScriptToken>();
+    private final List<ScenarioToken> tokens = new LinkedList<ScenarioToken>();
     /**
      * 現在パース中のユニット.
      */
@@ -57,18 +57,30 @@ public class ParserState {
      * パーサーが保持するユニットやラベルのリストを読み取り専用で返す.
      * @return
      */
-    protected List<ScriptToken> getTokens() {
+    protected List<ScenarioToken> getTokens() {
         return Collections.unmodifiableList(tokens);
     }
-
+    
+    /**
+     * 現在パース中のユニットを返す.
+     * @return 現在パース中のユニット
+     */
     public Unit getParsingUnit() {
         return parsingUnit;
     }
-
+    
+    /**
+     * 現在パース中のユニットを指定する.
+     * @param currentUnit 現在パース中のユニット
+     */
     public void setCurrentUnit(Unit currentUnit) {
         this.parsingUnit = currentUnit;
     }
-
+    
+    /**
+     * 現在パース中のユニットのインデックスを取得する.
+     * @return 現在パース中のユニットのインデックス
+     */
     public int getUnitIndex() {
         return unitIndex;
     }

@@ -10,7 +10,6 @@ import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.state.parser.ArgumentSyntax;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
@@ -145,15 +144,15 @@ public class ContextsTest {
                 return new Scenario(new Unit("TestParser"));
             }
             @Override
-            public ArgumentSyntax getArgumentSyntax() {
-                return null;
-            }
-            @Override
             public Scenario parseScript(List<String> scriptLines) {
                 return null;
             }
             @Override
             public RosettoValue parseElement(String actionCall) {
+                return null;
+            }
+            @Override
+            public List<String> splitElements(String elements) {
                 return null;
             }
         });

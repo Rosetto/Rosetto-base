@@ -4,8 +4,6 @@
 
 package info.rosetto.models.base.scenario;
 
-import info.rosetto.parsers.ScriptToken;
-
 import java.io.Serializable;
 
 import javax.annotation.concurrent.Immutable;
@@ -16,7 +14,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public class Label implements Serializable, ScriptToken {
+public class Label implements Serializable, ScenarioToken {
     private static final long serialVersionUID = 1014810670973539619L;
 
     /**
