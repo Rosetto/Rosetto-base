@@ -4,12 +4,12 @@
 package info.rosetto.utils.base;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.BoolValue;
-import info.rosetto.models.base.values.DoubleValue;
-import info.rosetto.models.base.values.IntValue;
-import info.rosetto.models.base.values.NullValue;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.VoidValue;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.BoolValue;
+import info.rosetto.models.base.elements.values.DoubleValue;
+import info.rosetto.models.base.elements.values.IntValue;
+import info.rosetto.models.base.elements.values.NullValue;
+import info.rosetto.models.base.elements.values.VoidValue;
 
 import java.io.IOException;
 

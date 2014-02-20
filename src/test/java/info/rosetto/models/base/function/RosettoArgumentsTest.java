@@ -3,7 +3,8 @@ package info.rosetto.models.base.function;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -29,7 +30,7 @@ public class RosettoArgumentsTest {
     @Test
     public void インスタンス化の際にnullが渡るとエラー() throws Exception {
         try {
-            new RosettoArguments((String)null);
+            MixedStore.createFromString((String)null);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
@@ -37,23 +38,23 @@ public class RosettoArgumentsTest {
     
     @Test
     public void 括弧付きの文字列からインスタンス化() throws Exception {
-        RosettoArguments sut1 = new RosettoArguments("a [b] (c)");
+        MixedStore sut1 = MixedStore.createFromString("a [b] (c)");
         assertThat(sut1.getSize(), is(3));
         
-        RosettoArguments sut2 = new RosettoArguments("a [b c] (d e)");
+        MixedStore sut2 = MixedStore.createFromString("a [b c] (d e)");
         assertThat(sut2.getSize(), is(3));
         
-        RosettoArguments sut3 = new RosettoArguments("a [b [c]] (d (e))");
+        MixedStore sut3 = MixedStore.createFromString("a [b [c]] (d (e))");
         assertThat(sut3.getSize(), is(3));
         
-        RosettoArguments sut4 = new RosettoArguments("a [b [c (d)]] (e (f [g (h)]))");
+        MixedStore sut4 = MixedStore.createFromString("a [b [c (d)]] (e (f [g (h)]))");
         assertThat(sut4.getSize(), is(3));
     }
     
     @Test
     public void インスタンス化の際に属性値を囲んでいるダブルクオートは外される() throws Exception {
         String test = " \"foo\" bar=baz hoge=\"fuga\" ika=\"tako and tako\"";
-        RosettoArguments sut = new RosettoArguments(test);
+        MixedStore sut = MixedStore.createFromString(test);
         assertThat(sut.get("hoge").asString(), is("fuga"));
         assertThat(sut.get("ika").asString(), is("tako and tako"));
         assertThat(sut.get(0).asString(), is("foo"));
@@ -67,13 +68,13 @@ public class RosettoArgumentsTest {
         TreeMap<String, String> map = new TreeMap<String, String>();
         map.put("foo", "bar");
         map.put("hoge", "fuga");
-        RosettoArguments sut = new RosettoArguments("aaa bbb foo=bar hoge=fuga");
+        MixedStore sut = MixedStore.createFromString("aaa bbb foo=bar hoge=fuga");
         assertThat(sut.toString(), is(args.toString() + map.toString()));
     }
     
     @Test
     public void parseにnull値を渡すとエラー() throws Exception {
-        RosettoArguments sut = new RosettoArguments("foo=bar");
+        MixedStore sut = MixedStore.createFromString("foo=bar");
         try {
             sut.parse(null, testScope);
         } catch(Exception e) {
@@ -86,9 +87,9 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "arg1", "arg2=dummy", "arg3=v3") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
-        RosettoArguments sut = new RosettoArguments("arg1=v1 v2");
+        MixedStore sut = MixedStore.createFromString("arg1=v1 v2");
         Map<String, RosettoValue> result = sut.parse(f, testScope);
         assertThat(result.get("arg1").asString(), is("v1"));
         assertThat(result.get("arg2").asString(), is("v2"));
@@ -97,10 +98,10 @@ public class RosettoArgumentsTest {
         RosettoFunction f2 = new RosettoFunction("testfunc", 
                 "file", "volume=", "loop=") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         
-        RosettoArguments sut2 = new RosettoArguments("storage=foo.mp3");
+        MixedStore sut2 = MixedStore.createFromString("storage=foo.mp3");
         
         try {
             sut2.parse(f2, testScope);
@@ -116,20 +117,20 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "a", "b", "c") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         //これは正常に動作
-        new RosettoArguments("A B C").parse(f, testScope);
+        MixedStore.createFromString("A B C").parse(f, testScope);
         //これは足りないのでエラー
         try {
-            new RosettoArguments("A B").parse(f, testScope);
+            MixedStore.createFromString("A B").parse(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         
         //これは多いのでエラー
         try {
-            new RosettoArguments("A B C D").parse(f, testScope);
+            MixedStore.createFromString("A B C D").parse(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
@@ -140,15 +141,15 @@ public class RosettoArgumentsTest {
         RosettoFunction f = new RosettoFunction("testfunc", 
                 "a", "b", "*rest") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         
-        Map<String, RosettoValue> sut1 = new RosettoArguments("A B C").parse(f, testScope);
+        Map<String, RosettoValue> sut1 = MixedStore.createFromString("A B C").parse(f, testScope);
         assertThat(sut1.get("a").asString(), is("A"));
         assertThat(sut1.get("b").asString(), is("B"));
         assertThat(sut1.get("rest").asString(), is("(C)"));
         
-        Map<String, RosettoValue> sut2 = new RosettoArguments("A B C D E F").parse(f, testScope);
+        Map<String, RosettoValue> sut2 = MixedStore.createFromString("A B C D E F").parse(f, testScope);
         assertThat(sut2.get("a").asString(), is("A"));
         assertThat(sut2.get("b").asString(), is("B"));
         assertThat(sut2.get("rest").asString(), is("(C D E F)"));
@@ -156,21 +157,21 @@ public class RosettoArgumentsTest {
     
     @Test
     public void sizeで含まれる属性数が返る() throws Exception {
-        RosettoArguments sut1 = new RosettoArguments("hoge fuga=piyo foo=bar");
+        MixedStore sut1 = MixedStore.createFromString("hoge fuga=piyo foo=bar");
         assertThat(sut1.getSize(), is(3));
     }
 
   
     @Test
     public void containsKeyで指定キーを含んでいる場合にtrueが返る() throws Exception {
-        RosettoArguments sut = new RosettoArguments("1=1 2=2 3=3");
+        MixedStore sut = MixedStore.createFromString("1=1 2=2 3=3");
         assertThat(sut.containsKey("2"), is(true));
         assertThat(sut.containsKey("5"), is(false));
     }
 
     @Test
     public void getで指定キーに関連づけられた値が返る() throws Exception {
-        RosettoArguments sut = new RosettoArguments("%1 2=2 3=3");
+        MixedStore sut = MixedStore.createFromString("%1 2=2 3=3");
         assertThat(sut.get("2").asString(), is("2"));
         assertThat(sut.get("5"), is(nullValue()));
     }

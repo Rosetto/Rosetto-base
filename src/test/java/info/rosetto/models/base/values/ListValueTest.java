@@ -3,6 +3,8 @@ package info.rosetto.models.base.values;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.values.IntValue;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;

@@ -3,10 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.functions.base;
 
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -32,7 +32,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asInt() + scope.get("y").asInt());
         }
     };
@@ -42,7 +42,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asInt() - scope.get("y").asInt());
         }
     };
@@ -52,7 +52,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asInt() * scope.get("y").asInt());
         }
     };
@@ -62,7 +62,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() / scope.get("y").asDouble());
         }
     };
@@ -72,7 +72,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asInt() % scope.get("y").asInt());
         }
     };
@@ -83,7 +83,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() == scope.get("y").asDouble());
         }
     };
@@ -93,7 +93,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() < scope.get("y").asDouble());
         }
     };
@@ -103,7 +103,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() > scope.get("y").asDouble());
         }
     };
@@ -113,7 +113,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() <= scope.get("y").asDouble());
         }
     };
@@ -123,7 +123,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments rawArgs) {
+        protected RosettoValue run(Scope scope, MixedStore rawArgs) {
             return Values.create(scope.get("x").asDouble() >= scope.get("y").asDouble());
         }
     };

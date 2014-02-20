@@ -4,10 +4,10 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
+import info.rosetto.models.base.elements.RosettoAction;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoAction;
-import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.engine.EngineModel;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.NameSpace;

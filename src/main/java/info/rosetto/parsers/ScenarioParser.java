@@ -3,12 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers;
 
+import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.parsers.rosetto.RosettoElementParser;
 import info.rosetto.utils.base.TextUtils;

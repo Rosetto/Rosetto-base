@@ -5,7 +5,7 @@ package info.rosetto.parsers;
 
 import java.util.List;
 
-import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.elements.RosettoValue;
 
 /**
  * タグそのもの、あるいはタグ中に現れる任意の要素をRosettoValueに変換するためのパーサー.<br>

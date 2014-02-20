@@ -4,9 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 

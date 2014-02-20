@@ -2,7 +2,8 @@ package info.rosetto.models.base.function;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class FunctionPackageTest {
         FunctionPackage sut2 = new FunctionPackage(
                 new RosettoFunction("foo") {
                     @Override
-                    protected RosettoValue run(Scope functionScope, RosettoArguments args) {
+                    protected RosettoValue run(Scope functionScope, MixedStore args) {
                         return null;
                     }
                 });

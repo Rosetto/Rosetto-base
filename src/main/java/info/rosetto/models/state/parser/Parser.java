@@ -1,7 +1,7 @@
 package info.rosetto.models.state.parser;
 
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.scenario.Scenario;
-import info.rosetto.models.base.values.RosettoValue;
 
 import java.util.List;
 

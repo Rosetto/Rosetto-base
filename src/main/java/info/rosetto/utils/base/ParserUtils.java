@@ -5,8 +5,8 @@
 package info.rosetto.utils.base;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 
 import java.util.ArrayList;

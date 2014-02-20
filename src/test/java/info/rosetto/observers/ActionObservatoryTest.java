@@ -3,9 +3,9 @@ package info.rosetto.observers;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.function.RosettoArguments;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.observers.ActionObserver;
@@ -22,7 +22,7 @@ public class ActionObservatoryTest {
             public void macroExecuted(RosettoMacro macro) {}
             
             @Override
-            public void functionExecuted(RosettoFunction func, RosettoArguments args,
+            public void functionExecuted(RosettoFunction func, MixedStore args,
                     RosettoValue evaluatedValue) {
                 sb.append(".");
             }
@@ -30,7 +30,7 @@ public class ActionObservatoryTest {
         
         RosettoFunction sut = new RosettoFunction("func") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {
+            protected RosettoValue run(Scope functionScope, MixedStore args) {
                 return null;
             }
         };

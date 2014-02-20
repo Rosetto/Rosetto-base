@@ -2,13 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package info.rosetto.models.base.function;
+package info.rosetto.models.base.elements;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.ListValue;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
+import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.TextUtils;
@@ -26,45 +24,39 @@ import java.util.TreeMap;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * RosettoActionの引数リスト.
- * String形式で渡された引数を標準引数とキーワード引数に分けて順に格納する.
+ * RosettoValueの連続を標準引数とキーワード引数に分けて順に格納する.<br>
  * イミュータブル.
  * @author tohhy
  */
 @Immutable
-public class RosettoArguments implements Serializable {
+public class MixedStore implements Serializable {
     private static final long serialVersionUID = 7674155534111041469L;
     
     /**
      * 通常引数のリスト.
      */
-    private final ArrayList<RosettoValue> args = new ArrayList<RosettoValue>();
+    private final List<RosettoValue> list;
     
     /**
-     * キーワード引数のマップ.
+     * キーワード引数のマップ.<br>
+     * キーをソートするのでTreeMapが必須.
      */
-    private final TreeMap<String, RosettoValue> kwargs = new TreeMap<String, RosettoValue>();
+    private final TreeMap<String, RosettoValue> map;
     
     /**
      * 空の引数リスト.
      */
-    public static final RosettoArguments EMPTY = new RosettoArguments("");
+    public static final MixedStore EMPTY = new MixedStore(
+            new ArrayList<RosettoValue>(), new TreeMap<String, RosettoValue>());
     
     /**
-     * 引数のリストを受け取って引数リストオブジェクトを生成する.
-     * @param args 引数のリスト
-     */
-    public RosettoArguments(List<RosettoArgument> args) {
-        if(args == null) throw new IllegalArgumentException("引数がnullです");
-        initializeArgs(args);
-    }
-    
-    /**
-     * 文字列形式の引数リストを受け取って引数リストオブジェクトを生成する.
+     * 文字列形式の要素の連続を受け取ってHashedListオブジェクトを生成する.
      * @param args 文字列形式の引数リスト
      */
-    public RosettoArguments(String args) {
+    public static MixedStore createFromString(String args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
+        List<RosettoValue> list = new ArrayList<RosettoValue>();
+        Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
         //スペース区切りのキーワード引数を解釈してリストとマップに格納する
         //ダブルクオートで囲まれた値の中にスペースが含まれる場合があるため考慮する
         List<String> splited = Contexts.getParser().splitElements(args);
@@ -72,30 +64,60 @@ public class RosettoArguments implements Serializable {
         for(String str : splited) {
             int equalPosition = str.indexOf("=");
             if(equalPosition == -1) {
-                this.args.add(parser.parseElement(TextUtils.removeDoubleQuote(str)));
+                list.add(parser.parseElement(TextUtils.removeDoubleQuote(str)));
             } else {
                 String key = str.substring(0, equalPosition);
                 String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
-                this.kwargs.put(key, parser.parseElement(value));
+                map.put(key, parser.parseElement(value));
             }
         }
+        return new MixedStore(list, map);
     }
     
-    public RosettoArguments(String[] args) {
-        //文字列形式の引数をキャッシュする
-        StringBuilder sb = new StringBuilder();
-        for(String s:args) {sb.append(s).append(" ");}
+    public static MixedStore createFromString(String[] args) {
+        List<RosettoValue> list = new ArrayList<RosettoValue>();
+        Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
         for(String str : args) {
             int equalPosition = str.indexOf("=");
             if(equalPosition == -1) {
-                this.args.add(Values.create(TextUtils.removeDoubleQuote(str)));
+                list.add(Values.create(TextUtils.removeDoubleQuote(str)));
             } else {
                 String key = str.substring(0, equalPosition);
                 String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
-                this.kwargs.put(key, Values.create(value));
+                map.put(key, Values.create(value));
             }
         }
+        return new MixedStore(list, map);
     }
+    
+    public static MixedStore createFromString(List<String> args) {
+        List<RosettoValue> list = new ArrayList<RosettoValue>();
+        Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
+        for(String str : args) {
+            int equalPosition = str.indexOf("=");
+            if(equalPosition == -1) {
+                list.add(Values.create(TextUtils.removeDoubleQuote(str)));
+            } else {
+                String key = str.substring(0, equalPosition);
+                String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
+                map.put(key, Values.create(value));
+            }
+        }
+        return new MixedStore(list, map);
+    }
+    
+    public static MixedStore createFromValue(List<RosettoValue> values) {
+        List<RosettoValue> list = new ArrayList<RosettoValue>(values);
+        Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
+        return new MixedStore(list, map);
+    }
+    
+    private MixedStore(List<RosettoValue> list, Map<String, RosettoValue> map) {
+        this.list = list;
+        this.map = (map instanceof TreeMap) ? 
+                (TreeMap<String, RosettoValue>)map : new TreeMap<String, RosettoValue>(map);
+    }
+    
     
     
     /**
@@ -139,7 +161,7 @@ public class RosettoArguments implements Serializable {
         //ここから入力とのバインド
         
         //キーワード引数入力を先に処理
-        for(Entry<String, RosettoValue> e : kwargs.entrySet()) {
+        for(Entry<String, RosettoValue> e : getMap().entrySet()) {
             //もしEntryのキーがfuncArgsの値と一致するなら該当のfuncArgを消去
             boolean removed = funcArgs.remove(e.getKey());
             //一致していればカウントを減算
@@ -155,16 +177,16 @@ public class RosettoArguments implements Serializable {
             
             //引数の要求数が入力の数よりも大きければエラー
             //可変長引数は要求数に含まないので-1
-            if(requiredArgsCount - 1 > args.size()) {
+            if(requiredArgsCount - 1 > getList().size()) {
                 throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
-                            args.toString() + "|" + func.getArguments());
+                            getList().toString() + "|" + func.getArguments());
             }
             
             //引数に余りがあれば、それを可変長引数として追加していく
             //可変長引数のリスト
             List<RosettoValue> margs = new LinkedList<RosettoValue>();
-            for(int i=0; i<args.size(); i++) {
-                RosettoValue v = args.get(i);
+            for(int i=0; i<getList().size(); i++) {
+                RosettoValue v = getList().get(i);
                 if(!funcArgs.isEmpty()) {
                     //関数側で定義された引数名が空になるまでpopして取りだしていく
                     String farg = funcArgs.pollFirst();
@@ -195,14 +217,14 @@ public class RosettoArguments implements Serializable {
             
         } else {
             //含まれていなければ
-            if(requiredArgsCount > args.size()) {
+            if(requiredArgsCount > getList().size()) {
                 throw new IllegalArgumentException("関数に必要な引数を満たせません: " + 
-                        args.toString() + "|" + func.getArguments());
-            } else if(funcArgs.size() < args.size()) {
+                        getList().toString() + "|" + func.getArguments());
+            } else if(funcArgs.size() < getList().size()) {
                 throw new IllegalArgumentException("不明な引数が余ります: " + 
-                        args.toString() + "|" + func.getArguments());
+                        getList().toString() + "|" + func.getArguments());
             }
-            for(RosettoValue value : args) {
+            for(RosettoValue value : getList()) {
                 //残った非キーワード引数を順に結合してマップへ追加
                 if(value.getType() == ValueType.ACTION_CALL) {
                     //ActionCallなら評価しておく
@@ -221,45 +243,35 @@ public class RosettoArguments implements Serializable {
      */
     @Override
     public String toString() {
-        return args.toString() + kwargs.toString();
+        return getList().toString() + getMap().toString();
     }
     
     /**
      * キーワード引数が指定キーを含んでいるかを返す.
      */
     public boolean containsKey(String key) {
-        return kwargs.containsKey(key);
+        return getMap().containsKey(key);
     }
 
     /**
      * この属性リストに含まれる属性の数を返す.
      */
     public int getSize() {
-        return kwargs.size() + args.size();
+        return getMap().size() + getList().size();
     }
 
     /**
      * 通常引数中の指定インデックスに存在する値を取得する.
      */
     public RosettoValue get(int argNum) {
-        return args.get(argNum);
+        return getList().get(argNum);
     }
-
+    
     /**
      * キーワード引数中の指定キーに関連づけられた値を取得する.
      */
     public RosettoValue get(String key) {
-        return kwargs.get(key);
-    }
-
-    private void initializeArgs(List<RosettoArgument> args) {
-        for(RosettoArgument a : args) {
-            if(a.getKey() == null) {
-                this.args.add(a.getValue());
-            } else {
-                this.kwargs.put(a.getKey(), a.getValue());
-            }
-        }
+        return getMap().get(key);
     }
     
     /**
@@ -276,5 +288,17 @@ public class RosettoArguments implements Serializable {
             }
         }
         return result;
+    }
+    
+    public List<RosettoValue> getList() {
+        return list;
+    }
+    
+    public Map<String, RosettoValue> getMap() {
+        return map;
+    }
+    
+    public boolean hasMappedValue() {
+        return !map.isEmpty();
     }
 }

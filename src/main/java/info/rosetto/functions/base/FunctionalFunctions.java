@@ -4,16 +4,16 @@
 package info.rosetto.functions.base;
 
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoAction;
+import info.rosetto.models.base.elements.RosettoList;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.HashedList;
-import info.rosetto.models.base.values.ListValue;
-import info.rosetto.models.base.values.RosettoAction;
-import info.rosetto.models.base.values.RosettoList;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -43,7 +43,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
+        protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue v = scope.get("list");
             if(v instanceof RosettoList) {
                 return ((RosettoList)v).first();
@@ -57,7 +57,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
+        protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue v = scope.get("list");
             if(v instanceof RosettoList) {
                 return ((RosettoList)v).rest();
@@ -71,12 +71,12 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
+        protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue f = scope.get("fn");
             RosettoValue l = scope.get("list");
             RosettoAction fn = (f instanceof RosettoAction) ? 
                     (RosettoFunction) f : Contexts.getAction(f.asString());
-            if(fn == BaseFunctions.pass || !(l instanceof HashedList)) return Values.NULL;
+            if(fn == BaseFunctions.pass || !(l instanceof MixedStoreValue)) return Values.NULL;
             
             List<RosettoValue> list = ((ListValue)l).getList();
             List<RosettoValue> result = new LinkedList<RosettoValue>();
@@ -92,7 +92,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
+        protected RosettoValue run(Scope scope, MixedStore args) {
             int start = scope.get("start").asInt();
             int end = scope.get("end").asInt();
             List<RosettoValue> list = new LinkedList<RosettoValue>();
@@ -110,7 +110,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(RosettoArguments args, Scope parentScope) {
+        protected Scope createScope(MixedStore args, Scope parentScope) {
             Map<String, RosettoValue> parsed = args.parse(this, parentScope);
             Scope scope = new Scope();
             scope.set("args", parsed.get("args"));
@@ -118,7 +118,7 @@ public class FunctionalFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope scope, RosettoArguments args) {
+        protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue argsValue = scope.get("args");
             if(argsValue.getType() == ValueType.LIST) {
                 for(RosettoValue v : ((ListValue)argsValue).getList()) {

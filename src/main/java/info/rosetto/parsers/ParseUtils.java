@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
+import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.RosettoAction;
 import info.rosetto.utils.base.TextUtils;
 
 /**

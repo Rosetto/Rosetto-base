@@ -4,7 +4,7 @@
 
 package info.rosetto.models.base.scenario;
 
-import info.rosetto.models.base.values.ActionCall;
+import info.rosetto.models.base.elements.ActionCall;
 
 import java.io.Serializable;
 

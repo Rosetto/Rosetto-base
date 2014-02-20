@@ -3,6 +3,7 @@ package info.rosetto.models.base.values;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;

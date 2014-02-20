@@ -3,10 +3,10 @@ package info.rosetto.parsers.rosetto;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.HashedList;
-import info.rosetto.models.base.values.ListValue;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.state.variables.Scope;
 
 import java.util.List;
@@ -31,10 +31,22 @@ public class RosettoElementParserTest {
         assertThat(sut1.getType(), is(ValueType.LIST));
         assertThat(((ListValue)sut1).first().asString(), is("foo"));
         
+        RosettoValue sut2 = parser.parseArg("([= 1 2] foo)", new Scope());
+        assertThat(sut2.getType(), is(ValueType.LIST));
+        assertThat(((ListValue)sut2).first().asString(), is("[= 1 2]"));
+    }
+    
+    @Test
+    public void ハッシュドリストリテラルのパース() throws Exception {
+        RosettoValue sut1 = parser.parseArg("(foo=bar baz)", new Scope());
+        assertThat(sut1.getType(), is(ValueType.HASHED_LIST));
+        assertThat(((MixedStoreValue)sut1).get("foo").asString(), is("bar"));
+        assertThat(((MixedStoreValue)sut1).first().asString(), is("baz"));
+        
         RosettoValue sut2 = parser.parseArg("(foo=bar hoge baz=100 fuga)", new Scope());
         assertThat(sut2.getType(), is(ValueType.HASHED_LIST));
-        assertThat(((HashedList)sut2).get("foo").asString(), is("bar"));
-        assertThat(((HashedList)sut2).getAt(0).asString(), is("hoge"));
+        assertThat(((MixedStoreValue)sut2).get("foo").asString(), is("bar"));
+        assertThat(((MixedStoreValue)sut2).getAt(0).asString(), is("hoge"));
     }
     
 

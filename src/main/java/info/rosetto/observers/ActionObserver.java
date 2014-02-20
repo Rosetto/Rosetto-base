@@ -4,9 +4,9 @@
 package info.rosetto.observers;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.function.RosettoArguments;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoValue;
 
 /**
  * Rosetto中の関数呼び出しやマクロ実行等を監視するオブザーバ.
@@ -21,7 +21,7 @@ public interface ActionObserver {
      * @param evaluatedValue 実行結果の返り値
      */
     public void functionExecuted(RosettoFunction func, 
-            RosettoArguments args, 
+            MixedStore args, 
             RosettoValue evaluatedValue);
     
     /**

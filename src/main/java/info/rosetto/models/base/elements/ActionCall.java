@@ -1,20 +1,16 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.base.values;
+package info.rosetto.models.base.elements;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.function.RosettoArgument;
-import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
-
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -38,20 +34,20 @@ public class ActionCall implements RosettoValue {
      * 実行時の引数リスト.
      */
     @Nonnull
-    private final RosettoArguments args;
+    private final MixedStore args;
     
     /**
      * 何もしないActionCall.空の関数呼び出しを行う.
      */
     public static final ActionCall EMPTY = 
-            new ActionCall(BaseFunctions.pass.getName(), RosettoArguments.EMPTY);
+            new ActionCall(BaseFunctions.pass.getName(), MixedStore.EMPTY);
     
     /**
      * 引数なしで指定した対象を実行するActionCallを生成する.
      * @param functionName 呼び出す関数名
      */
     public ActionCall(String functionName) {
-        this(functionName, RosettoArguments.EMPTY);
+        this(functionName, MixedStore.EMPTY);
     }
     
     /**
@@ -60,7 +56,7 @@ public class ActionCall implements RosettoValue {
      * @param args 適用する引数
      */
     public ActionCall(String functionName, String args) {
-        this(functionName, new RosettoArguments(args));
+        this(functionName, MixedStore.createFromString(args));
     }
     
     /**
@@ -69,7 +65,7 @@ public class ActionCall implements RosettoValue {
      * @param args 適用する引数
      */
     public ActionCall(String functionName, String[] args) {
-        this(functionName, new RosettoArguments(args));
+        this(functionName, MixedStore.createFromString(args));
     }
     
     /**
@@ -77,23 +73,11 @@ public class ActionCall implements RosettoValue {
      * @param functionName 呼び出す関数名
      * @param args 適用する引数
      */
-    public ActionCall(String functionName, List<RosettoArgument> args) {
+    public ActionCall(String functionName, MixedStore args) {
         if(functionName == null)
             throw new IllegalArgumentException("関数オブジェクトがnullです");
         this.callName = functionName;
-        this.args = (args != null) ? new RosettoArguments(args) : RosettoArguments.EMPTY;
-    }
-    
-    /**
-     * 指定引数で指定関数を呼び出すFunctionCallを生成する.
-     * @param functionName 呼び出す関数名
-     * @param args 適用する引数
-     */
-    public ActionCall(String functionName, RosettoArguments args) {
-        if(functionName == null)
-            throw new IllegalArgumentException("関数オブジェクトがnullです");
-        this.callName = functionName;
-        this.args = (args != null) ? args : RosettoArguments.EMPTY;
+        this.args = (args != null) ? args : MixedStore.EMPTY;
     }
     
     @Override
@@ -123,7 +107,7 @@ public class ActionCall implements RosettoValue {
      * この呼び出しにおいて関数に渡される引数リストを返す.
      * @return この呼び出しにおいて関数に渡される引数リスト
      */
-    public RosettoArguments getArgs() {
+    public MixedStore getArgs() {
         return args;
     }
     
@@ -146,7 +130,7 @@ public class ActionCall implements RosettoValue {
         
         if(v.getType() == ValueType.FUNCTION) {
             RosettoFunction f = (RosettoFunction) v;
-            RosettoArguments args = this.getArgs();
+            MixedStore args = this.getArgs();
             RosettoValue result = f.execute(args, parentScope);
             ActionObservatory.getInstance().functionExecuted(f, args, result);
             return result;

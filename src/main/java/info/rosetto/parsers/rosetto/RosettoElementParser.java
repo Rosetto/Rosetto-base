@@ -4,15 +4,16 @@
 package info.rosetto.parsers.rosetto;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.values.ActionCall;
-import info.rosetto.models.base.values.BoolValue;
-import info.rosetto.models.base.values.DoubleValue;
-import info.rosetto.models.base.values.HashedList;
-import info.rosetto.models.base.values.IntValue;
-import info.rosetto.models.base.values.ListValue;
-import info.rosetto.models.base.values.RosettoList;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.StringValue;
+import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoList;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.BoolValue;
+import info.rosetto.models.base.elements.values.DoubleValue;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.IntValue;
+import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.parsers.AbstractElementParser;
 import info.rosetto.parsers.ParseUtils;
@@ -105,12 +106,12 @@ public class RosettoElementParser extends AbstractElementParser {
     public RosettoList parseList(String element) {
         if(element == null) return ListValue.EMPTY;
         String content = ParseUtils.removeRBracket(element);
-        if(element.contains("=")) {
-            //TODO
-            return new HashedList(content.split(" "));
+        List<String> splited = splitElements(content);
+        MixedStore elements = MixedStore.createFromString(splited);
+        if(elements.hasMappedValue()) {
+            return new MixedStoreValue(elements);
         }
-        List<RosettoValue> elements = stringToElements(content);
-        return new ListValue(elements);
+        return new ListValue(elements.getList());
     }
 
 
@@ -240,21 +241,6 @@ public class RosettoElementParser extends AbstractElementParser {
         }
         if(sbCount > 0 || rbCount > 0)
             throw new IllegalArgumentException("bracket not closed");
-        return result;
-    }
-    
-    /**
-     * スペース区切りの要素の連なりをRosettoValueのリストに変換する.
-     * ダブルクオートや括弧で囲まれた要素中にスペースが含まれる場合や
-     * スペースが連続した場合等に対応して適切な変換を行う.
-     * @param elements
-     * @return
-     */
-    public List<RosettoValue> stringToElements(String elements) {
-        ArrayList<RosettoValue> result = new ArrayList<RosettoValue>();
-        for(String s:splitElements(elements)) {
-            result.add(parseElement(s));
-        }
         return result;
     }
     

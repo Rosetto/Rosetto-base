@@ -1,6 +1,5 @@
-package info.rosetto.models.base.values;
+package info.rosetto.models.base.elements;
 
-import info.rosetto.models.base.function.RosettoArguments;
 import info.rosetto.models.state.variables.Scope;
 
 /**
@@ -22,7 +21,7 @@ public interface RosettoAction extends RosettoValue {
      * @param args 実行時引数
      * @return 実行した結果の返り値
      */
-    public RosettoValue execute(RosettoArguments args, Scope parentScope);
+    public RosettoValue execute(MixedStore args, Scope parentScope);
     
     /**
      * このアクションを実行する.

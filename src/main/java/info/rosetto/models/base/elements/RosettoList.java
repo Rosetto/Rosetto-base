@@ -1,4 +1,4 @@
-package info.rosetto.models.base.values;
+package info.rosetto.models.base.elements;
 
 
 public interface RosettoList extends RosettoValue {

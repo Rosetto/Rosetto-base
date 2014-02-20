@@ -5,7 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import info.rosetto.models.base.values.RosettoValue;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.state.variables.NameSpace;
 import info.rosetto.utils.base.Values;
 

@@ -1,9 +1,13 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.base.values;
+package info.rosetto.models.base.elements;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.NullValue;
+import info.rosetto.models.base.elements.values.VoidValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
 /**
@@ -30,7 +34,7 @@ public enum ValueType {
     /**
      * ハッシュドリストを表す型.
      */
-    HASHED_LIST(HashedList.class),
+    HASHED_LIST(MixedStoreValue.class),
     /**
      * 任意のオブジェクトを示す型.
      */

@@ -5,9 +5,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.base.values.ActionCall;
 import info.rosetto.parsers.rosetto.RosettoNormalizer;
 
 import java.io.File;

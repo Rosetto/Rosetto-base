@@ -2,10 +2,10 @@ package info.rosetto.contexts.base;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import info.rosetto.models.base.function.RosettoArguments;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoAction;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.base.values.RosettoAction;
-import info.rosetto.models.base.values.RosettoValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -24,7 +24,7 @@ public class ActionContextTest {
         
         RosettoFunction f1 = new RosettoFunction("foo") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {
+            protected RosettoValue run(Scope functionScope, MixedStore args) {
                 return null;
             }
         };
@@ -34,7 +34,7 @@ public class ActionContextTest {
         
         RosettoFunction f2 = new RosettoFunction("bar") {
             @Override
-            protected RosettoValue run(Scope functionScope, RosettoArguments args) {
+            protected RosettoValue run(Scope functionScope, MixedStore args) {
                 return null;
             }
         };

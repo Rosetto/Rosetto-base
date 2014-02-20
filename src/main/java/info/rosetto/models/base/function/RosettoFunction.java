@@ -3,10 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.function;
 
-import info.rosetto.models.base.values.ListValue;
-import info.rosetto.models.base.values.RosettoAction;
-import info.rosetto.models.base.values.RosettoValue;
-import info.rosetto.models.base.values.ValueType;
+import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.RosettoAction;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
 import info.rosetto.system.RosettoLogger;
@@ -107,7 +108,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * そのため、個々の引数も非nullになる.<br>
      * execメソッドが実行される際にこのメソッドが呼び出される.
      */
-    protected abstract RosettoValue run(Scope scope, RosettoArguments rawArgs);
+    protected abstract RosettoValue run(Scope scope, MixedStore rawArgs);
     
     
     /**
@@ -116,7 +117,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @param parentScope
      * @return
      */
-    protected Scope createScope(RosettoArguments args, Scope parentScope) {
+    protected Scope createScope(MixedStore args, Scope parentScope) {
         return new Scope(args, this, parentScope);
     }
 
@@ -125,16 +126,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * execute(RosettoArguments.EMPTY)と同じ.
      */
     public RosettoValue execute(Scope parentScope) {
-        return execute(RosettoArguments.EMPTY, parentScope);
+        return execute(MixedStore.EMPTY, parentScope);
     }
     
     /**
      * この関数を実行する.
      * @param args 実行時引数
      */
-    public RosettoValue execute(RosettoArguments args, Scope parentScope) {
+    public RosettoValue execute(MixedStore args, Scope parentScope) {
         if(args == null)
-            args = RosettoArguments.EMPTY;
+            args = MixedStore.EMPTY;
         RosettoValue result = Values.NULL;
         try {
             result = run(createScope(args, parentScope), args);
@@ -152,9 +153,9 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @param args 文字列形式の実行時引数
      */
     public RosettoValue execute(String args, Scope parentScope) {
-        RosettoArguments rargs = RosettoArguments.EMPTY;
+        MixedStore rargs = MixedStore.EMPTY;
         if(args != null) {
-            rargs = new RosettoArguments(args);
+            rargs = MixedStore.createFromString(args);
         }
         RosettoValue result = Values.NULL;
         try {
