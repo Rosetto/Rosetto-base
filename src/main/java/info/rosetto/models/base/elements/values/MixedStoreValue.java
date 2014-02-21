@@ -10,6 +10,7 @@ import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
@@ -71,6 +72,12 @@ public class MixedStoreValue implements RosettoList {
     @Override
     public String toString() {
         return (list.size() > 0 ? list.toString() : "") + (map.size() > 0 ? map.toString() : "");
+    }
+    
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
     }
     
     public boolean hasMappedValue() {
@@ -155,5 +162,13 @@ public class MixedStoreValue implements RosettoList {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
+    }
+
+    public LinkedList<RosettoValue> getList() {
+        return list;
+    }
+
+    public Map<String, RosettoValue> getMap() {
+        return map;
     }
 }

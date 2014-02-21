@@ -10,8 +10,8 @@ import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
@@ -26,7 +26,7 @@ public class FunctionalFunctions extends FunctionPackage {
     private static FunctionalFunctions instance;
     
     private FunctionalFunctions() {
-        super(first, rest, map, range);
+        super(first, rest, map, range, cond);
     }
     
     
@@ -74,16 +74,27 @@ public class FunctionalFunctions extends FunctionPackage {
         protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue f = scope.get("fn");
             RosettoValue l = scope.get("list");
-            RosettoAction fn = (f instanceof RosettoAction) ? 
+            RosettoAction fn = (f instanceof RosettoFunction) ? 
                     (RosettoFunction) f : Contexts.getAction(f.asString());
-            if(fn == BaseFunctions.pass || !(l instanceof MixedStoreValue)) return Values.NULL;
+            if(fn == BaseFunctions.pass) return Values.NULL;
             
-            List<RosettoValue> list = ((ListValue)l).getList();
-            List<RosettoValue> result = new LinkedList<RosettoValue>();
-            for(RosettoValue v : list) {
-                result.add(fn.execute(v.asString(), scope));
+            if(l instanceof ListValue) {
+                List<RosettoValue> list = ((ListValue)l).getList();
+                List<RosettoValue> result = new LinkedList<RosettoValue>();
+                for(RosettoValue v : list) {
+                    result.add(fn.execute(v.asString(), scope).evaluate(scope));
+                }
+                return new ListValue(result);
+                
+            } else if(l instanceof MixedStoreValue) {
+                List<RosettoValue> list = ((MixedStoreValue)l).getList();
+                List<RosettoValue> result = new LinkedList<RosettoValue>();
+                for(RosettoValue v : list) {
+                    result.add(fn.execute(v.asString(), scope).evaluate(scope));
+                }
+                return new ListValue(result);
             }
-            return new ListValue(result);
+            return Values.NULL;
         }
     };
     
@@ -111,8 +122,8 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected Scope createScope(MixedStore args, Scope parentScope) {
-            Map<String, RosettoValue> parsed = args.parse(this, parentScope);
-            Scope scope = new Scope();
+            Map<String, RosettoValue> parsed = args.bind(this, parentScope);
+            Scope scope = new Scope(parentScope);
             scope.set("args", parsed.get("args"));
             return scope;
         }
@@ -123,11 +134,9 @@ public class FunctionalFunctions extends FunctionPackage {
             if(argsValue.getType() == ValueType.LIST) {
                 for(RosettoValue v : ((ListValue)argsValue).getList()) {
                     ListValue l = (ListValue)v;
-                    RosettoValue condition = l.first();
-                    if(condition instanceof ActionCall)
-                        condition = ((ActionCall)condition).evaluate(scope);
+                    RosettoValue condition = l.first().evaluate(scope);
                     if(condition.asBool() == true) {
-                        RosettoValue actions = l.rest();
+                        RosettoValue actions = l.rest().evaluate(scope);
                         RosettoValue result = actions;
                         if(actions instanceof ListValue)
                         for(RosettoValue a : ((ListValue)actions).getList()) {

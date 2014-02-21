@@ -76,7 +76,7 @@ public class RosettoArgumentsTest {
     public void parseにnull値を渡すとエラー() throws Exception {
         MixedStore sut = MixedStore.createFromString("foo=bar");
         try {
-            sut.parse(null, testScope);
+            sut.bind(null, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
@@ -90,7 +90,7 @@ public class RosettoArgumentsTest {
             protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         MixedStore sut = MixedStore.createFromString("arg1=v1 v2");
-        Map<String, RosettoValue> result = sut.parse(f, testScope);
+        Map<String, RosettoValue> result = sut.bind(f, testScope);
         assertThat(result.get("arg1").asString(), is("v1"));
         assertThat(result.get("arg2").asString(), is("v2"));
         assertThat(result.get("arg3").asString(), is("v3"));
@@ -104,7 +104,7 @@ public class RosettoArgumentsTest {
         MixedStore sut2 = MixedStore.createFromString("storage=foo.mp3");
         
         try {
-            sut2.parse(f2, testScope);
+            sut2.bind(f2, testScope);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -120,17 +120,17 @@ public class RosettoArgumentsTest {
             protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         //これは正常に動作
-        MixedStore.createFromString("A B C").parse(f, testScope);
+        MixedStore.createFromString("A B C").bind(f, testScope);
         //これは足りないのでエラー
         try {
-            MixedStore.createFromString("A B").parse(f, testScope);
+            MixedStore.createFromString("A B").bind(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
         
         //これは多いのでエラー
         try {
-            MixedStore.createFromString("A B C D").parse(f, testScope);
+            MixedStore.createFromString("A B C D").bind(f, testScope);
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
@@ -144,12 +144,12 @@ public class RosettoArgumentsTest {
             protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
         };
         
-        Map<String, RosettoValue> sut1 = MixedStore.createFromString("A B C").parse(f, testScope);
+        Map<String, RosettoValue> sut1 = MixedStore.createFromString("A B C").bind(f, testScope);
         assertThat(sut1.get("a").asString(), is("A"));
         assertThat(sut1.get("b").asString(), is("B"));
         assertThat(sut1.get("rest").asString(), is("(C)"));
         
-        Map<String, RosettoValue> sut2 = MixedStore.createFromString("A B C D E F").parse(f, testScope);
+        Map<String, RosettoValue> sut2 = MixedStore.createFromString("A B C D E F").bind(f, testScope);
         assertThat(sut2.get("a").asString(), is("A"));
         assertThat(sut2.get("b").asString(), is("B"));
         assertThat(sut2.get("rest").asString(), is("(C D E F)"));

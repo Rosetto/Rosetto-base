@@ -48,6 +48,12 @@ public class NullValue implements RosettoValue, RosettoAction {
         return false;
     }
     
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
+    }
+    
     @Override
     public ValueType getType() {
         return ValueType.NULL;

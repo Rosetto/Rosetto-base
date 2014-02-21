@@ -8,6 +8,7 @@ import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
 
@@ -64,6 +65,12 @@ public class ListValue implements RosettoValue, RosettoList {
         }
         sb.append(")");
         return sb.toString();
+    }
+    
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
     }
 
     public int getSize() {

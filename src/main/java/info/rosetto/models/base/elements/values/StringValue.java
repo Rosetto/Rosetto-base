@@ -5,6 +5,7 @@ package info.rosetto.models.base.elements.values;
 
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
 /**
@@ -45,6 +46,12 @@ public class StringValue implements RosettoValue {
     @Override
     public String toString() {
         return value;
+    }
+    
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
     }
     
     @Override

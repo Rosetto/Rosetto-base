@@ -128,7 +128,7 @@ public class MixedStore implements Serializable {
      * @param func パースに用いる関数
      * @return 引数名と値のマップ
      */
-    public Map<String, RosettoValue> parse(RosettoFunction func, Scope currentScope) {
+    public Map<String, RosettoValue> bind(RosettoFunction func, Scope currentScope) {
         if(func == null) throw new IllegalArgumentException("渡された関数がnullです");
         
         //結果のマップ
@@ -236,6 +236,30 @@ public class MixedStore implements Serializable {
             }
         }
         return result;
+    }
+    
+    /**
+     * 要素中に含まれるすべてのActionCallを評価し、新しいインスタンスにまとめて返す.
+     * @return
+     */
+    public MixedStore evaluate(Scope parentScope) {
+        List<RosettoValue> list = new ArrayList<RosettoValue>();
+        Map<String, RosettoValue> map = new TreeMap<String, RosettoValue>();
+        for(RosettoValue v:this.list) {
+            if(v instanceof ActionCall) {
+                list.add(((ActionCall)v).evaluate(parentScope));
+            } else {
+                list.add(v);
+            }
+        }
+        for(Entry<String, RosettoValue> e : this.map.entrySet()) {
+            if(e.getValue() instanceof ActionCall) {
+                map.put(e.getKey(), ((ActionCall)e.getValue()).evaluate(parentScope));
+            } else {
+                map.put(e.getKey(), e.getValue());
+            }
+        }
+        return new MixedStore(list, map);
     }
     
     /**

@@ -43,7 +43,7 @@ public class Scope {
      * @param func 実行する関数
      */
     public Scope(MixedStore args, RosettoFunction func, Scope parent) {
-        Map<String, RosettoValue> parsed = args.parse(func, parent);
+        Map<String, RosettoValue> parsed = args.bind(func, parent);
         this.vars = new HashMap<String, RosettoValue>(parsed);
         this.parent = parent;
     }

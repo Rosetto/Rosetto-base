@@ -129,7 +129,7 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue name = args.get(0);
             RosettoValue list = args.get(1);
             RosettoValue actionCall = args.get(2);
-            Scope scope = new Scope();
+            Scope scope = new Scope(parentScope);
             scope.set("name", name);
             scope.set("args", list);
             scope.set("action", actionCall);
@@ -164,7 +164,7 @@ public class BaseFunctions extends FunctionPackage {
         protected Scope createScope(MixedStore args, Scope parentScope) {
             RosettoValue list = args.get(0);
             RosettoValue actionCall = args.get(1);
-            Scope scope = new Scope();
+            Scope scope = new Scope(parentScope);
             scope.set("args", list);
             scope.set("action", actionCall);
             return scope;

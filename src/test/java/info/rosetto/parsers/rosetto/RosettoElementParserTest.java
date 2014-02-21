@@ -3,10 +3,12 @@ package info.rosetto.parsers.rosetto;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.utils.base.Values;
 
 import java.util.List;
 
@@ -22,6 +24,25 @@ public class RosettoElementParserTest {
         Contexts.dispose();
         Contexts.initialize();
         parser = new RosettoElementParser();
+    }
+    
+
+    @Test
+    public void parseElementでタグをActionCallに変換できる() throws Exception {
+        ActionCall s1 = (ActionCall)parser.parseElement("[hoge]");
+        assertThat(s1.getFunctionName(), is("hoge"));
+        assertThat(s1.getArgs().getSize(), is(0));
+        ActionCall s2 = (ActionCall)parser.parseElement("[print text=\"test\"]");
+        assertThat(s2.getFunctionName(), is("print"));
+        assertThat(s2.getArgs().getSize(), is(1));
+        assertThat(s2.getArgs().get("text").asString(), is("test"));
+        ActionCall s3 = (ActionCall)parser.parseElement("[wait 1000]");
+        assertThat(s3.getFunctionName(), is("wait"));
+        assertThat(s3.getArgs().getSize(), is(1));
+        assertThat(s3.getArgs().get(0).asString(), is("1000"));
+        //nullだとActionはEMPTYになる
+        RosettoValue s4 = parser.parseElement(null);
+        assertThat(s4, is((RosettoValue)Values.NULL));
     }
     
     @Test

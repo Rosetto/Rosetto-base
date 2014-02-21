@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements;
 
+import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
 import java.io.Serializable;
@@ -43,6 +44,14 @@ public interface RosettoValue extends Serializable {
      * @return このRosettoValueの実体となる値
      */
     public Object getValue();
+    
+    /**
+     * この値が評価可能な値であれば評価結果を返す.<br>
+     * そうでなければ自身をそのまま返す.
+     * @param scope 評価に利用するローカル変数をもつスコープ
+     * @return 評価結果
+     */
+    public RosettoValue evaluate(Scope scope);
     
     /**
      * この値を文字列として解釈した場合の値を返す.<br>

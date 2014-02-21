@@ -118,7 +118,8 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @return
      */
     protected Scope createScope(MixedStore args, Scope parentScope) {
-        return new Scope(args, this, parentScope);
+        //通常はすべての関数が評価されて渡される
+        return new Scope(args.evaluate(parentScope), this, parentScope);
     }
 
     /**
@@ -138,7 +139,8 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
             args = MixedStore.EMPTY;
         RosettoValue result = Values.NULL;
         try {
-            result = run(createScope(args, parentScope), args);
+            Scope functionScope = createScope(args, parentScope);
+            result = run(functionScope, args);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -198,6 +200,12 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     public List<String> getArguments() {
         return Collections.unmodifiableList(args);
+    }
+    
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
     }
     
     public String getName() {
