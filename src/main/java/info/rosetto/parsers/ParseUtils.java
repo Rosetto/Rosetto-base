@@ -3,17 +3,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Map.Entry;
-
 import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.utils.base.TextUtils;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
 
 /**
  * パースに関連した操作を扱うユーティリティクラス.

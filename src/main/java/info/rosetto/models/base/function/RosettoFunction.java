@@ -110,6 +110,27 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     protected abstract RosettoValue run(Scope scope, MixedStore rawArgs);
     
+
+    @Override
+    public RosettoValue first() {
+        return this;
+    }
+
+    @Override
+    public RosettoValue rest() {
+        return Values.NULL;
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        if(index == 0) return this;
+        return Values.NULL;
+    }
+    
+    @Override
+    public int size() {
+        return 1;
+    }
     
     /**
      * 特殊関数では評価順を変える等の処理をする.

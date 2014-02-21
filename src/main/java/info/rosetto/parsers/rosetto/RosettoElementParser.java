@@ -6,13 +6,12 @@ package info.rosetto.parsers.rosetto;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.elements.MixedStore;
-import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.DoubleValue;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.parsers.AbstractElementParser;
@@ -103,7 +102,7 @@ public class RosettoElementParser extends AbstractElementParser {
      * @param element
      * @return
      */
-    public RosettoList parseList(String element) {
+    public RosettoValue parseList(String element) {
         if(element == null) return ListValue.EMPTY;
         String content = ParseUtils.removeRBracket(element);
         List<String> splited = splitElements(content);

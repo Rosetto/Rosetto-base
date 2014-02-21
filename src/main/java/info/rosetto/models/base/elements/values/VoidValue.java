@@ -49,6 +49,27 @@ public class VoidValue implements RosettoValue {
         return this;
     }
     
+    
+    @Override
+    public RosettoValue first() {
+        throw new UnsupportedOperationException("this value is void");
+    }
+    
+    @Override
+    public RosettoValue rest() {
+        throw new UnsupportedOperationException("this value is void");
+    }
+    
+    @Override
+    public int size() {
+        return 0;
+    }
+    
+    @Override
+    public RosettoValue getAt(int index) {
+        throw new UnsupportedOperationException("this value is void");
+    }
+    
     @Override
     public ValueType getType() {
         return ValueType.VOID;
@@ -151,4 +172,5 @@ public class VoidValue implements RosettoValue {
     public long asLong(long defaultValue) {
         return defaultValue;
     }
+
 }

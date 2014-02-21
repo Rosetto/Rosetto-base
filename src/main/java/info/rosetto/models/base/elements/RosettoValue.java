@@ -53,6 +53,14 @@ public interface RosettoValue extends Serializable {
      */
     public RosettoValue evaluate(Scope scope);
     
+    public RosettoValue first();
+    
+    public RosettoValue rest();
+    
+    public RosettoValue getAt(int index);
+    
+    public int size();
+    
     /**
      * この値を文字列として解釈した場合の値を返す.<br>
      * 文字列として解釈できなかった場合、NotConvertibleExceptionをスローする.

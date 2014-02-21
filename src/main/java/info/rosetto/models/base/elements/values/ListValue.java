@@ -4,7 +4,6 @@
 package info.rosetto.models.base.elements.values;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.parser.Parser;
@@ -23,7 +22,7 @@ import javax.annotation.concurrent.Immutable;
  * @author tohhy
  */
 @Immutable
-public class ListValue implements RosettoValue, RosettoList {
+public class ListValue implements RosettoValue {
     private static final long serialVersionUID = -5778537199758610111L;
     
     public static final ListValue EMPTY = new ListValue(new String[0]);
@@ -94,6 +93,11 @@ public class ListValue implements RosettoValue, RosettoList {
     
     public RosettoValue getAt(int index) {
         return list.get(index);
+    }
+    
+    @Override
+    public int size() {
+        return list.size();
     }
     
     @Override

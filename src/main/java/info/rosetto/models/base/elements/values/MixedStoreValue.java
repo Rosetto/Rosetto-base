@@ -6,7 +6,6 @@ package info.rosetto.models.base.elements.values;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.MixedStore;
-import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.parser.Parser;
@@ -33,7 +32,7 @@ import java.util.Map;
  * 先にキーワードを持つものが抽出されてマップとして保持され、その後に残りの要素がリストとして保持される.
  * @author tohhy
  */
-public class MixedStoreValue implements RosettoList {
+public class MixedStoreValue implements RosettoValue {
     private static final long serialVersionUID = -5778537199758610111L;
     
     private final LinkedList<RosettoValue> list;
@@ -102,6 +101,11 @@ public class MixedStoreValue implements RosettoList {
 
     public RosettoValue getAt(int listIndex) {
         return list.get(listIndex);
+    }
+    
+    @Override
+    public int size() {
+        return list.size() + map.size();
     }
     
     @Override

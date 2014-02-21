@@ -7,7 +7,6 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoAction;
-import info.rosetto.models.base.elements.RosettoList;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
@@ -45,8 +44,8 @@ public class FunctionalFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue v = scope.get("list");
-            if(v instanceof RosettoList) {
-                return ((RosettoList)v).first();
+            if(v instanceof RosettoValue) {
+                return ((RosettoValue)v).first();
             }
             return Values.NULL;
         }
@@ -59,8 +58,8 @@ public class FunctionalFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, MixedStore args) {
             RosettoValue v = scope.get("list");
-            if(v instanceof RosettoList) {
-                return ((RosettoList)v).rest();
+            if(v instanceof RosettoValue) {
+                return ((RosettoValue)v).rest();
             }
             return Values.NULL;
         }

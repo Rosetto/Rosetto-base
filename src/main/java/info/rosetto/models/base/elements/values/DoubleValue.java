@@ -7,6 +7,7 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.utils.base.Values;
 
 /**
  * 
@@ -43,6 +44,27 @@ public class DoubleValue implements RosettoValue {
             }
         }
         return false;
+    }
+    
+    @Override
+    public RosettoValue first() {
+        return this;
+    }
+
+    @Override
+    public RosettoValue rest() {
+        return Values.NULL;
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        if(index == 0) return this;
+        return Values.NULL;
+    }
+    
+    @Override
+    public int size() {
+        return 1;
     }
     
     @Override

@@ -11,6 +11,7 @@ import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.system.messages.SystemMessage;
+import info.rosetto.utils.base.Values;
 
 /**
  * 値ではあるが、評価できない値.<br>
@@ -48,7 +49,26 @@ public class NullValue implements RosettoValue, RosettoAction {
         return false;
     }
     
+    @Override
+    public RosettoValue first() {
+        return this;
+    }
 
+    @Override
+    public RosettoValue rest() {
+        return Values.NULL;
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        return this;
+    }
+    
+    @Override
+    public int size() {
+        return 0;
+    }
+    
     @Override
     public RosettoValue evaluate(Scope scope) {
         return this;

@@ -93,8 +93,6 @@ public class RosettoNormalizer extends AbstractNormalizer {
         return line;
     }
     
-    
-    
     /**
      * その行がページングタグを含んでいるかを返す.
      * @param line 

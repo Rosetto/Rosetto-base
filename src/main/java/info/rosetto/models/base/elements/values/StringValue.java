@@ -7,6 +7,7 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.utils.base.Values;
 
 /**
  * 文字列を実体とするRosettoValue.<br>
@@ -48,7 +49,29 @@ public class StringValue implements RosettoValue {
         return value;
     }
     
+    
+    
+    @Override
+    public RosettoValue first() {
+        return this;
+    }
 
+    @Override
+    public RosettoValue rest() {
+        return Values.NULL;
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        if(index == 0) return this;
+        return Values.NULL;
+    }
+    
+    @Override
+    public int size() {
+        return 1;
+    }
+    
     @Override
     public RosettoValue evaluate(Scope scope) {
         return this;
@@ -155,4 +178,5 @@ public class StringValue implements RosettoValue {
             return defaultValue;
         }
     }
+
 }

@@ -5,6 +5,8 @@ package info.rosetto.models.base.elements;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.functions.base.BaseFunctions;
+import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.observers.ActionObservatory;
@@ -195,6 +197,26 @@ public class ActionCall implements RosettoValue {
         return evaluate(parentScope).asDouble(defaultValue);
     }
     
+    @Override
+    public RosettoValue first() {
+        return new StringValue(getFunctionName());
+    }
+
+    @Override
+    public RosettoValue rest() {
+        return new ListValue(getArgs().getList());
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        if(index == 0) return first();
+        return getArgs().get(index-1);
+    }
+    
+    @Override
+    public int size() {
+        return 1;
+    }
     
     @Override
     public String asString() throws NotConvertibleException {
@@ -280,4 +302,6 @@ public class ActionCall implements RosettoValue {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
+
+
 }
