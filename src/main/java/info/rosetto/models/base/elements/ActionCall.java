@@ -9,7 +9,7 @@ import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
-import info.rosetto.observers.ActionObservatory;
+import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
@@ -134,7 +134,7 @@ public class ActionCall implements RosettoValue {
             RosettoFunction f = (RosettoFunction) v;
             MixedStore args = this.getArgs();
             RosettoValue result = f.execute(args, parentScope);
-            ActionObservatory.getInstance().functionExecuted(f, args, result);
+            Observatories.getAction().functionExecuted(f, args, result);
             return result;
         }
         

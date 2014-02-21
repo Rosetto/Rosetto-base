@@ -14,18 +14,7 @@ import org.frows.observatories.Observatory;
 public class VariableObservatory extends Observatory<VariableObserver> 
     implements VariableObserver {
     
-    /**
-     * シングルトンインスタンス.
-     */
-    private static final VariableObservatory instance = new VariableObservatory();
-    
-    /**
-     * VariableObservatoryのシングルトンインスタンスを取得する.
-     * @return VariableObservatoryのシングルトンインスタンス
-     */
-    public static VariableObservatory getInstance() {
-        return instance;
-    }
+    VariableObservatory() {}
     
     /**
      * 特定の名前空間の変数変更のみを監視するオブザーバを登録する.
@@ -33,7 +22,7 @@ public class VariableObservatory extends Observatory<VariableObserver>
      * @param observer 追加するオブザーバ
      */
     public void addNameSpaceObserver(String nameSpace, VariableObserver observer) {
-        NameSpaceObservatory.getInstance().addObserver(nameSpace, observer);
+        Observatories.getNameSpace().addObserver(nameSpace, observer);
     }
     
     @Override
@@ -42,7 +31,7 @@ public class VariableObservatory extends Observatory<VariableObserver>
         for(VariableObserver o : getObservers()) {
             o.valueChanged(nameSpace, variableName, newValue);
         }
-        NameSpaceObservatory.getInstance().valueChanged(nameSpace, variableName, newValue);
+        Observatories.getNameSpace().valueChanged(nameSpace, variableName, newValue);
     }
 
 }

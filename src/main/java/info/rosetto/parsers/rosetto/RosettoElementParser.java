@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers.rosetto;
 
-import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
@@ -13,17 +12,13 @@ import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.elements.values.StringValue;
-import info.rosetto.models.state.variables.Scope;
 import info.rosetto.parsers.AbstractElementParser;
 import info.rosetto.parsers.ParseUtils;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -112,86 +107,7 @@ public class RosettoElementParser extends AbstractElementParser {
         }
         return new ListValue(elements.getList());
     }
-
-
-    private static class ArgParser {
-        Stack<Integer> obIndex = new Stack<Integer>();
-        Map<Integer, Integer> coress = new HashMap<Integer, Integer>();
-        Map<Integer, ActionCall> parsed = new HashMap<Integer, ActionCall>();
-        private final String argStr;
-        
-        public ArgParser(String argStr) {
-            this.argStr = argStr;
-        }
-        
-        public RosettoValue parse(Scope currentScope) {
-            if(!argStr.startsWith("[")) return Contexts.getParser().parseElement(argStr);
-            int strLen = argStr.length();
-            
-            for(int i=0; i<strLen; i++) {
-                char c = argStr.charAt(i);
-                
-                if(c == '[') {
-                    obIndex.push(i);
-                } else if(c == ']') {
-                    if(obIndex.isEmpty()) throw new IllegalArgumentException("");
-                    int ob = obIndex.pop();
-                    coress.put(ob, i);
-                    ActionCall v = parseRegion(ob, i, currentScope);
-                    parsed.put(ob, v);
-                }
-            }
-            RosettoValue result = parsed.get(0);
-            if(result instanceof ActionCall) result = ((ActionCall)result).evaluate(currentScope);
-            return result;
-        }
-        
-        private ActionCall parseRegion(int start, int end, Scope scope) {
-            List<String> result = new ArrayList<String>();
-            StringBuilder buf = new StringBuilder();
-            for(int i=start+1; i<end; i++) {
-                char c = argStr.charAt(i);
-                
-                if(c == '[') {
-                    //ここまでのbuf内容を追加してクリア
-                    if(buf.length() > 0) {
-                        result.add(buf.toString());
-                        buf = new StringBuilder();
-                    }
-                    //パース済みのactioncallをresultに追加
-                    result.add(parsed.get(i).evalAsString(scope));
-                    //対応する括弧までスキップ
-                    i = coress.get(i);
-                } else if(c == ']') {
-                    throw new IllegalArgumentException("");
-                } else if(c == ' ') {
-                    //ここまでのbuf内容を追加してクリア
-                    if(buf.length() > 0) {
-                        result.add(buf.toString());
-                        buf = new StringBuilder();
-                    }
-                } else {
-                    buf.append(c);
-                }
-            }
-            //残っていればここまでのbuf内容を追加
-            if(buf.length() > 0) result.add(buf.toString());
-            
-            if(result.size() == 0) {
-                return ActionCall.EMPTY;
-            } else if(result.size() == 1) {
-                return new ActionCall(result.get(0));
-            } else {
-                String[] args = new String[result.size()-1];
-                for(int i=1; i<result.size(); i++) {
-                    args[i-1] = result.get(i);
-                }
-                return new ActionCall(result.get(0), args);
-            }
-        }
-    }
     
-
     
     public List<String> splitElements(String elements) {
         ArrayList<String> result = new ArrayList<String>();

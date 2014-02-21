@@ -17,15 +17,7 @@ import org.frows.observatories.ObjectObservatory;
 public class NameSpaceObservatory extends ObjectObservatory<String, VariableObserver> 
     implements VariableObserver {
     
-    /**
-     * シングルトンインスタンス.
-     */
-    private static final NameSpaceObservatory instance = new NameSpaceObservatory();
-    
-    /**
-     * コンストラクタは非公開.
-     */
-    private NameSpaceObservatory() {}
+    NameSpaceObservatory() {}
     
     @Override
     public void valueChanged(String nameSpace, String variableName, RosettoValue newValue) {
@@ -35,13 +27,5 @@ public class NameSpaceObservatory extends ObjectObservatory<String, VariableObse
                     o.valueChanged(nameSpace, variableName, newValue);
                 }
         }
-    }
-    
-    /**
-     * NameSpaceObservatoryのシングルトンインスタンスを取得する.
-     * @return NameSpaceObservatoryのシングルトンインスタンス
-     */
-    static NameSpaceObservatory getInstance() {
-        return instance;
     }
 }

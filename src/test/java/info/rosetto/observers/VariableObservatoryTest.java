@@ -1,11 +1,9 @@
 package info.rosetto.observers;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.observers.VariableObservatory;
-import info.rosetto.observers.VariableObserver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +14,12 @@ public class VariableObservatoryTest {
     public void setUp() {
         Contexts.dispose();
         Contexts.initialize();
-        VariableObservatory.getInstance().clear();
     }
 
     @Test
     public void notifyTest() throws Exception {
         final StringBuilder sb = new StringBuilder();
-        VariableObservatory.getInstance().addObserver(new VariableObserver() {
+        Observatories.getVariable().addObserver(new VariableObserver() {
             @Override
             public void valueChanged(String nameSpace, String variableName,
                     RosettoValue newValue) {
@@ -41,7 +38,7 @@ public class VariableObservatoryTest {
     @Test
     public void addNameSpaceObserverTest() throws Exception {
         final StringBuilder sb = new StringBuilder();
-        VariableObservatory.getInstance().addNameSpaceObserver("hoge", 
+        Observatories.getVariable().addNameSpaceObserver("hoge", 
                 new VariableObserver() {
             @Override
             public void valueChanged(String nameSpace, String variableName,

@@ -18,7 +18,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-
 /**
  * Rosetto中の値の生成・操作に関するユーティリティクラス.
  * @author tohhy

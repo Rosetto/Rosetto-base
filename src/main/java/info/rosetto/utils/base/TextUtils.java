@@ -1,7 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package info.rosetto.utils.base;
 
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.List;
  * @author tohhy
  */
 public class TextUtils {
-    
     
     /**
      * 正規表現でエスケープが必要なcharのリスト.
@@ -90,5 +88,5 @@ public class TextUtils {
         secondIndex = secondIndex + firstIndex;
         return removeAllDoubleQuotedStrings(line.substring(0, firstIndex) + line.substring(secondIndex+1));
     }
-
+    
 }

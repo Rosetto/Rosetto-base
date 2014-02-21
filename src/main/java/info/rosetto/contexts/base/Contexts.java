@@ -11,6 +11,7 @@ import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.engine.EngineModel;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.NameSpace;
+import info.rosetto.observers.Observatories;
 import info.rosetto.utils.base.Values;
 
 /**
@@ -72,6 +73,7 @@ public class Contexts {
         instance.functions = null;
         instance.system = null;
         instance.isInitialized = false;
+        Observatories.clear();
     }
     
     /**

@@ -3,12 +3,6 @@ package info.rosetto.parsers;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
-import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.state.variables.Scope;
-import info.rosetto.parsers.ParseUtils;
 
 import java.util.List;
 

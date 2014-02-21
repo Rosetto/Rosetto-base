@@ -2,7 +2,6 @@ package info.rosetto.models.base.namespace;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;

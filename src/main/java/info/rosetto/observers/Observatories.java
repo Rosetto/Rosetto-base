@@ -4,5 +4,42 @@
 package info.rosetto.observers;
 
 public class Observatories {
-
+    
+    private static Observatories instance;
+    
+    private final ActionObservatory action = new ActionObservatory();
+    
+    private final NameSpaceObservatory nameSpace = new NameSpaceObservatory();
+    
+    private final ProgressObservatory progress = new ProgressObservatory();
+    
+    private final VariableObservatory variable = new VariableObservatory();
+    
+    private static Observatories getInstance() {
+        if(instance == null) {
+            instance = new Observatories();
+        }
+        return instance;
+    }
+    
+    public static void clear() {
+        instance = new Observatories();
+    }
+    
+    public static ActionObservatory getAction() {
+        return getInstance().action;
+    }
+    
+    public static NameSpaceObservatory getNameSpace() {
+        return getInstance().nameSpace;
+    }
+    
+    public static ProgressObservatory getProgress() {
+        return getInstance().progress;
+    }
+    
+    public static VariableObservatory getVariable() {
+        return getInstance().variable;
+    }
+    
 }

@@ -16,20 +16,8 @@ import org.frows.observatories.Observatory;
  */
 public class ActionObservatory extends Observatory<ActionObserver> 
 implements ActionObserver {
-    /**
-     * シングルトンインスタンス.
-     */
-    private static final ActionObservatory instance = new ActionObservatory();
     
-    private ActionObservatory() {}
-    
-    /**
-     * ActionObservatoryのシングルトンインスタンスを取得する.
-     * @return ActionObservatoryのシングルトンインスタンス
-     */
-    public static ActionObservatory getInstance() {
-        return instance;
-    }
+    ActionObservatory() {}
     
     @Override
     public void functionExecuted(RosettoFunction func, MixedStore args,

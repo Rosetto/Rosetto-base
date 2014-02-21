@@ -9,7 +9,7 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.state.variables.Scope;
-import info.rosetto.observers.ActionObservatory;
+import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
@@ -165,7 +165,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        ActionObservatory.getInstance().functionExecuted(this, args, result);
+        Observatories.getAction().functionExecuted(this, args, result);
         logFunctionExecuted(this);
         return result;
     }
@@ -186,7 +186,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        ActionObservatory.getInstance().functionExecuted(this, rargs, result);
+        Observatories.getAction().functionExecuted(this, rargs, result);
         logFunctionExecuted(this);
         return result;
     }

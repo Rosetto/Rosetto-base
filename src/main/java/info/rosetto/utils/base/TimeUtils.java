@@ -5,8 +5,11 @@ package info.rosetto.utils.base;
 
 import info.rosetto.contexts.base.Contexts;
 
+/**
+ * フレーム数と時間の処理に関わるユーティリティクラス.
+ * @author tohhy
+ */
 public class TimeUtils {
-    
     /**
      * ミリ秒を現在のFPSを使ってフレーム数に変換する.
      * @param timeMs

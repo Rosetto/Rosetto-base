@@ -1,17 +1,13 @@
 package info.rosetto.parsers;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.ActionCall;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.parsers.rosetto.RosettoNormalizer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 

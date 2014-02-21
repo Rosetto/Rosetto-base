@@ -1,14 +1,12 @@
 package info.rosetto.observers;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
-import info.rosetto.observers.ActionObservatory;
-import info.rosetto.observers.ActionObserver;
 
 import org.junit.Test;
 
@@ -17,7 +15,7 @@ public class ActionObservatoryTest {
     @Test
     public void testName() throws Exception {
         final StringBuilder sb = new StringBuilder();
-        ActionObservatory.getInstance().addObserver(new ActionObserver() {
+        Observatories.getAction().addObserver(new ActionObserver() {
             @Override
             public void macroExecuted(RosettoMacro macro) {}
             
@@ -29,6 +27,8 @@ public class ActionObservatoryTest {
         });
         
         RosettoFunction sut = new RosettoFunction("func") {
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected RosettoValue run(Scope functionScope, MixedStore args) {
                 return null;
