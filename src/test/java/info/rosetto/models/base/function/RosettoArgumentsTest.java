@@ -69,7 +69,7 @@ public class RosettoArgumentsTest {
         map.put("foo", "bar");
         map.put("hoge", "fuga");
         MixedStore sut = MixedStore.createFromString("aaa bbb foo=bar hoge=fuga");
-        assertThat(sut.toString(), is(args.toString() + map.toString()));
+        assertThat(sut.toString(), is("aaa bbb foo=bar hoge=fuga"));
     }
     
     @Test

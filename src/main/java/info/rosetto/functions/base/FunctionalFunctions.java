@@ -124,6 +124,8 @@ public class FunctionalFunctions extends FunctionPackage {
                 for(RosettoValue v : ((ListValue)argsValue).getList()) {
                     ListValue l = (ListValue)v;
                     RosettoValue condition = l.first();
+                    if(condition instanceof ActionCall)
+                        condition = ((ActionCall)condition).evaluate(scope);
                     if(condition.asBool() == true) {
                         RosettoValue actions = l.rest();
                         RosettoValue result = actions;

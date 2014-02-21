@@ -192,14 +192,7 @@ public class RosettoElementParser extends AbstractElementParser {
         }
     }
     
-    /**
-     * 文字列の引数をパースしてRosettoValueに変換する.
-     * @param argStr
-     * @return
-     */
-    public RosettoValue parseArg(String argStr, Scope currentScope) {
-        return new ArgParser(argStr).parse(currentScope);
-    }
+
     
     public List<String> splitElements(String elements) {
         ArrayList<String> result = new ArrayList<String>();

@@ -90,16 +90,16 @@ public class MixedStore implements Serializable {
         return new MixedStore(list, map);
     }
     
-    public static MixedStore createFromString(List<String> args) {
+    public static MixedStore createFromString(List<String> elements) {
         List<RosettoValue> list = new ArrayList<RosettoValue>();
         Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
-        for(String str : args) {
-            int equalPosition = str.indexOf("=");
+        for(String element : elements) {
+            int equalPosition = element.indexOf("=");
             if(equalPosition == -1) {
-                list.add(Values.create(TextUtils.removeDoubleQuote(str)));
+                list.add(Values.create(TextUtils.removeDoubleQuote(element)));
             } else {
-                String key = str.substring(0, equalPosition);
-                String value = TextUtils.removeDoubleQuote(str.substring(equalPosition + 1));
+                String key = element.substring(0, equalPosition);
+                String value = TextUtils.removeDoubleQuote(element.substring(equalPosition + 1));
                 map.put(key, Values.create(value));
             }
         }
@@ -243,7 +243,26 @@ public class MixedStore implements Serializable {
      */
     @Override
     public String toString() {
-        return getList().toString() + getMap().toString();
+        StringBuilder sb = new StringBuilder();
+        int listLen = list.size();
+        int mapLen = map.size();
+        for(int i=0; i<listLen; i++) {
+            sb.append(list.get(i).asString());
+            if(i == listLen-1) {
+                if(mapLen > 0) sb.append(" ");
+            } else {
+                sb.append(" ");
+            }
+        }
+        Entry<String, RosettoValue> e = map.firstEntry();
+        for(int i=0; i<mapLen; i++) {
+            sb.append(e.getKey()).append("=").append(e.getValue());
+            if(i != mapLen-1) {
+                sb.append(" ");
+                e = map.higherEntry(e.getKey());
+            }
+        }
+        return sb.toString();
     }
     
     /**

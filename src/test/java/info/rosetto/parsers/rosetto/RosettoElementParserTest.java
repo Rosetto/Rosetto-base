@@ -5,9 +5,8 @@ import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.base.elements.values.MixedStoreValue;
 
 import java.util.List;
 
@@ -27,23 +26,23 @@ public class RosettoElementParserTest {
     
     @Test
     public void リストリテラルのパース() throws Exception {
-        RosettoValue sut1 = parser.parseArg("(foo bar baz)", new Scope());
+        RosettoValue sut1 = parser.parseElement("(foo bar baz)");
         assertThat(sut1.getType(), is(ValueType.LIST));
         assertThat(((ListValue)sut1).first().asString(), is("foo"));
         
-        RosettoValue sut2 = parser.parseArg("([= 1 2] foo)", new Scope());
+        RosettoValue sut2 = parser.parseElement("([eq? 1 2] foo)");
         assertThat(sut2.getType(), is(ValueType.LIST));
-        assertThat(((ListValue)sut2).first().asString(), is("[= 1 2]"));
+        assertThat(((ListValue)sut2).first().asString(), is("[eq? 1 2]"));
     }
     
     @Test
     public void ハッシュドリストリテラルのパース() throws Exception {
-        RosettoValue sut1 = parser.parseArg("(foo=bar baz)", new Scope());
+        RosettoValue sut1 = parser.parseElement("(foo=bar baz)");
         assertThat(sut1.getType(), is(ValueType.HASHED_LIST));
         assertThat(((MixedStoreValue)sut1).get("foo").asString(), is("bar"));
         assertThat(((MixedStoreValue)sut1).first().asString(), is("baz"));
         
-        RosettoValue sut2 = parser.parseArg("(foo=bar hoge baz=100 fuga)", new Scope());
+        RosettoValue sut2 = parser.parseElement("(foo=bar hoge baz=100 fuga)");
         assertThat(sut2.getType(), is(ValueType.HASHED_LIST));
         assertThat(((MixedStoreValue)sut2).get("foo").asString(), is("bar"));
         assertThat(((MixedStoreValue)sut2).getAt(0).asString(), is("hoge"));

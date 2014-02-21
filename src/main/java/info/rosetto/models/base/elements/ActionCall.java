@@ -198,7 +198,7 @@ public class ActionCall implements RosettoValue {
     
     @Override
     public String asString() throws NotConvertibleException {
-        throw new NotConvertibleException();
+        return toString();
     }
 
     /**
@@ -207,7 +207,7 @@ public class ActionCall implements RosettoValue {
      */
     @Override
     public String asString(String defaultValue) {
-        return defaultValue;
+        return toString();
     }
     /**
      * NotConvertibleExceptionをスローする.

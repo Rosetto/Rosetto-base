@@ -78,7 +78,7 @@ public class ArithmeticFunctions extends FunctionPackage {
     };
     
     
-    public static final RosettoFunction eq = new RosettoFunction("=", 
+    public static final RosettoFunction eq = new RosettoFunction("eq?", 
             "x", "y") {
         private static final long serialVersionUID = -411581748747383868L;
         
@@ -108,7 +108,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         }
     };
     
-    public static final RosettoFunction leq = new RosettoFunction("<=", 
+    public static final RosettoFunction leq = new RosettoFunction("leq?", 
             "x", "y") {
         private static final long serialVersionUID = -411581748747383868L;
         
@@ -118,7 +118,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         }
     };
     
-    public static final RosettoFunction geq = new RosettoFunction(">=", 
+    public static final RosettoFunction geq = new RosettoFunction("geq?", 
             "x", "y") {
         private static final long serialVersionUID = -411581748747383868L;
         

@@ -35,7 +35,8 @@ public class Values {
     public static final NullValue NULL = NullValue.INSTANCE;
     
     /**
-     * 指定した文字列を受け取ってRosettoValueを生成する.
+     * 指定した文字列を受け取ってRosettoValueを生成する.<br>
+     * 現在のparserのparseElementを呼び出す.
      * @param value StringValueとして生成する値
      * @return 生成したStringValue
      */
