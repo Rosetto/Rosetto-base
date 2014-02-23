@@ -73,14 +73,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     }
     
     /**
-     * 無名のlambda関数を生成する.
-     * @param args 引数名リスト
-     */
-    public RosettoFunction(RosettoValue args) {
-        this("", args);
-    }
-    
-    /**
      * @param args 引数名リスト
      */
     public RosettoFunction(String name, RosettoValue args) {
@@ -191,23 +183,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return result;
     }
     
-    /**
-     * この関数の情報を表す文字列を生成する.
-     * @return この関数の情報を表す文字列
-     */
-    private String createFunctionInfo() {
-        StringBuilder result = new StringBuilder();
-        result.append("[").append(name).append(" ");
-        List<String> args = getArguments();
-        for(int i=0; i<args.size(); i++) {
-            result.append(args.get(i));
-            if(i != args.size()-1)
-                result.append(" ");
-        }
-        result.append("]");
-        return result.toString();
-    }
-    
     @Override
     public String toString() {
         return createFunctionInfo();
@@ -301,6 +276,29 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     private static void logFunctionExecuted(RosettoFunction func) {
         RosettoLogger.finer("function executed: " + func.toString());
+    }
+
+    /**
+     * この関数の情報を表す文字列を生成する.
+     * @return この関数の情報を表す文字列
+     */
+    private String createFunctionInfo() {
+        StringBuilder result = new StringBuilder();
+        result.append("[").append(name).append(" ");
+        String argsStr = createArgsStr();
+        result.append(argsStr).append("]");
+        return result.toString();
+    }
+    
+    protected String createArgsStr() {
+        StringBuilder result = new StringBuilder();
+        List<String> args = getArguments();
+        for(int i=0; i<args.size(); i++) {
+            result.append(args.get(i));
+            if(i != args.size()-1)
+                result.append(" ");
+        }
+        return result.toString();
     }
     
 }

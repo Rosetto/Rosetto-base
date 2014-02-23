@@ -8,7 +8,6 @@ import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.state.engine.EngineModel;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.NameSpace;
 import info.rosetto.observers.Observatories;
@@ -265,22 +264,5 @@ public class Contexts {
         instance.system.setParser(parser);
     }
     
-    /**
-     * 
-     * @return
-     */
-    public static EngineModel getEngine() {
-        initializedCheck();
-        return instance.system.getEngine();
-    }
-    
-    /**
-     * 
-     * @param parser
-     */
-    public static void setEngine(EngineModel parser) {
-        initializedCheck();
-        instance.system.setEngine(parser);
-    }
 
 }

@@ -9,6 +9,7 @@ import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.function.FunctionPackage;
+import info.rosetto.models.base.function.LambdaFunction;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
@@ -176,7 +177,7 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue actionValue = scope.get("action");
             if(actionValue.getType() == ValueType.ACTION_CALL) {
                 final ActionCall ac = (ActionCall) actionValue;
-                RosettoFunction f = new RosettoFunction(argsValue) {
+                RosettoFunction f = new LambdaFunction(argsValue) {
                     private static final long serialVersionUID = 1L;
                     @Override
                     protected RosettoValue run(Scope scope, MixedStore args) {

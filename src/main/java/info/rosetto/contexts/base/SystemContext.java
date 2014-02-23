@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.models.state.engine.EngineModel;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.parsers.rosetto.RosettoParser;
 
@@ -18,11 +17,6 @@ public class SystemContext {
      */
     private Parser parser = new RosettoParser();
     
-    /**
-     * このコンテキストでのエンジンの設定等を格納したモデル.<br>
-     * ファイルのロード方式等、プレイヤーの動作に関わる環境設定等を保持する.
-     */
-    private EngineModel engine;
     
     
     /**
@@ -46,20 +40,5 @@ public class SystemContext {
         this.parser = parser;
     }
     
-    /**
-     * システムが利用するエンジンのモデルを取得する.
-     * @return システムが利用するエンジンのモデル
-     */
-    public EngineModel getEngine() {
-        return engine;
-    }
-    
-    /**
-     * システムが利用するエンジンのモデルを指定する.
-     * @param engine システムが利用するエンジンのモデル
-     */
-    public void setEngine(EngineModel engine) {
-        this.engine = engine;
-    }
     
 }
