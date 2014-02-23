@@ -58,8 +58,8 @@ public class OptionableListTest {
     public void インスタンス化の際に属性値を囲んでいるダブルクオートは外される() throws Exception {
         String test = " \"foo\" bar=baz hoge=\"fuga\" ika=\"tako and tako\"";
         OptionableList sut = OptionableList.createFromString(test);
-        assertThat(sut.getOption("hoge").asString(), is("fuga"));
-        assertThat(sut.getOption("ika").asString(), is("tako and tako"));
+        assertThat(sut.get("hoge").asString(), is("fuga"));
+        assertThat(sut.get("ika").asString(), is("tako and tako"));
         assertThat(sut.getAt(0).asString(), is("foo"));
     }
     
@@ -175,8 +175,8 @@ public class OptionableListTest {
     @Test
     public void getで指定キーに関連づけられた値が返る() throws Exception {
         OptionableList sut = OptionableList.createFromString("%1 2=2 3=3");
-        assertThat(sut.getOption("2").asString(), is("2"));
-        assertThat(sut.getOption("5"), is(nullValue()));
+        assertThat(sut.get("2").asString(), is("2"));
+        assertThat(sut.get("5"), is(nullValue()));
     }
 
 }

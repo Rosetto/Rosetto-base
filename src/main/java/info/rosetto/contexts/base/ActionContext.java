@@ -26,7 +26,7 @@ public class ActionContext implements Serializable {
     private static final long serialVersionUID = -2299445118074812605L;
     
     /**
-     * 関数コンテキストが保有する全ての名前空間の一覧.
+     * コンテキストが保有する全ての名前空間の一覧.
      */
     private final Map<String, NameSpace> nameSpaces = new HashMap<String, NameSpace>();
     
@@ -37,7 +37,7 @@ public class ActionContext implements Serializable {
     
     /**
      * パッケージ内でのみ生成.<br>
-     * 生成時にbaseパッケージがimportされ、useされる.
+     * 生成時に基本関数パッケージがimportされ、useされる.
      */
     ActionContext() {
         importPackage(BaseFunctions.getInstance(), "base");
@@ -48,7 +48,7 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * currentから指定名のアクションを取得する.<br>
+     * 指定名のアクションを取得する.<br>
      * 指定名のアクションが存在しない場合はNullValueが返る.
      * @param functionName 関数コンテキストから取得するアクションの名称
      * @return 取得したアクション
@@ -62,9 +62,9 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * 指定した名前空間の指定したキーに存在する値を取得する.
+     * 指定した名前空間の指定したキーに存在するアクションを取得する.
      * @param nameSpace 指定する名前空間
-     * @param key 取得する変数名
+     * @param key 取得するアクション名
      * @return 取得した値
      */
     public RosettoAction get(String nameSpace, String varName) {
@@ -90,7 +90,7 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * 指定したパッケージを指定名の名前空間上に読み込む.
+     * 指定したパッケージ内の然要素を指定名の名前空間上に読み込む.
      * @param p 読み込むパッケージ
      */
     public void importPackage(FunctionPackage p, String packageName) {
@@ -99,16 +99,16 @@ public class ActionContext implements Serializable {
             space.set(f.getName(), f);
         }
     }
-
+    
     /**
-     * 指定したパッケージに含まれるすべての関数をcurrentにロードして使用可能にする.
+     * 指定したパッケージに含まれるすべてのアクションをcurrentにロードして使用可能にする.
      * @param packageName ロードするパッケージの完全名
      */
     public void usePackage(String packageName) {
         NameSpace pkg = getNameSpace(packageName);
         if(pkg != null) current.include(pkg);
     }
-
+    
     /**
      * 指定名のパッケージが含まれているかどうかを返す.
      * @param name 対象とするパッケージ
@@ -130,7 +130,7 @@ public class ActionContext implements Serializable {
     }
     
     /**
-     * WholeSpaceに指定した名前空間を追加する.
+     * 指定した名前空間を追加する.
      * @param ns 追加する名前空間
      */
     private void putNameSpace(NameSpace ns) {

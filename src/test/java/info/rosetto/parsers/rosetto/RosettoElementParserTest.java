@@ -34,8 +34,8 @@ public class RosettoElementParserTest {
         assertThat(s1.getArgs().size(), is(0));
         ActionCall s2 = (ActionCall)parser.parseElement("[print text=\"test\"]");
         assertThat(s2.getFunctionName(), is("print"));
-        assertThat(s2.getArgs().getOptionSize(), is(1));
-        assertThat(s2.getArgs().getOption("text").asString(), is("test"));
+        assertThat(s2.getArgs().optionSize(), is(1));
+        assertThat(s2.getArgs().get("text").asString(), is("test"));
         ActionCall s3 = (ActionCall)parser.parseElement("[wait 1000]");
         assertThat(s3.getFunctionName(), is("wait"));
         assertThat(s3.getArgs().size(), is(1));
@@ -60,12 +60,12 @@ public class RosettoElementParserTest {
     public void ハッシュドリストリテラルのパース() throws Exception {
         RosettoValue sut1 = parser.parseElement("(foo=bar baz)");
         assertThat(sut1.getType(), is(ValueType.COLLECTION));
-        assertThat(((OptionableList)sut1).getOption("foo").asString(), is("bar"));
+        assertThat(((OptionableList)sut1).get("foo").asString(), is("bar"));
         assertThat(((OptionableList)sut1).first().asString(), is("baz"));
         
         RosettoValue sut2 = parser.parseElement("(foo=bar hoge baz=100 fuga)");
         assertThat(sut2.getType(), is(ValueType.COLLECTION));
-        assertThat(((OptionableList)sut2).getOption("foo").asString(), is("bar"));
+        assertThat(((OptionableList)sut2).get("foo").asString(), is("bar"));
         assertThat(((OptionableList)sut2).getAt(0).asString(), is("hoge"));
     }
     

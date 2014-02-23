@@ -33,7 +33,7 @@ public class Contexts {
     /**
      * すべての関数を保持するインスタンス.
      */
-    private ActionContext functions;
+    private ActionContext actions;
     
     /**
      * Rosettoのシステム状態を保持するインスタンス.
@@ -51,17 +51,27 @@ public class Contexts {
     private Contexts() {}
     
     /**
-     * Contextsを初期化して使用可能な状態にする.<br>
+     * 指定したコンテキストを用いてContextsを初期化し、使用可能な状態にする.<br>
+     * nullを指定したコンテキストはデフォルトの設定で初期化される.
      * @throws IllegalStateException すでにContextsが初期化されている場合
      */
-    public static void initialize() {
+    public static void initialize(GlobalVariables global, 
+            ActionContext actions, SystemContext system) {
         if(instance.isInitialized)
             throw new IllegalStateException("Contexts already initialized");
         
-        instance.globalVars = new GlobalVariables();
-        instance.functions = new ActionContext();
-        instance.system = new SystemContext();
+        instance.globalVars = (global != null) ? global : new GlobalVariables();
+        instance.actions = (actions != null) ? actions : new ActionContext();
+        instance.system = (system != null) ? system : new SystemContext();
         instance.isInitialized = true;
+    }
+    
+    /**
+     * Contextsを初期化して使用可能な状態にする.
+     * @throws IllegalStateException すでにContextsが初期化されている場合
+     */
+    public static void initialize() {
+        initialize(null, null, null);
     }
     
     /**
@@ -69,7 +79,7 @@ public class Contexts {
      */
     public static void dispose() {
         instance.globalVars = null;
-        instance.functions = null;
+        instance.actions = null;
         instance.system = null;
         instance.isInitialized = false;
         Observatories.clear();
@@ -92,7 +102,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に保存されている値を取得する.<br>
+     * 指定したグローバル変数に保存されている値を取得する.
      * @param key 値を取得する変数名
      * @return 取得した値、変数が存在しなければnull
      */
@@ -125,7 +135,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に指定した値を設定する.
+     * 指定したグローバル変数に値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -134,7 +144,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に指定した値を設定する.
+     * 指定したグローバル変数に値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -143,7 +153,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に指定した値を設定する.
+     * 指定したグローバル変数に値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -152,7 +162,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に指定した値を設定する.
+     * 指定したグローバル変数に値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -161,7 +171,7 @@ public class Contexts {
     }
     
     /**
-     * 指定したグローバル変数に指定した値を設定する.
+     * 指定したグローバル変数に値を設定する.
      * @param key 値を設定する変数名
      * @param value 設定する値
      */
@@ -171,28 +181,30 @@ public class Contexts {
     
     /**
      * アクションコンテキストから指定名のアクションを取得する.
-     * 値が関数でない場合、存在しない場合はBaseFunctions.passが返る.
+     * 指定名のアクションが存在しない場合はBaseFunctions.passが返る.
      * @param key 値を取得する変数名
-     * @return 取得した関数. 値が関数でないか、変数が存在しなければBaseFunctions.pass
-     * TODO マクロへの対応
+     * @return 取得したアクション. アクションが存在しなければBaseFunctions.pass
      */
     public static RosettoAction getAction(String key) {
-        return instance.functions.get(key);
+        return instance.actions.get(key);
     }
     
     /**
-     * 指定した関数を関数コンテキストに追加する.
-     * @param func 関数コンテキストに追加する関数
+     * 指定した関数をアクションコンテキストに追加する.
+     * @param func アクションコンテキストに追加する関数
      */
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
-        instance.functions.defineAction(func);
+        instance.actions.defineAction(func);
     }
     
+    /**
+     * 指定したマクロをアクションコンテキストに追加する.
+     * @param macro
+     */
     public static void defineMacro(RosettoMacro macro) {
         initializedCheck();
-        //TODO
-        //instance.functions.defineAction(macro);
+        instance.actions.defineAction(macro);
     }
     
     /**
@@ -202,7 +214,7 @@ public class Contexts {
      */
     public static void importPackage(FunctionPackage p, String packageName) {
         initializedCheck();
-        instance.functions.importPackage(p, packageName);
+        instance.actions.importPackage(p, packageName);
     }
     
     /**
@@ -211,7 +223,7 @@ public class Contexts {
      */
     public static void usePackage(String packageName) {
         initializedCheck();
-        instance.functions.usePackage(packageName);
+        instance.actions.usePackage(packageName);
     }
     
     /**

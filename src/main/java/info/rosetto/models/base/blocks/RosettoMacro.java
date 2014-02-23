@@ -4,11 +4,16 @@
 package info.rosetto.models.base.blocks;
 
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.RosettoAction;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
+import info.rosetto.models.state.variables.Scope;
+import info.rosetto.system.exceptions.NotConvertibleException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +22,7 @@ import java.util.List;
  * 単一のマクロを記録するブロック. イミュータブル.
  * @author tohhy
  */
-public class RosettoMacro extends Block {
+public class RosettoMacro extends Block implements RosettoAction {
     private static final long serialVersionUID = 4177216826565925097L;
     
     /**
@@ -70,5 +75,131 @@ public class RosettoMacro extends Block {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public ValueType getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Object getValue() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue first() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue rest() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue cons(RosettoValue head) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue getAt(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int size() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public String asString() throws NotConvertibleException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String asString(String defaultValue) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean asBool() throws NotConvertibleException {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean asBool(boolean defaultValue) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public int asInt() throws NotConvertibleException {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int asInt(int defaultValue) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double asDouble(double defaultValue) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public RosettoValue execute(Scope parentScope) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue execute(OptionableList args, Scope parentScope) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RosettoValue execute(String args, Scope parentScope) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

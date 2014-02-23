@@ -92,7 +92,7 @@ public class ActionCall implements RosettoValue {
     
     @Override
     public String toString() {
-        if(args.size() == 0 && args.getOptionSize() == 0) return "[" + callName + "]";
+        if(args.size() == 0 && args.optionSize() == 0) return "[" + callName + "]";
         return "[" + callName + " " + args.toString() + "]";
     }
     

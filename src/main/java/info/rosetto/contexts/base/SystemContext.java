@@ -17,8 +17,6 @@ public class SystemContext {
      */
     private Parser parser = new RosettoParser();
     
-    
-    
     /**
      * パッケージ内でのみ生成.
      */
@@ -39,6 +37,4 @@ public class SystemContext {
     public void setParser(Parser parser) {
         this.parser = parser;
     }
-    
-    
 }

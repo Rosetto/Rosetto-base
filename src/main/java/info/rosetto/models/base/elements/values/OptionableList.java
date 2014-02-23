@@ -29,7 +29,7 @@ import java.util.TreeMap;
  * <br>
  * (foo=10 bar=100 2 6 a=1 9 3)<br>
  * <br>
- * Rosetto中ではこのオプショナブルリストは以下のように整理される.<br>
+ * Rosetto中では上のリストは以下のように整理される.<br>
  * <br>
  * Map {foo=10, bar=100, a=1}<br>
  * List (2,6,9,3)<br>
@@ -329,21 +329,10 @@ public class OptionableList implements RosettoValue {
     }
     
     /**
-     * オプションマップ中の指定キーに関連づけられた値を取得する.
-     */
-    public RosettoValue getOption(String mapKey) {
-        return map.get(mapKey);
-    }
-    
-    /**
      * オプションマップが指定キーを含んでいるかを返す.
      */
     public boolean containsKey(String key) {
         return map.containsKey(key);
-    }
-    
-    public int getOptionSize() {
-        return map.size();
     }
     
     @Override
@@ -378,6 +367,17 @@ public class OptionableList implements RosettoValue {
         return list.size();
     }
     
+    /**
+     * オプションマップ中の指定キーに関連づけられた値を取得する.
+     */
+    public RosettoValue get(String mapKey) {
+        return map.get(mapKey);
+    }
+
+    public int optionSize() {
+        return map.size();
+    }
+
     public List<RosettoValue> getList() {
         return Collections.unmodifiableList(list);
     }
