@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.values.ActionCall;
 
 import org.junit.Before;
 import org.junit.Test;

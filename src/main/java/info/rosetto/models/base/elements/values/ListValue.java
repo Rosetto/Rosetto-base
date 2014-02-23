@@ -91,6 +91,14 @@ public class ListValue implements RosettoValue {
         return new ListValue(list.subList(1, list.size()));
     }
     
+    @Override
+    public RosettoValue cons(RosettoValue head) {
+        LinkedList<RosettoValue> list = new LinkedList<RosettoValue>();
+        list.add(head);
+        list.addAll(this.list);
+        return new ListValue(list);
+    }
+    
     public RosettoValue getAt(int index) {
         return list.get(index);
     }

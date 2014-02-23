@@ -4,9 +4,9 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
@@ -125,7 +125,7 @@ public class ContextsTest {
         Contexts.defineFunction(new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
             @Override
-            protected RosettoValue run(Scope functionScope, MixedStore args) {
+            protected RosettoValue run(Scope functionScope, OptionableList args) {
                 return Values.VOID;
             }
         });

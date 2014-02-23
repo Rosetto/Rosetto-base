@@ -2,18 +2,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-package info.rosetto.models.base.elements;
+package info.rosetto.models.base.elements.values;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.state.parser.Parser;
 import info.rosetto.models.state.variables.Scope;
+import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.TextUtils;
 import info.rosetto.utils.base.Values;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,39 +23,46 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import javax.annotation.concurrent.Immutable;
-
 /**
- * RosettoValueの連続を標準引数とキーワード引数に分けて順に格納する.<br>
- * イミュータブル.
+ * リストを拡張し、キーと値の組を格納できるようにしたもの.<br>
+ * 以下のようにごちゃ混ぜに値を放り込むことができる.<br>
+ * <br>
+ * (foo=10 bar=100 2 6 a=1 9 3)<br>
+ * <br>
+ * Rosetto中ではこのオプショナブルリストは以下のように整理される.<br>
+ * <br>
+ * Map {foo=10, bar=100, a=1}<br>
+ * List (2,6,9,3)<br>
+ * <br>
+ * 先にキーワードを持つものが抽出されてマップとして保持され、その後に残りの要素がリストとして保持される.<br>
+ * シーケンス操作はすべてリスト部分のみに適用される.<br>
+ * [size (a=1 b=2 c=3)] => 0
  * @author tohhy
  */
-@Immutable
-public class MixedStore implements Serializable {
-    private static final long serialVersionUID = 7674155534111041469L;
+public class OptionableList implements RosettoValue {
+    private static final long serialVersionUID = -5778537199758610111L;
+    
+    public static final OptionableList EMPTY = 
+            new OptionableList(new LinkedList<RosettoValue>(), new TreeMap<String, RosettoValue>());
     
     /**
-     * 通常引数のリスト.
+     * 通常引数のリスト.<br>
+     * Lispライクな処理を多用するのでLinkedListが必須.
      */
-    private final List<RosettoValue> list;
+    private final LinkedList<RosettoValue> list;
     
     /**
      * キーワード引数のマップ.<br>
-     * キーをソートするのでTreeMapが必須.
+     * 並び順を一意にするためにTreeMapが必須.
      */
     private final TreeMap<String, RosettoValue> map;
     
-    /**
-     * 空の引数リスト.
-     */
-    public static final MixedStore EMPTY = new MixedStore(
-            new ArrayList<RosettoValue>(), new TreeMap<String, RosettoValue>());
-    
+
     /**
      * 文字列形式の要素の連続を受け取ってHashedListオブジェクトを生成する.
      * @param args 文字列形式の引数リスト
      */
-    public static MixedStore createFromString(String args) {
+    public static OptionableList createFromString(String args) {
         if(args == null) throw new IllegalArgumentException("引数がnullです");
         List<RosettoValue> list = new ArrayList<RosettoValue>();
         Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
@@ -71,11 +80,11 @@ public class MixedStore implements Serializable {
                 map.put(key, parser.parseElement(value));
             }
         }
-        return new MixedStore(list, map);
+        return new OptionableList(list, map);
     }
     
-    public static MixedStore createFromString(String[] args) {
-        List<RosettoValue> list = new ArrayList<RosettoValue>();
+    public static OptionableList createFromString(String[] args) {
+        List<RosettoValue> list = new LinkedList<RosettoValue>();
         Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
         for(String str : args) {
             int equalPosition = str.indexOf("=");
@@ -87,10 +96,10 @@ public class MixedStore implements Serializable {
                 map.put(key, Values.create(value));
             }
         }
-        return new MixedStore(list, map);
+        return new OptionableList(list, map);
     }
     
-    public static MixedStore createFromString(List<String> elements) {
+    public static OptionableList createFromString(List<String> elements) {
         List<RosettoValue> list = new ArrayList<RosettoValue>();
         Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
         for(String element : elements) {
@@ -103,23 +112,100 @@ public class MixedStore implements Serializable {
                 map.put(key, Values.create(value));
             }
         }
-        return new MixedStore(list, map);
+        return new OptionableList(list, map);
     }
     
-    public static MixedStore createFromValue(List<RosettoValue> values) {
+    public static OptionableList createFromValue(List<RosettoValue> values) {
         List<RosettoValue> list = new ArrayList<RosettoValue>(values);
         Map<String, RosettoValue> map = new HashMap<String, RosettoValue>();
-        return new MixedStore(list, map);
+        return new OptionableList(list, map);
     }
     
-    private MixedStore(List<RosettoValue> list, Map<String, RosettoValue> map) {
-        this.list = list;
+    public static OptionableList createFromValue(
+            List<RosettoValue> list, Map<String, RosettoValue> map) {
+        return new OptionableList(
+                new LinkedList<RosettoValue>(list), 
+                new HashMap<String, RosettoValue>(map));
+    }
+    
+    public static OptionableList createFromValue(OptionableList list) {
+        return new OptionableList(
+                new LinkedList<RosettoValue>(list.getList()), 
+                new HashMap<String, RosettoValue>(list.getMap()));
+    }
+    
+    private OptionableList(List<RosettoValue> list, Map<String, RosettoValue> map) {
+        this.list = (list instanceof LinkedList) ? 
+                (LinkedList<RosettoValue>) list : new LinkedList<RosettoValue>(list);
         this.map = (map instanceof TreeMap) ? 
                 (TreeMap<String, RosettoValue>)map : new TreeMap<String, RosettoValue>(map);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoValue) {
+            return ((RosettoValue)obj).asString().equals(this.asString());
+        }
+        return false;
+    }
     
+    /**
+     * 引数リストの文字列表現とキーワード引数マップの文字列表現を結合して返す.<br>
+     * 外周の丸括弧はつけない.丸括弧も含める場合はasStringを呼び出す.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int listLen = list.size();
+        int mapLen = map.size();
+        for(int i=0; i<listLen; i++) {
+            sb.append(list.get(i).asString());
+            if(i == listLen-1) {
+                if(mapLen > 0) sb.append(" ");
+            } else {
+                sb.append(" ");
+            }
+        }
+        Entry<String, RosettoValue> e = map.firstEntry();
+        for(int i=0; i<mapLen; i++) {
+            sb.append(e.getKey()).append("=").append(e.getValue());
+            if(i != mapLen-1) {
+                sb.append(" ");
+                e = map.higherEntry(e.getKey());
+            }
+        }
+        return sb.toString();
+    }
     
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
+    }
+    
+    /**
+     * 含まれるすべての要素を評価し、新しいインスタンスにまとめて返す.
+     * @return
+     */
+    public OptionableList evaluateChildren(Scope parentScope) {
+        List<RosettoValue> list = new ArrayList<RosettoValue>();
+        Map<String, RosettoValue> map = new TreeMap<String, RosettoValue>();
+        for(RosettoValue v:this.list) {
+            if(v instanceof ActionCall) {
+                list.add(((ActionCall)v).evaluate(parentScope));
+            } else {
+                list.add(v);
+            }
+        }
+        for(Entry<String, RosettoValue> e : this.map.entrySet()) {
+            if(e.getValue() instanceof ActionCall) {
+                map.put(e.getKey(), ((ActionCall)e.getValue()).evaluate(parentScope));
+            } else {
+                map.put(e.getKey(), e.getValue());
+            }
+        }
+        return new OptionableList(list, map);
+    }
+
     /**
      * 指定した関数とスコープを用いてこの引数リストをパースする.
      * キーワードが指定されていない通常引数は指定関数の引数順等を考慮して指定関数に合わせてマッピングされる.
@@ -237,84 +323,67 @@ public class MixedStore implements Serializable {
         }
         return result;
     }
-    
-    /**
-     * 要素中に含まれるすべてのActionCallを評価し、新しいインスタンスにまとめて返す.
-     * @return
-     */
-    public MixedStore evaluate(Scope parentScope) {
-        List<RosettoValue> list = new ArrayList<RosettoValue>();
-        Map<String, RosettoValue> map = new TreeMap<String, RosettoValue>();
-        for(RosettoValue v:this.list) {
-            if(v instanceof ActionCall) {
-                list.add(((ActionCall)v).evaluate(parentScope));
-            } else {
-                list.add(v);
-            }
-        }
-        for(Entry<String, RosettoValue> e : this.map.entrySet()) {
-            if(e.getValue() instanceof ActionCall) {
-                map.put(e.getKey(), ((ActionCall)e.getValue()).evaluate(parentScope));
-            } else {
-                map.put(e.getKey(), e.getValue());
-            }
-        }
-        return new MixedStore(list, map);
+
+    public boolean hasMappedValue() {
+        return map.size() > 0;
     }
     
     /**
-     * 引数リストの文字列表現とキーワード引数マップの文字列表現を結合して返す.
+     * オプションマップ中の指定キーに関連づけられた値を取得する.
      */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        int listLen = list.size();
-        int mapLen = map.size();
-        for(int i=0; i<listLen; i++) {
-            sb.append(list.get(i).asString());
-            if(i == listLen-1) {
-                if(mapLen > 0) sb.append(" ");
-            } else {
-                sb.append(" ");
-            }
-        }
-        Entry<String, RosettoValue> e = map.firstEntry();
-        for(int i=0; i<mapLen; i++) {
-            sb.append(e.getKey()).append("=").append(e.getValue());
-            if(i != mapLen-1) {
-                sb.append(" ");
-                e = map.higherEntry(e.getKey());
-            }
-        }
-        return sb.toString();
+    public RosettoValue getOption(String mapKey) {
+        return map.get(mapKey);
     }
     
     /**
-     * キーワード引数が指定キーを含んでいるかを返す.
+     * オプションマップが指定キーを含んでいるかを返す.
      */
     public boolean containsKey(String key) {
-        return getMap().containsKey(key);
+        return map.containsKey(key);
     }
-
-    /**
-     * この属性リストに含まれる属性の数を返す.
-     */
-    public int getSize() {
-        return getMap().size() + getList().size();
+    
+    public int getOptionSize() {
+        return map.size();
     }
-
-    /**
-     * 通常引数中の指定インデックスに存在する値を取得する.
-     */
-    public RosettoValue get(int argNum) {
-        return getList().get(argNum);
+    
+    @Override
+    public RosettoValue first() {
+        return list.getFirst();
+    }
+    
+    @Override
+    public RosettoValue rest() {
+        if(list.size() == 0 || list.size() == 1) return Values.NULL;
+        if(list.size() == 2) return list.getFirst();
+        return new OptionableList(list.subList(1, list.size()), map);
+    }
+    
+    @Override
+    public RosettoValue cons(RosettoValue head) {
+        return null;
     }
     
     /**
-     * キーワード引数中の指定キーに関連づけられた値を取得する.
+     * List部の指定インデックスに存在する値を取得する.
      */
-    public RosettoValue get(String key) {
-        return getMap().get(key);
+    public RosettoValue getAt(int listIndex) {
+        return list.get(listIndex);
+    }
+    
+    /**
+     * List部の要素数を取得する.
+     */
+    @Override
+    public int size() {
+        return list.size();
+    }
+    
+    public List<RosettoValue> getList() {
+        return Collections.unmodifiableList(list);
+    }
+
+    public Map<String, RosettoValue> getMap() {
+        return Collections.unmodifiableMap(map);
     }
     
     /**
@@ -332,16 +401,68 @@ public class MixedStore implements Serializable {
         }
         return result;
     }
-    
-    public List<RosettoValue> getList() {
-        return list;
+
+    @Override
+    public ValueType getType() {
+        return ValueType.COLLECTION;
     }
     
-    public Map<String, RosettoValue> getMap() {
-        return map;
+    @Override
+    public Object getValue() {
+        return this;
     }
     
-    public boolean hasMappedValue() {
-        return !map.isEmpty();
+    @Override
+    public String asString() throws NotConvertibleException {
+        return "(" + toString() + ")";
     }
+    
+    @Override
+    public String asString(String defaultValue) {
+        return "(" + toString() + ")";
+    }
+
+    @Override
+    public boolean asBool() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public boolean asBool(boolean defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public int asInt() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public int asInt(int defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public long asLong() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public long asLong(long defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public double asDouble() throws NotConvertibleException {
+        throw new NotConvertibleException();
+    }
+
+    @Override
+    public double asDouble(double defaultValue) {
+        return defaultValue;
+    }
+    
+    
+    
+    
 }

@@ -4,8 +4,8 @@
 package info.rosetto.observers;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.function.RosettoFunction;
 
 import org.frows.observatories.Observatory;
@@ -20,7 +20,7 @@ implements ActionObserver {
     ActionObservatory() {}
     
     @Override
-    public void functionExecuted(RosettoFunction func, MixedStore args,
+    public void functionExecuted(RosettoFunction func, OptionableList args,
             RosettoValue evaluatedValue) {
         for(ActionObserver o : getObservers()) {
             o.functionExecuted(func, args, evaluatedValue);

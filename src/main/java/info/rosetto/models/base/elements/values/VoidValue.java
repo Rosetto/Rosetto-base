@@ -61,6 +61,11 @@ public class VoidValue implements RosettoValue {
     }
     
     @Override
+    public RosettoValue cons(RosettoValue head) {
+        throw new UnsupportedOperationException("this value is void");
+    }
+    
+    @Override
     public int size() {
         return 0;
     }

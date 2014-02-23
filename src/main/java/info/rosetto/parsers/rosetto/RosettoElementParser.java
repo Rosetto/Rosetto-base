@@ -3,14 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers.rosetto;
 
-import info.rosetto.models.base.elements.ActionCall;
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.DoubleValue;
 import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.parsers.AbstractElementParser;
 import info.rosetto.parsers.ParseUtils;
@@ -101,9 +100,9 @@ public class RosettoElementParser extends AbstractElementParser {
         if(element == null) return ListValue.EMPTY;
         String content = ParseUtils.removeRBracket(element);
         List<String> splited = splitElements(content);
-        MixedStore elements = MixedStore.createFromString(splited);
+        OptionableList elements = OptionableList.createFromString(splited);
         if(elements.hasMappedValue()) {
-            return new MixedStoreValue(elements);
+            return OptionableList.createFromValue(elements);
         }
         return new ListValue(elements.getList());
     }

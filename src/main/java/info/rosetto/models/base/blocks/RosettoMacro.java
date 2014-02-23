@@ -4,8 +4,8 @@
 package info.rosetto.models.base.blocks;
 
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.elements.ActionCall;
-import info.rosetto.models.base.elements.MixedStore;
+import info.rosetto.models.base.elements.values.ActionCall;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.Unit;
@@ -42,8 +42,8 @@ public class RosettoMacro extends Block {
      * @param contextArgs マクロ展開引数の展開の際に用いる引数
      * @return マクロブロックをパースして生成したシナリオ
      */
-    public Scenario toScenario(MixedStore contextArgs) {
-        contextArgs = (contextArgs == null) ? MixedStore.EMPTY : contextArgs;
+    public Scenario toScenario(OptionableList contextArgs) {
+        contextArgs = (contextArgs == null) ? OptionableList.EMPTY : contextArgs;
         Scenario s = Contexts.getParser().parseScript(getContent());
         return new Scenario(expand(s.getUnits(), contextArgs), ScenarioType.MACRO);
     }
@@ -54,10 +54,10 @@ public class RosettoMacro extends Block {
      * @param contextArgs 展開用引数
      * @return 展開用引数で全ユニットの引数を展開した結果
      */
-    private static List<Unit> expand(List<Unit> units, MixedStore contextArgs) {
+    private static List<Unit> expand(List<Unit> units, OptionableList contextArgs) {
         List<Unit> result = new ArrayList<Unit>();
         for(Unit u:units) {
-            MixedStore expanded = u.getAction().getArgs();//TODO
+            OptionableList expanded = u.getAction().getArgs();//TODO
             result.add(new Unit(u.getContent(), 
                     new ActionCall(u.getAction().getFunctionName(), expanded)));
         }

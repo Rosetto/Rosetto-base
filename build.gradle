@@ -14,7 +14,7 @@ defaultTasks 'clean', 'build'
 sourceCompatibility = 1.6
 
 ext {
-    project.version = '0.0.5'
+    project.version = '0.0.6'
     project.group = 'info.rosetto'
     appName = 'rosetto-base'
     project.description = 'Rosetto base classes'

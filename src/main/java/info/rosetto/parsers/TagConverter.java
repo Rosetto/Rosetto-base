@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers;
 
-import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.values.ActionCall;
 
 /**
  * 単一のタグを異なるタグに変換するコンバーター.<br>

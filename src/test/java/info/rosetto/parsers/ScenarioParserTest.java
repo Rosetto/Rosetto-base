@@ -3,7 +3,7 @@ package info.rosetto.parsers;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.elements.ActionCall;
+import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.parsers.rosetto.RosettoNormalizer;
@@ -49,7 +49,7 @@ public class ScenarioParserTest {
         Unit s1 = sut.createUnit("吾輩は猫である。[hoge fuga=piyo]", ps);
         assertThat(s1.getContent(), is("吾輩は猫である。"));
         assertThat(s1.getAction().getFunctionName(), is("hoge"));
-        assertThat(s1.getAction().getArgs().get("fuga").asString(), is("piyo"));
+        assertThat(s1.getAction().getArgs().getOption("fuga").asString(), is("piyo"));
         Unit s2 = sut.createUnit("テスト。", ps);
         assertThat(s2.getContent(), is("テスト。"));
         assertThat(s2.getAction(), is(ActionCall.EMPTY));

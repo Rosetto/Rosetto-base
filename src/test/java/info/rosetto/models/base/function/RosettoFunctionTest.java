@@ -1,9 +1,9 @@
 package info.rosetto.models.base.function;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import info.rosetto.models.base.elements.MixedStore;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.state.variables.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -18,7 +18,7 @@ public class RosettoFunctionTest {
     public void インスタンス化テスト() throws Exception {
         RosettoFunction f1 = new RosettoFunction("f1") {
             @Override
-            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
         };
         assertThat(f1.getName(), is("f1"));
         assertThat(f1.getArguments().size(), is(0));
@@ -26,7 +26,7 @@ public class RosettoFunctionTest {
         RosettoFunction f2 = new RosettoFunction("f2",
                 "hoge", "huga", "foo=bar") {
             @Override
-            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
         };
         assertThat(f2.getName(), is("f2"));
         assertThat(f2.getArguments().size(), is(3));
@@ -34,7 +34,7 @@ public class RosettoFunctionTest {
         RosettoFunction f3 = new RosettoFunction("f3", 
                 (String[])null) {
             @Override
-            protected RosettoValue run(Scope functionScope, MixedStore args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
         };
         assertThat(f3.getName(), is("f3"));
         assertThat(f3.getArguments().size(), is(0));

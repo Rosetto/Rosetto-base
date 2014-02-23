@@ -10,8 +10,11 @@ import java.io.Serializable;
 
 /**
  * Rosetto中のあらゆる値を表現するインタフェース.<br>
- * String, boolean, int, doubleのそれぞれのプリミティブな型への解釈手続きを定義する.<br>
+ * String, boolean, int, doubleのそれぞれのプリミティブな型への解釈手続きと、
+ * clojureのsequenceと同様のインタフェースを定義する.<br>
+ * あるRosettoValueに変換される文字列と、変換されたRosettoValueのasString()の結果は常に文字列上で一致する.<br>
  * 実装クラスはSerializableであることが必要.<br>
+ * <br>
  * <br>
  * RosettoScriptの記法を実現する都合上、引数には型の情報を持たせることができない.<br>
  * そのため、ユーザが入力したあらゆるスクリプトからの引数は全てRosettoValueを継承したStringValueとして渡ってくる.<br>
@@ -26,8 +29,6 @@ import java.io.Serializable;
  * <br>
  * 特定の型の実体を持った引数に限って受け取りたい関数等の実装では、getTypeで判別することができる.<br>
  * ジェネリクスではなくenumで型情報を保持しているのは、返り値の型を動的に判別するため.<br>
- * <br>
- * 引数に独自の構造を与えたい場合、RosettoValueを実装し、getTypeでOBJECTを返すようなクラスを作成するようにする.
  * @author tohhy
  */
 public interface RosettoValue extends Serializable {
@@ -53,9 +54,27 @@ public interface RosettoValue extends Serializable {
      */
     public RosettoValue evaluate(Scope scope);
     
+    /**
+     * この値の最初の要素を返す.<br>
+     * この値が単一の要素からなる場合は自身をそのまま返す.<br>
+     * この値が要素を持たない場合はValues.NULLを返す.
+     * @return この値の最初の要素
+     */
     public RosettoValue first();
     
+    /**
+     * この値の最初の要素を除いた残りの要素を返す.<br>
+     * この値が単一の要素からなる場合、この値が要素を持たない場合はValues.NULLを返す.
+     * @return この値の最初の要素を除いた残りの要素
+     */
     public RosettoValue rest();
+    
+    /**
+     * 引数に与えた値を先頭とし、その後にこの値を付け加えた新しいコレクションを返す.
+     * @param head 先頭に結合する値
+     * @return 結合後の値
+     */
+    public RosettoValue cons(RosettoValue head);
     
     public RosettoValue getAt(int index);
     

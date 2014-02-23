@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.state.variables;
 
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.utils.base.Values;
 
@@ -42,7 +42,7 @@ public class Scope {
      * @param args 未評価の引数
      * @param func 実行する関数
      */
-    public Scope(MixedStore args, RosettoFunction func, Scope parent) {
+    public Scope(OptionableList args, RosettoFunction func, Scope parent) {
         Map<String, RosettoValue> parsed = args.bind(func, parent);
         this.vars = new HashMap<String, RosettoValue>(parsed);
         this.parent = parent;

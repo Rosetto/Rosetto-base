@@ -4,9 +4,10 @@
 package info.rosetto.models.base.elements;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.elements.values.MixedStoreValue;
+import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.elements.values.VoidValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
@@ -32,13 +33,9 @@ public enum ValueType {
      */
     LIST(ListValue.class),
     /**
-     * ハッシュドリストを表す型.
+     * コレクションを表す型.
      */
-    HASHED_LIST(MixedStoreValue.class),
-    /**
-     * 任意のオブジェクトを示す型.
-     */
-    OBJECT(RosettoObject.class),
+    COLLECTION(OptionableList.class),
     /**
      * 関数を示す型.
      */

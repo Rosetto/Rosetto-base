@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements.values;
 
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
@@ -57,6 +56,11 @@ public class NullValue implements RosettoValue, RosettoAction {
     @Override
     public RosettoValue rest() {
         return Values.NULL;
+    }
+    
+    @Override
+    public RosettoValue cons(RosettoValue head) {
+        return new ListValue(head, this);
     }
 
     @Override
@@ -189,7 +193,7 @@ public class NullValue implements RosettoValue, RosettoAction {
     }
     
     @Override
-    public RosettoValue execute(MixedStore args, Scope parentScope) {
+    public RosettoValue execute(OptionableList args, Scope parentScope) {
         RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
         return this;
     }

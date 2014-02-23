@@ -1,5 +1,9 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements;
 
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.state.variables.Scope;
 
 /**
@@ -8,6 +12,10 @@ import info.rosetto.models.state.variables.Scope;
  */
 public interface RosettoAction extends RosettoValue {
     
+    /**
+     * このアクション呼び出しの名前を取得する.
+     * @return このアクション呼び出しの名前
+     */
     public String getName();
     
     /**
@@ -21,7 +29,7 @@ public interface RosettoAction extends RosettoValue {
      * @param args 実行時引数
      * @return 実行した結果の返り値
      */
-    public RosettoValue execute(MixedStore args, Scope parentScope);
+    public RosettoValue execute(OptionableList args, Scope parentScope);
     
     /**
      * このアクションを実行する.

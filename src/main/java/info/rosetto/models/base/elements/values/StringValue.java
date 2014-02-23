@@ -60,6 +60,11 @@ public class StringValue implements RosettoValue {
     public RosettoValue rest() {
         return Values.NULL;
     }
+    
+    @Override
+    public RosettoValue cons(RosettoValue head) {
+        return new ListValue(head, this);
+    }
 
     @Override
     public RosettoValue getAt(int index) {

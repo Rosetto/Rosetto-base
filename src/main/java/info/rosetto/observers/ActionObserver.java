@@ -4,8 +4,8 @@
 package info.rosetto.observers;
 
 import info.rosetto.models.base.blocks.RosettoMacro;
-import info.rosetto.models.base.elements.MixedStore;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.base.function.RosettoFunction;
 
 /**
@@ -21,7 +21,7 @@ public interface ActionObserver {
      * @param evaluatedValue 実行結果の返り値
      */
     public void functionExecuted(RosettoFunction func, 
-            MixedStore args, 
+            OptionableList args, 
             RosettoValue evaluatedValue);
     
     /**
