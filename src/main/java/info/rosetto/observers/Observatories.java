@@ -11,8 +11,6 @@ public class Observatories {
     
     private final NameSpaceObservatory nameSpace = new NameSpaceObservatory();
     
-    private final ProgressObservatory progress = new ProgressObservatory();
-    
     private final VariableObservatory variable = new VariableObservatory();
     
     private static Observatories getInstance() {
@@ -34,9 +32,6 @@ public class Observatories {
         return getInstance().nameSpace;
     }
     
-    public static ProgressObservatory getProgress() {
-        return getInstance().progress;
-    }
     
     public static VariableObservatory getVariable() {
         return getInstance().variable;
