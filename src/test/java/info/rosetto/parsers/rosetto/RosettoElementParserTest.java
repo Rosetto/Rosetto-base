@@ -59,12 +59,12 @@ public class RosettoElementParserTest {
     @Test
     public void ハッシュドリストリテラルのパース() throws Exception {
         RosettoValue sut1 = parser.parseElement("(foo=bar baz)");
-        assertThat(sut1.getType(), is(ValueType.COLLECTION));
+        assertThat(sut1.getType(), is(ValueType.OPTIONABLE_LIST));
         assertThat(((OptionableList)sut1).get("foo").asString(), is("bar"));
         assertThat(((OptionableList)sut1).first().asString(), is("baz"));
         
         RosettoValue sut2 = parser.parseElement("(foo=bar hoge baz=100 fuga)");
-        assertThat(sut2.getType(), is(ValueType.COLLECTION));
+        assertThat(sut2.getType(), is(ValueType.OPTIONABLE_LIST));
         assertThat(((OptionableList)sut2).get("foo").asString(), is("bar"));
         assertThat(((OptionableList)sut2).getAt(0).asString(), is("hoge"));
     }

@@ -35,6 +35,19 @@ public class ParseUtils {
     }
     
     /**
+     * 指定文字列を囲んでいるダブルクォートを除去する.<br>
+     * 行頭と行末のホワイトスペースは無視される.
+     * @param tag 角括弧を除去する文字列
+     * @return 除去後の文字列
+     */
+    public static String removeDoubleQuate(String str) {
+        str = str.trim();
+        if(str.startsWith("\"") && str.endsWith("\""))
+            return str.substring(1, str.length() - 1);
+        return str;
+    }
+    
+    /**
      * 指定文字列を囲んでいる丸括弧を除去する.<br>
      * 行頭と行末にそれぞれ左角括弧と右角括弧が存在する場合にその再外周の括弧のみを取り除く.<br>
      * 行頭と行末のホワイトスペースは無視される.

@@ -35,6 +35,8 @@ public class RosettoElementParser extends AbstractElementParser {
     public RosettoValue parseElement(String element) {
         //nullならValues.NULL
         if(element == null) return Values.NULL;
+        //ダブルクォートで囲まれていれば外す
+        element = ParseUtils.removeDoubleQuate(element);
         
         //特定の括弧で囲まれていればそれに合わせた変換
         if(element.startsWith("[") && element.endsWith("]")) {

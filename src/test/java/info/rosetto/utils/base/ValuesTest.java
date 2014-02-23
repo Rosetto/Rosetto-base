@@ -1,16 +1,22 @@
 package info.rosetto.utils.base;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class ValuesTest {
+    
+    @Before
+    public void setUp() {
+        Contexts.dispose();
+        Contexts.initialize();
+    }
 
     @Test
     public void createIntValueTest() throws Exception {
@@ -44,6 +50,11 @@ public class ValuesTest {
         } catch(Exception e) {
             assertThat(e, instanceOf(NotConvertibleException.class));
         }
+    }
+    
+    @Test
+    public void createQuotedValueTest() throws Exception {
+        assertThat(Values.create("\"foo bar\"").asString(), is("foo bar"));
     }
 
 }

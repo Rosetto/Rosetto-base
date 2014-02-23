@@ -33,9 +33,9 @@ public enum ValueType {
      */
     LIST(ListValue.class),
     /**
-     * コレクションを表す型.
+     * オプション付きリストを表す型.
      */
-    COLLECTION(OptionableList.class),
+    OPTIONABLE_LIST(OptionableList.class),
     /**
      * 関数を示す型.
      */

@@ -4,8 +4,10 @@
 package info.rosetto.models.base.blocks;
 
 import info.rosetto.contexts.base.Contexts;
+import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
+import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;
 import java.util.List;
@@ -58,11 +60,9 @@ public class IfContent implements Serializable {
      */
     public String getTrueBranch() {
         for(IfBranch b : branches) {
-            //TODO
-//            Object evaluatedExp = Contexts.getIScript().evaluate(b.getExp());
-//            boolean isTrueKey = Context.toBoolean(evaluatedExp);
-//            if(isTrueKey) return b.getContent();
-            return b.getContent();
+            String exp = b.getExp();
+            RosettoValue v = Values.create(exp);
+            if(v.asBool()) return b.getContent();
         }
         return elseBody;
     }

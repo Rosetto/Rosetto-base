@@ -404,7 +404,7 @@ public class OptionableList implements RosettoValue {
 
     @Override
     public ValueType getType() {
-        return ValueType.COLLECTION;
+        return ValueType.OPTIONABLE_LIST;
     }
     
     @Override
