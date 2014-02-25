@@ -140,7 +140,7 @@ public class ParseUtils {
         //左括弧か右括弧がなければそのまま
         if(obIndex == -1 || cbIndex == -1) return line;
         //タグ内のダブルクオートで囲まれた要素を取り除いておく
-        line = TextUtils.removeAllDoubleQuotedStrings(line);
+        line = removeAllDoubleQuotedStrings(line);
         //ダブルクオート除去後の括弧位置に更新、cbはobより後のものに制限する
         obIndex = line.indexOf("[");
         int cb = line.substring(obIndex).indexOf(']');
@@ -149,6 +149,21 @@ public class ParseUtils {
         //どちらも存在し括弧を形成しているならその部分を取り除いて再帰
         String striped = line.substring(0, obIndex) + line.substring(cbIndex+1);
         return removeAllTags(striped);
+    }
+    
+
+    /**
+     * 行中から全てのダブルクオートで囲まれた部分を取り除く.
+     * @param line 編集する行
+     * @return ダブルクオートで囲まれた部分を取り除いた行
+     */
+    public static String removeAllDoubleQuotedStrings(String line) {
+        int firstIndex = line.indexOf('"');
+        if(firstIndex == -1 || firstIndex == line.length() - 1) return line;
+        int secondIndex = line.substring(firstIndex + 1).indexOf('"');
+        if(secondIndex == -1) return line;
+        secondIndex = secondIndex + firstIndex;
+        return removeAllDoubleQuotedStrings(line.substring(0, firstIndex) + line.substring(secondIndex+1));
     }
     
     /**

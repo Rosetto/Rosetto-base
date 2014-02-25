@@ -4,7 +4,7 @@
 package info.rosetto.system.exceptions;
 
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Scope;
 import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.system.messages.SystemMessages;
 

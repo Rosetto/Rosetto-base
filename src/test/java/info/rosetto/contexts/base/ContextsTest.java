@@ -7,11 +7,12 @@ import static org.junit.Assert.fail;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.state.parser.Parser;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
 import java.util.List;
@@ -153,6 +154,11 @@ public class ContextsTest {
             }
             @Override
             public List<String> splitElements(String elements) {
+                return null;
+            }
+            @Override
+            public Scenario parseScript(ScriptValue script, Scope scope) {
+                // TODO Auto-generated method stub
                 return null;
             }
         });

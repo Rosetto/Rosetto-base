@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.state.variables;
+package info.rosetto.models.system;
 
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.OptionableList;
@@ -31,6 +31,11 @@ public class Scope {
     
     public Scope(Scope parent) {
         this.vars = new HashMap<String, RosettoValue>();
+        this.parent = parent;
+    }
+    
+    public Scope(Scope parent, Map<String, RosettoValue> values) {
+        this.vars = new HashMap<String, RosettoValue>(values);
         this.parent = parent;
     }
     
@@ -87,7 +92,6 @@ public class Scope {
     public String toString() {
         return vars.toString();
     }
-    
     
     /**
      * キーワード引数のマップを取得する.読み込み専用.

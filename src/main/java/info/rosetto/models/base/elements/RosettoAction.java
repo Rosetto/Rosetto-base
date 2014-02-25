@@ -4,7 +4,7 @@
 package info.rosetto.models.base.elements;
 
 import info.rosetto.models.base.elements.values.OptionableList;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Scope;
 
 /**
  * 関数やマクロなど、返り値を伴う実行が可能なRosettoValueを示すインタフェース.

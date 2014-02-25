@@ -2,15 +2,13 @@ package info.rosetto.utils.base;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import info.rosetto.utils.base.TextUtils;
 
 import org.junit.Test;
 
 public class TextUtilsTest {
 
-
     @Test
-    public void createTagRegexで指定タグ全体にマッチする正規表現を生成できる() throws Exception {
+    public void createTagRegexTest() throws Exception {
         String sut = TextUtils.createTagRegex("[", "]");
         assertThat(sut, is("\\[(.*?)\\]"));
     }
@@ -18,8 +16,19 @@ public class TextUtilsTest {
     @Test
     public void regexEscapeTest() throws Exception {
         
-        String sut = TextUtils.escapeForRegex("[]");
-        assertThat(sut, is("\\[\\]"));
+        assertThat(TextUtils.escapeForRegex("[]"), is("\\[\\]"));
+        assertThat(TextUtils.escapeForRegex("[* [+ $x @a]]"), is("\\[\\* \\[\\+ \\$x @a\\]\\]"));
+    }
+    
+    @Test
+    public void containsCountTest() throws Exception {
+         assertThat(TextUtils.containsCount("Hello, World!", 'l'), is(3));
+    }
+    
+    @Test
+    public void removeDoubleQuoteTest() throws Exception {
+        assertThat(TextUtils.removeDoubleQuote("\"hello!\""), is("hello!")); 
+        assertThat(TextUtils.removeDoubleQuote("not quoted"), is("not quoted")); 
     }
 
 }

@@ -8,10 +8,13 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.DoubleValue;
 import info.rosetto.models.base.elements.values.IntValue;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
 import info.rosetto.models.base.elements.values.VoidValue;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -90,17 +93,23 @@ public class Values {
      */
     public static RosettoValue createFromJSON(String json) 
             throws JsonParseException {
+        List<RosettoValue> values = new LinkedList<RosettoValue>();
         try {
             JsonParser parser = new JsonFactory().createParser(json);
-            
-            while(parser.isClosed()) {
+            while(!parser.isClosed()) {
                 JsonToken token = parser.nextToken();
                 if (token == null) break;
+                if(token.isScalarValue())
+                    values.add(Values.create(parser.getText()));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        if(values.size() == 0)
+            throw new IllegalArgumentException("Invalid JSON Value");
+        if(values.size() == 1)
+            return values.get(0);
+        return new ListValue(values);
     }
     
 }

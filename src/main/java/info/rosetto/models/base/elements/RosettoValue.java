@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements;
 
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 
 import java.io.Serializable;

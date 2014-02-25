@@ -1,6 +1,7 @@
-package info.rosetto.models.state.parser;
+package info.rosetto.models.system;
 
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.scenario.Scenario;
 
 import java.util.List;
@@ -13,6 +14,13 @@ public interface Parser {
      * @return
      */
     public Scenario parseScript(String script);
+    
+    /**
+     * スクリプトをパースして解釈後のシナリオオブジェクトを返す.
+     * @param script
+     * @return
+     */
+    public Scenario parseScript(ScriptValue script, Scope scope);
     
     /**
      * スクリプトをパースして解釈後のシナリオオブジェクトを返す.

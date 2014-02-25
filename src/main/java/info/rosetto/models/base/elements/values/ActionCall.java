@@ -8,7 +8,7 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
@@ -138,7 +138,7 @@ public class ActionCall implements RosettoValue {
             return result;
         }
         
-        if(v.getType() == ValueType.MACRO) {
+        if(v.getType() == ValueType.SCRIPT) {
             //TODO
         }
         

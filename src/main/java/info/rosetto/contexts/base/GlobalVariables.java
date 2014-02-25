@@ -4,7 +4,7 @@
 package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.state.variables.NameSpace;
+import info.rosetto.models.system.NameSpace;
 import info.rosetto.utils.base.Values;
 
 import java.io.Serializable;

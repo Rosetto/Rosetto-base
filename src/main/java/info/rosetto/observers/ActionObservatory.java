@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.observers;
 
-import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
 import org.frows.observatories.Observatory;
@@ -28,9 +28,10 @@ implements ActionObserver {
     }
     
     @Override
-    public void macroExecuted(RosettoMacro macro) {
+    public void macroExecuted(ScriptValue macro, OptionableList args,
+            RosettoValue evaluatedValue) {
         for(ActionObserver o : getObservers()) {
-            o.macroExecuted(macro);
+            o.macroExecuted(macro, args, evaluatedValue);
         }
     }
     

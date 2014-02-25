@@ -8,10 +8,11 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.LambdaFunction;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.state.variables.Scope;
+import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
 /**
@@ -41,7 +42,10 @@ public class BaseFunctions extends FunctionPackage {
      * コンストラクタは公開しない.
      */
     private BaseFunctions() {
-        super(pass, getglobal, def, getlocal, set, defn, fn, use);
+        super(pass, 
+                getglobal, def, getlocal, set, 
+                defn, fn, defmacro, macro, 
+                use);
     }
     
     /**
@@ -182,6 +186,74 @@ public class BaseFunctions extends FunctionPackage {
                     @Override
                     protected RosettoValue run(Scope scope, OptionableList args) {
                         return ac.evaluate(scope);
+                    }
+                };
+                return f;
+            }
+            return Values.NULL;
+        }
+    };
+    
+
+    public static final RosettoFunction defmacro = new RosettoFunction("defmacro", 
+            "name", "args", "action") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(OptionableList args, Scope parentScope) {
+            RosettoValue name = args.getAt(0);
+            RosettoValue list = args.getAt(1);
+            RosettoValue script = args.getAt(2);
+            if(args.size() == 2) {
+                list = null;
+                script = args.getAt(2);
+            }
+            Scope scope = new Scope(parentScope);
+            scope.set("name", name);
+            if(list != null) scope.set("args", list);
+            scope.set("script", script);
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, OptionableList args) {
+            RosettoValue nameValue = scope.get("name");
+            RosettoValue argsValue = scope.get("args");
+            RosettoValue scriptValue = scope.get("script");
+            if(scriptValue.getType() == ValueType.SCRIPT) {
+                ScriptValue sv = (ScriptValue) scriptValue;
+                Contexts.defineMacro(nameValue.asString(), sv);
+                return sv;
+            }
+            return Values.NULL;
+        }
+    };
+    
+    public static final RosettoFunction macro = new RosettoFunction("macro", 
+            "args", "script") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(OptionableList args, Scope parentScope) {
+            RosettoValue list = args.getAt(0);
+            RosettoValue script = args.getAt(1);
+            Scope scope = new Scope(parentScope);
+            scope.set("args", list);
+            scope.set("script", script);
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, OptionableList args) {
+            RosettoValue argsValue = scope.get("args");
+            RosettoValue scriptValue = scope.get("script");
+            if(scriptValue.getType() == ValueType.SCRIPT) {
+                final ScriptValue script = (ScriptValue) scriptValue;
+                RosettoFunction f = new LambdaFunction(argsValue) {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    protected RosettoValue run(Scope scope, OptionableList args) {
+                        return script.evaluate(scope);
                     }
                 };
                 return f;

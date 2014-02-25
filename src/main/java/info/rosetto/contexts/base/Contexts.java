@@ -3,13 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
-import info.rosetto.models.state.parser.Parser;
-import info.rosetto.models.state.variables.NameSpace;
+import info.rosetto.models.system.NameSpace;
+import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.ScenarioPlayer;
 import info.rosetto.observers.Observatories;
 import info.rosetto.utils.base.Values;
 
@@ -202,9 +203,9 @@ public class Contexts {
      * 指定したマクロをアクションコンテキストに追加する.
      * @param macro
      */
-    public static void defineMacro(RosettoMacro macro) {
+    public static void defineMacro(String name, ScriptValue macro) {
         initializedCheck();
-        instance.actions.defineAction(macro);
+        instance.actions.defineAction(name, macro);
     }
     
     /**
@@ -274,6 +275,24 @@ public class Contexts {
     public static void setParser(Parser parser) {
         initializedCheck();
         instance.system.setParser(parser);
+    }
+    
+    /**
+     * 現在のコンテキストで利用するシナリオプレイヤーを取得する.
+     * @return 現在のコンテキストで利用するシナリオプレイヤー
+     */
+    public static ScenarioPlayer getPlayer() {
+        initializedCheck();
+        return instance.system.getPlayer();
+    }
+    
+    /**
+     * 現在のコンテキストで利用するシナリオプレイヤーを変更する.
+     * @param player 現在のコンテキストで利用するシナリオプレイヤー
+     */
+    public static void setPlayer(ScenarioPlayer player) {
+        initializedCheck();
+        instance.system.setPlayer(player);
     }
     
 

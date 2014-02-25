@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.state.variables.NameSpace;
+import info.rosetto.models.system.NameSpace;
 import info.rosetto.system.exceptions.VariableSealedException;
 import info.rosetto.utils.base.Values;
 

@@ -5,11 +5,13 @@ package info.rosetto.parsers;
 
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ActionCall;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.Scope;
 import info.rosetto.parsers.rosetto.RosettoElementParser;
 import info.rosetto.utils.base.TextUtils;
 
@@ -107,6 +109,18 @@ public class ScenarioParser extends Tokenizer implements Parser {
         List<? extends Token> tokens = tokenize(normalized);
         //シナリオ作成
         return new Scenario(tokens, ScenarioType.NORMAL);
+    }
+
+    @Override
+    public Scenario parseScript(ScriptValue script, Scope scope) {
+        List<String> scenarioLines = ParseUtils.asLines(script.getScript());
+        //テキストと角括弧形式のタグのみに正規化
+        List<String> normalized = normalizer.normalize(scenarioLines);
+        //トークンのリストを作成
+        List<? extends Token> tokens = tokenize(normalized);
+        //シナリオ作成
+        //TODO スコープ継承
+        return new Scenario(tokens, ScenarioType.MACRO);
     }
 
     /**

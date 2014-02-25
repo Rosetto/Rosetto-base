@@ -3,7 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.contexts.base;
 
-import info.rosetto.models.state.parser.Parser;
+import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.ScenarioPlayer;
 import info.rosetto.parsers.rosetto.RosettoParser;
 
 /**
@@ -16,6 +17,11 @@ public class SystemContext {
      * このコンテキストでスクリプト解釈に使用されるパーサー.
      */
     private Parser parser = new RosettoParser();
+    
+    /**
+     * このコンテキストでシナリオ再生に使用されるプレイヤー.
+     */
+    private ScenarioPlayer player;
     
     /**
      * パッケージ内でのみ生成.
@@ -36,5 +42,13 @@ public class SystemContext {
      */
     public void setParser(Parser parser) {
         this.parser = parser;
+    }
+
+    public ScenarioPlayer getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(ScenarioPlayer player) {
+        this.player = player;
     }
 }

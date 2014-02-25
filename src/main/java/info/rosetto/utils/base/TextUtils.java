@@ -74,19 +74,4 @@ public class TextUtils {
         }
         return str;
     }
-    
-    /**
-     * 行中から全てのダブルクオートで囲まれた部分を取り除く.
-     * @param line 編集する行
-     * @return ダブルクオートで囲まれた部分を取り除いた行
-     */
-    public static String removeAllDoubleQuotedStrings(String line) {
-        int firstIndex = line.indexOf('"');
-        if(firstIndex == -1 || firstIndex == line.length() - 1) return line;
-        int secondIndex = line.substring(firstIndex + 1).indexOf('"');
-        if(secondIndex == -1) return line;
-        secondIndex = secondIndex + firstIndex;
-        return removeAllDoubleQuotedStrings(line.substring(0, firstIndex) + line.substring(secondIndex+1));
-    }
-    
 }

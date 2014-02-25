@@ -115,6 +115,7 @@ public class RosettoElementParser extends AbstractElementParser {
         String param = "";
         int sbCount = 0;
         int rbCount = 0;
+        int mbCount = 0;
         for(String str : elements.split(" ")) {
             //キーも値もなければ飛ばす
             if(str.length() == 0) continue;
@@ -123,15 +124,19 @@ public class RosettoElementParser extends AbstractElementParser {
             //括弧の開きをカウント
             int sb = TextUtils.containsCount(str, '[');
             int rb = TextUtils.containsCount(str, '(');
+            int mb = TextUtils.containsCount(str, '{');
             //括弧の閉じをカウント
             int csb = TextUtils.containsCount(str, ']');
             int crb = TextUtils.containsCount(str, ')');
+            int cmb = TextUtils.containsCount(str, '}');
             //開きの残りを計算
             sbCount += sb-csb;
             rbCount += rb-crb;
+            mbCount += mb-cmb;
             //負の値になっていれば0に丸める
             if(sbCount < 0) sbCount = 0;
             if(rbCount < 0) rbCount = 0;
+            if(mbCount < 0) mbCount = 0;
             
             //奇数個のダブルクオートを含むならスペースを補って次の文字列と連結
             if(TextUtils.containsCount(param, '\"') % 2 != 0) {
@@ -140,7 +145,7 @@ public class RosettoElementParser extends AbstractElementParser {
             }
             
             //括弧の開きが残っているならスペースを補って次の文字列と連結
-            if(sbCount > 0 || rbCount > 0) {
+            if(sbCount > 0 || rbCount > 0 || mbCount > 0) {
                 param = param + " ";
                 continue;
             }
@@ -148,7 +153,7 @@ public class RosettoElementParser extends AbstractElementParser {
             result.add(param);
             param = "";
         }
-        if(sbCount > 0 || rbCount > 0)
+        if(sbCount > 0 || rbCount > 0 || mbCount > 0)
             throw new IllegalArgumentException("bracket not closed");
         return result;
     }

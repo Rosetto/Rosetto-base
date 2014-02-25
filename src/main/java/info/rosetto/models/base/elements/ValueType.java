@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements;
 
-import info.rosetto.models.base.blocks.RosettoMacro;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.elements.values.VoidValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
@@ -43,7 +43,7 @@ public enum ValueType {
     /**
      * マクロを示す型.
      */
-    MACRO(RosettoMacro.class),
+    SCRIPT(ScriptValue.class),
     /**
      * 文字列リテラルを示す型.
      */
