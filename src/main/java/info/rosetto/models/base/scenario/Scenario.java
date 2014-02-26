@@ -25,11 +25,6 @@ import org.frows.lilex.token.Token;
 public class Scenario implements Serializable {
     private static final long serialVersionUID = 2673278568820929562L;
     
-    /**
-     * シナリオの種別を表す.
-     * @author tohhy
-     */
-    public enum ScenarioType {NORMAL, IF, FOR, WHILE, MACRO, CHARA_ACTION}
     
     /**
      * このシナリオが保持するユニットのリスト.読み取り専用.
@@ -41,10 +36,6 @@ public class Scenario implements Serializable {
      */
     private final Map<String, Label> labels;
     
-    /**
-     * このシナリオの種別.
-     */
-    private final ScenarioType type;
     
     /**
      * 指定したトークンのリストでこのシナリオを初期化する.
@@ -52,16 +43,7 @@ public class Scenario implements Serializable {
      * @param tokens シナリオに追加するトークンのリスト
      */
     public Scenario(Token... tokens) {
-        this(Arrays.asList((tokens == null) ? new Token[0] : tokens), ScenarioType.NORMAL);
-    }
-    
-    /**
-     * 指定したトークンのリストでこのシナリオを初期化する.
-     * トークンのリストはラベルとユニットのリストに振り分けられて格納される.
-     * @param units シナリオに追加するトークンのリスト
-     */
-    public Scenario(List<Token> tokens) {
-        this(tokens, ScenarioType.NORMAL);
+        this(Arrays.asList((tokens == null) ? new Token[0] : tokens));
     }
     
     /**
@@ -69,14 +51,13 @@ public class Scenario implements Serializable {
      * トークンのリストはラベルとユニットのリストに振り分けられて格納される.
      * @param units シナリオに追加するトークンのリスト
      */
-    public Scenario(List<? extends Token> tokens, ScenarioType type) {
+    public Scenario(List<? extends Token> tokens) {
         this.units = (tokens != null) ? 
                 Collections.unmodifiableList(createUnitList(tokens)) : 
                 Collections.unmodifiableList(new ArrayList<Unit>());
         this.labels = (tokens != null) ? 
                 Collections.unmodifiableMap(createLabelMap(tokens)) : 
                 Collections.unmodifiableMap(new HashMap<String, Label>());
-        this.type = type;
     }
     
     /**
@@ -84,14 +65,13 @@ public class Scenario implements Serializable {
      * @param units シナリオに追加するユニットのリスト
      * @param labels シナリオに追加するラベルのリスト
      */
-    public Scenario(List<Unit> units, List<Label> labels, ScenarioType type) {
+    public Scenario(List<Unit> units, List<Label> labels) {
         this.units = (units != null) ? 
                 Collections.unmodifiableList(units) : 
                 Collections.unmodifiableList(new ArrayList<Unit>());
         this.labels = (labels != null) ? 
                 Collections.unmodifiableMap(createLabelMap(labels)) : 
                 Collections.unmodifiableMap(new HashMap<String, Label>());
-        this.type = type;
     }
     
     private static List<Unit> createUnitList(List<? extends Token> tokens) {
@@ -182,14 +162,6 @@ public class Scenario implements Serializable {
      */
     public Map<String, Label> getLabels() {
         return labels;
-    }
-
-    /**
-     * このシナリオの種別を取得する.
-     * @return このシナリオの種別
-     */
-    public ScenarioType getType() {
-        return type;
     }
     
 }

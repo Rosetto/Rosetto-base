@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.system.messages;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * システムで定義される各種の出力メッセージ.
+ * システムで定義される各種の出力メッセージ.<br>
+ * 例外処理等をログで処理する場合、メッセージはなるべく手書きせずに定義したメッセージを用いる.<br>
+ * 言語ごとにローカライズしたメッセージを用意するようにする.
  * @author tohhy
  */
 public enum SystemMessage {
@@ -19,24 +19,25 @@ public enum SystemMessage {
     E8000_WRONG_TYPE_ARGUMENT(8000),
     
     ;
-    private static final Map<Integer, SystemMessage> mapByCode = new HashMap<Integer, SystemMessage>();
+    /**
+     * 
+     */
     private final int messageCode;
     
+    /**
+     * 指定したメッセージコードをもつメッセージを生成する.
+     * @param messageCode
+     */
     private SystemMessage(int messageCode) {
         this.messageCode = messageCode;
     }
     
-    @Override
-    public String toString() {
-        return String.valueOf(messageCode);
-    }
-    
+    /**
+     * このメッセージのメッセージコードを取得する.
+     * @return このメッセージのメッセージコード
+     */
     public int getMessageCode() {
         return messageCode;
     }
     
-    public static SystemMessage getByCode(int code) {
-        return mapByCode.get(code);
-    }
-
 }

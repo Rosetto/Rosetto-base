@@ -9,7 +9,10 @@ import info.rosetto.system.messages.SystemMessages;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Rosetto内で使用する単一のロガー.
@@ -69,7 +72,7 @@ public class RosettoLogger {
     }
     
     /**
-     * ゲームの実行が維持できなくなる致命的なエラーに付加するログ.
+     * ゲームの実行が維持できなくなるような致命的なエラーに付加するログ.
      * @param body 出力内容
      */
     public static void severe(String body) {
@@ -77,16 +80,11 @@ public class RosettoLogger {
     }
     
     /**
-     * ゲーム中で予期しない動作が発生する可能性がある例外発生等に付加するログ.
-     * @param error 出力するエラー
+     * ゲームの実行が維持できなくなるような致命的なエラーに付加するログ.
+     * @param body 出力内容
      */
-    public static void warning(SystemMessage error, String...args) {
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i<args.length; i++) {
-            sb.append(args[i]);
-            if(i != args.length-1) sb.append(",");
-        }
-        warning(SystemMessages.get(error) + sb.toString());
+    public static void severe(SystemMessage body, String...args) {
+        severe(SystemMessages.get(body) + " : " + StringUtils.join(args, ','));
     }
     
     /**
@@ -98,11 +96,28 @@ public class RosettoLogger {
     }
     
     /**
+     * ゲーム中で予期しない動作が発生する可能性がある例外発生等に付加するログ.
+     * @param body 出力内容
+     */
+    public static void warning(SystemMessage body, String...args) {
+        warning(SystemMessages.get(body) + " : " + StringUtils.join(args, ','));
+    }
+
+    /**
      * ゲーム中で予期しない動作が発生する可能性は低いが、何らかの問題に繋がる可能性がある動作等に付加するログ.
      * @param body 出力内容
      */
     public static void info(String body) {
         instance.info(body);
+    }
+    
+    /**
+     * ゲーム中で予期しない動作が発生する可能性は低いが、何らかの問題に繋がる可能性がある動作等に付加するログ.
+     * @param body 出力内容
+     * @param args 
+     */
+    public static void info(SystemMessage body, String...args) {
+        info(SystemMessages.get(body) + " : " + StringUtils.join(args, ','));
     }
     
     /**
@@ -114,6 +129,15 @@ public class RosettoLogger {
     }
     
     /**
+     * 正常な動作のうち、注目するべきチェックポイントになり得る部分に付加するログ.
+     * @param body
+     * @param args
+     */
+    public static void fine(SystemMessage body, String...args) {
+        fine(SystemMessages.get(body) + " : " + StringUtils.join(args, ','));
+    }
+    
+    /**
      * 正常な動作のうち、特に注意するべき内容を含まない部分に付加するログ.
      * @param body 出力内容
      */
@@ -122,21 +146,14 @@ public class RosettoLogger {
     }
     
     /**
-     * 現状使用予定はない.
-     * @param body 出力内容
+     * 正常な動作のうち、特に注意するべき内容を含まない部分に付加するログ.
+     * @param body
+     * @param args
      */
-    protected static void finest(String body) {
-        instance.finest(body);
+    public static void finer(SystemMessage body, String...args) {
+        finer(SystemMessages.get(body) + " : " + StringUtils.join(args, ','));
     }
     
-    /**
-     * 現状使用予定はない.
-     * @param body 出力内容
-     */
-    protected static void config(String body) {
-        instance.config(body);
-    }
-
     /**
      * 関数内などで例外を捕まえ、ログ出力のみで処理する.
      * 出力するログのレベルはgetExceptionLogLevelの値になる.

@@ -31,11 +31,8 @@ public class SystemMessagesJA {
         return instance;
     }
     
-    public String get(int code) {
-        return messages.get(SystemMessage.getByCode(code));
-    }
     
-    public String get(SystemMessage error) {
-        return messages.get(error);
+    public String get(SystemMessage message) {
+        return messages.get(message);
     }
 }

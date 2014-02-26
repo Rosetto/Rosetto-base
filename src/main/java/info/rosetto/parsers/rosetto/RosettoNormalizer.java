@@ -25,9 +25,8 @@ public class RosettoNormalizer extends AbstractNormalizer {
     
     @Override
     protected String processMiddleDesignators(String line, String prevLine, String nextLine) {
-        //前後のホワイトスペースを除去、括弧のエスケープを処理
+        //前後のホワイトスペースを除去
         line = line.trim();
-        line = ParseUtils.escapeBracket(line);
         
         //コメント等の行中指示子を適用
         line = super.processMiddleDesignators(line, prevLine, nextLine);

@@ -7,7 +7,6 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.scenario.Scenario;
-import info.rosetto.models.base.scenario.Scenario.ScenarioType;
 import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.system.Parser;
@@ -108,7 +107,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
         //トークンのリストを作成
         List<? extends Token> tokens = tokenize(normalized);
         //シナリオ作成
-        return new Scenario(tokens, ScenarioType.NORMAL);
+        return new Scenario(tokens);
     }
 
     @Override
@@ -120,7 +119,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
         List<? extends Token> tokens = tokenize(normalized);
         //シナリオ作成
         //TODO スコープ継承
-        return new Scenario(tokens, ScenarioType.MACRO);
+        return new Scenario(tokens);
     }
 
     /**
@@ -131,15 +130,14 @@ public class ScenarioParser extends Tokenizer implements Parser {
      * </code>
      * のような形で渡される.これから単一のユニットを生成して返す.
      */
-    protected Unit createUnit(String unitStr, ParserState ps) {
+    protected Unit createUnit(String unitStr) {
         //タグとテキストに分割
         int obIndex = unitStr.indexOf('[');
         String tag = (obIndex == -1) ? "[pass]" : unitStr.substring(obIndex);
         String text = (obIndex == -1) ? unitStr : unitStr.substring(0, obIndex);
         ActionCall action = (ActionCall)elementParser.parseElement(tag);
-        return ParseUtils.execUnit(new Unit(text, action), ps);
+        return new Unit(text, action);
     }
-    
     
     /**
      * テキスト+タグの形式のみに正規化された文字列を受け取り、UnitのListに変換して返す.
@@ -151,12 +149,11 @@ public class ScenarioParser extends Tokenizer implements Parser {
         ParserState ps = new ParserState();
         for(String unitStr : ParseUtils.splitScript(normalized)) {
             //テキストをコンパイルしてユニットにする
-            Unit u = createUnit(unitStr, ps);
+            Unit u = createUnit(unitStr);
             //ユニットを追加
             ps.addUnit(u);
         }
         return ps.getTokens();
     }
     
-
 }

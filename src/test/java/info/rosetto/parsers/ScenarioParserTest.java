@@ -45,12 +45,11 @@ public class ScenarioParserTest {
 
     @Test
     public void createUnitでユニットを生成できる() throws Exception {
-        ParserState ps = new ParserState();
-        Unit s1 = sut.createUnit("吾輩は猫である。[hoge fuga=piyo]", ps);
+        Unit s1 = sut.createUnit("吾輩は猫である。[hoge fuga=piyo]");
         assertThat(s1.getContent(), is("吾輩は猫である。"));
         assertThat(s1.getAction().getFunctionName(), is("hoge"));
         assertThat(s1.getAction().getArgs().get("fuga").asString(), is("piyo"));
-        Unit s2 = sut.createUnit("テスト。", ps);
+        Unit s2 = sut.createUnit("テスト。");
         assertThat(s2.getContent(), is("テスト。"));
         assertThat(s2.getAction(), is(ActionCall.EMPTY));
     }

@@ -3,6 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.system.messages;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 言語ごとのシステムメッセージを提供する.
  * @author tohhy
@@ -15,9 +18,21 @@ public class SystemMessages {
     private static SystemMessages instance = new SystemMessages();
     
     /**
+     * 
+     */
+    private static final Map<Integer, SystemMessage> mapByCode = 
+            new HashMap<Integer, SystemMessage>();
+    
+    /**
      * メッセージ定義のインスタンス.
      */
-    private final SystemMessagesJA errorMessages = SystemMessagesJA.getInstance();
+    private final SystemMessagesJA localizedMessages = SystemMessagesJA.getInstance();
+    
+    public SystemMessages() {
+        for(SystemMessage m : SystemMessage.values()) {
+            mapByCode.put(m.getMessageCode(), m);
+        }
+    }
     
     /**
      * 指定したメッセージコードに対応するメッセージを取得する.
@@ -25,7 +40,7 @@ public class SystemMessages {
      * @return
      */
     public static String get(int messageCode) {
-        String s = instance.errorMessages.get(messageCode);
+        String s = instance.localizedMessages.get(mapByCode.get(messageCode));
         return (s != null) ? s : "[sys] code = " + messageCode;
     }
     
@@ -35,8 +50,17 @@ public class SystemMessages {
      * @return
      */
     public static String get(SystemMessage message) {
-        String s = instance.errorMessages.get(message.getMessageCode());
+        String s = instance.localizedMessages.get(message);
         return (s != null) ? s : "[sys]" + message.name();
     }
-
+    
+    /**
+     * メッセージコードからメッセージのインスタンスを取得する.
+     * @param code メッセージコード
+     * @return 取得したインスタンス、一致するものがなければnull
+     */
+    public static SystemMessage getByCode(int code) {
+        return mapByCode.get(code);
+    }
+    
 }

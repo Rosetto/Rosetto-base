@@ -3,9 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers;
 
-import info.rosetto.models.base.elements.RosettoAction;
-import info.rosetto.models.base.elements.values.ActionCall;
-import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.utils.base.TextUtils;
 
 import java.util.LinkedList;
@@ -100,16 +97,6 @@ public class ParseUtils {
     }
     
     /**
-     * エスケープされた左角括弧を特殊文字描画タグに変換する.
-     * "[["を"[spchar type=ob]"へ.
-     * TODO 見直し
-     * @return 変換したline
-     */
-    public static String escapeBracket(String line) {
-        return line.replace("[[", "[spchar type=ob]");
-    }
-    
-    /**
      * 指定した行が閉じられていない角括弧を持つかどうかを判定する.<br>
      * 連続する左角括弧によるエスケープは無効、括弧のネストは無視して最外周の階層のみ見る
      */
@@ -179,25 +166,6 @@ public class ParseUtils {
         return (line.length() == 0);
     }
     
-
-    /**
-     * ユニットがパース時に実行する関数を持っていれば実行する.
-     * @param u
-     */
-    public static Unit execUnit(Unit u, ParserState ps) {
-        //パース状態を編集
-        ps.setCurrentUnit(u);
-        
-        //変換処理
-        ActionCall action = u.getAction();
-        String func = action.getFunctionName();
-        RosettoAction f = info.rosetto.contexts.base.Contexts.getAction(func);
-        if(f != null) {
-//            return f.execOnParse(u);
-        }
-        return u;
-    }
-
     /**
      * 複数行からなる文字列を行ごとのリストへ変換する.
      * @param scenarioText 
@@ -219,8 +187,6 @@ public class ParseUtils {
         }
     }
     
-
-    
     /**
      * 指定した文字列を角括弧で囲む.
      * @param content 囲む文字列
@@ -229,7 +195,7 @@ public class ParseUtils {
     public static String squareBracket(String content) {
         return "[".concat(content).concat("]");
     }
-
+    
     /**
      * スクリプト文字列をユニット文字列に分割する.<br>
      * タグ部分を末尾にするように行を分割する.
