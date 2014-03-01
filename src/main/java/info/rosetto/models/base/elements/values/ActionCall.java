@@ -12,6 +12,7 @@ import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.utils.base.Values;
 
 import javax.annotation.Nonnull;
@@ -96,23 +97,6 @@ public class ActionCall implements RosettoValue {
         return "[" + callName + " " + args.toString() + "]";
     }
     
-    
-    /**
-     * このFunctionCallで呼び出される関数名を返す.
-     * @return このFunctionCallで呼び出される関数名
-     */
-    public String getFunctionName() {
-        return callName;
-    }
-    
-    /**
-     * この呼び出しにおいて関数に渡される引数リストを返す.
-     * @return この呼び出しにおいて関数に渡される引数リスト
-     */
-    public OptionableList getArgs() {
-        return args;
-    }
-    
     /**
      * このActionCallを評価する.
      * 関数名から関数を生成し、その関数と引数から実行時引数を生成し、
@@ -126,7 +110,7 @@ public class ActionCall implements RosettoValue {
         RosettoValue v = Contexts.getAction(varName);
         
         if(v == Values.NULL || v == BaseFunctions.pass) {
-            RosettoLogger.warning("実行可能な対象 " + varName + "がコンテキスト中に見つかりません");
+            RosettoLogger.warning(SystemMessage.E1100_ACTION_NOT_FOUND, varName);
             return Values.VOID;
         }
         
@@ -139,24 +123,17 @@ public class ActionCall implements RosettoValue {
         }
         
         if(v.getType() == ValueType.SCRIPT) {
-            //TODO
+            ScriptValue macro = (ScriptValue) v;
+            RosettoValue result = macro.execute(parentScope);
+            Observatories.getAction().macroExecuted(macro, args, result);
+            return result;
         }
         
         //それでもなければ何もしない
-        RosettoLogger.warning("変数 " + varName + "は実行不可能です");
+        RosettoLogger.warning(SystemMessage.E1100_ACTION_NOT_FOUND, varName);
         return Values.VOID;
     }
 
-    @Override
-    public ValueType getType() {
-        return ValueType.ACTION_CALL;
-    }
-    
-    @Override
-    public Object getValue() {
-        return this;
-    }
-    
     public String evalAsString(Scope parentScope) throws NotConvertibleException {
         return evaluate(parentScope).asString();
     }
@@ -197,6 +174,32 @@ public class ActionCall implements RosettoValue {
         return evaluate(parentScope).asDouble(defaultValue);
     }
     
+    /**
+     * このFunctionCallで呼び出される関数名を返す.
+     * @return このFunctionCallで呼び出される関数名
+     */
+    public String getFunctionName() {
+        return callName;
+    }
+
+    /**
+     * この呼び出しにおいて関数に渡される引数リストを返す.
+     * @return この呼び出しにおいて関数に渡される引数リスト
+     */
+    public OptionableList getArgs() {
+        return args;
+    }
+
+    @Override
+    public ValueType getType() {
+        return ValueType.ACTION_CALL;
+    }
+
+    @Override
+    public Object getValue() {
+        return this;
+    }
+
     @Override
     public RosettoValue first() {
         return new StringValue(getFunctionName());
@@ -227,15 +230,12 @@ public class ActionCall implements RosettoValue {
     public String asString() throws NotConvertibleException {
         return toString();
     }
-
-    /**
-     * デフォルト値を返す.
-     * @return defaultValueで指定した値
-     */
+    
     @Override
     public String asString(String defaultValue) {
         return toString();
     }
+    
     /**
      * NotConvertibleExceptionをスローする.
      * @throws NotConvertibleException 
@@ -307,6 +307,4 @@ public class ActionCall implements RosettoValue {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
-
-
 }

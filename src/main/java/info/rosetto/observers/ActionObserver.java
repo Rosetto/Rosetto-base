@@ -25,10 +25,13 @@ public interface ActionObserver {
             RosettoValue evaluatedValue);
     
     /**
-     * マクロが実行された場合に呼び出される.
+     * マクロの実行が完了した場合に呼び出される.
      * @param macro 実行されたマクロ
+     * @param args 実行時の引数
+     * @param evaluatedValue 実行結果の返り値
      */
-    public void macroExecuted(ScriptValue macro, OptionableList args,
+    public void macroExecuted(ScriptValue macro, 
+            OptionableList args,
             RosettoValue evaluatedValue);
     
 }

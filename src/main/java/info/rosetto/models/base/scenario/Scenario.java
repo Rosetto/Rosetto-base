@@ -25,7 +25,6 @@ import org.frows.lilex.token.Token;
 public class Scenario implements Serializable {
     private static final long serialVersionUID = 2673278568820929562L;
     
-    
     /**
      * このシナリオが保持するユニットのリスト.読み取り専用.
      */

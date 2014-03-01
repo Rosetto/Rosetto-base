@@ -10,7 +10,6 @@ import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.system.Parser;
-import info.rosetto.models.system.Scope;
 import info.rosetto.parsers.rosetto.RosettoElementParser;
 import info.rosetto.utils.base.TextUtils;
 
@@ -111,7 +110,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
     }
 
     @Override
-    public Scenario parseScript(ScriptValue script, Scope scope) {
+    public Scenario parseScript(ScriptValue script) {
         List<String> scenarioLines = ParseUtils.asLines(script.getScript());
         //テキストと角括弧形式のタグのみに正規化
         List<String> normalized = normalizer.normalize(scenarioLines);

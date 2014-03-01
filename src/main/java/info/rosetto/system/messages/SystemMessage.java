@@ -18,6 +18,8 @@ public enum SystemMessage {
     
     E8000_WRONG_TYPE_ARGUMENT(8000),
     
+    S11000_FUNCTION_EXECUTED(11000),
+    
     ;
     /**
      * 

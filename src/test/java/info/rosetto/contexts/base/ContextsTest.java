@@ -157,7 +157,7 @@ public class ContextsTest {
                 return null;
             }
             @Override
-            public Scenario parseScript(ScriptValue script, Scope scope) {
+            public Scenario parseScript(ScriptValue script) {
                 // TODO Auto-generated method stub
                 return null;
             }

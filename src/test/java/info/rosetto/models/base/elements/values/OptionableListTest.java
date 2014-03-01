@@ -1,4 +1,4 @@
-package info.rosetto.models.base.function;
+package info.rosetto.models.base.elements.values;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 

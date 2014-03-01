@@ -15,7 +15,7 @@ public class SystemMessages {
     /**
      * シングルトンインスタンス.
      */
-    private static SystemMessages instance = new SystemMessages();
+    private static SystemMessages instance;
     
     /**
      * 
@@ -40,7 +40,7 @@ public class SystemMessages {
      * @return
      */
     public static String get(int messageCode) {
-        String s = instance.localizedMessages.get(mapByCode.get(messageCode));
+        String s = getInstance().localizedMessages.get(mapByCode.get(messageCode));
         return (s != null) ? s : "[sys] code = " + messageCode;
     }
     
@@ -50,7 +50,7 @@ public class SystemMessages {
      * @return
      */
     public static String get(SystemMessage message) {
-        String s = instance.localizedMessages.get(message);
+        String s = getInstance().localizedMessages.get(message);
         return (s != null) ? s : "[sys]" + message.name();
     }
     
@@ -61,6 +61,12 @@ public class SystemMessages {
      */
     public static SystemMessage getByCode(int code) {
         return mapByCode.get(code);
+    }
+    
+    private static SystemMessages getInstance() {
+        if(instance ==  null)
+            instance = new SystemMessages();
+        return instance;
     }
     
 }

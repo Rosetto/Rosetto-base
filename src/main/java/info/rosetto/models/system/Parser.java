@@ -20,7 +20,7 @@ public interface Parser {
      * @param script
      * @return
      */
-    public Scenario parseScript(ScriptValue script, Scope scope);
+    public Scenario parseScript(ScriptValue script);
     
     /**
      * スクリプトをパースして解釈後のシナリオオブジェクトを返す.

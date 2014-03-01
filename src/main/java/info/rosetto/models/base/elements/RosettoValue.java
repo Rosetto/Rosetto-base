@@ -76,8 +76,18 @@ public interface RosettoValue extends Serializable {
      */
     public RosettoValue cons(RosettoValue head);
     
+    /**
+     * この値をリストとしてイテレーションしたとき、指定インデックスに存在する値を取得する.<br>
+     * 指定インデックスに値が存在しない場合はValues.NULLが返る.
+     * @param index 取得する値のインデックス
+     * @return 取得した値
+     */
     public RosettoValue getAt(int index);
     
+    /**
+     * この値をリストとしてイテレーションする場合に要素数がいくつになるかを取得する.
+     * @return リストの要素数
+     */
     public int size();
     
     /**

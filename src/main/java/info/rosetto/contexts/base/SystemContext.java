@@ -43,11 +43,19 @@ public class SystemContext {
     public void setParser(Parser parser) {
         this.parser = parser;
     }
-
+    
+    /**
+     * 
+     * @return
+     */
     public ScenarioPlayer getPlayer() {
         return player;
     }
-
+    
+    /**
+     * 
+     * @param player
+     */
     public void setPlayer(ScenarioPlayer player) {
         this.player = player;
     }

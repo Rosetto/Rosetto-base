@@ -1,4 +1,4 @@
-package info.rosetto.models.base.namespace;
+package info.rosetto.models.system;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

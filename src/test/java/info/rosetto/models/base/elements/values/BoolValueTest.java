@@ -1,4 +1,4 @@
-package info.rosetto.models.base.values;
+package info.rosetto.models.base.elements.values;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

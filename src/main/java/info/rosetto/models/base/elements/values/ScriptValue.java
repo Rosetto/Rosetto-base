@@ -195,8 +195,8 @@ public class ScriptValue implements RosettoAction {
         RosettoValue result = Values.NULL;
         try {
             Scope scriptScope = createScope(args, parentScope);
-            Scenario parsed = Contexts.getParser().parseScript(this, scriptScope);
-            Contexts.getPlayer().pushScenario(parsed);
+            Scenario parsed = Contexts.getParser().parseScript(this);
+            Contexts.getPlayer().pushScenario(parsed, scriptScope);
         } catch(Exception e) {
             e.printStackTrace();
         }

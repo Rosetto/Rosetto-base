@@ -12,6 +12,7 @@ import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.utils.base.Values;
 
 import java.util.ArrayList;
@@ -20,8 +21,10 @@ import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * Rosettoのスクリプト中の関数を表すオブジェクト.イミュータブル.
+ * Rosettoのスクリプト中の関数を表すオブジェクト.イミュータブル.<br>
  * 処理を定義してインスタンス化し、Functionsクラスのコンテキストに追加することで
  * スクリプト上で関数として呼び出せるようになる.
  * @author tohhy
@@ -73,6 +76,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     }
     
     /**
+     * 
      * @param args 引数名リスト
      */
     public RosettoFunction(String name, RosettoValue args) {
@@ -103,6 +107,71 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     protected abstract RosettoValue run(Scope scope, OptionableList rawArgs);
     
 
+    /**
+     * 特殊関数では評価順を変える等の処理をする.
+     * @param args
+     * @param parentScope
+     * @return
+     */
+    protected Scope createScope(OptionableList args, Scope parentScope) {
+        //通常はすべての関数が評価されて渡される
+        return new Scope(args.evaluateChildren(parentScope), this, parentScope);
+    }
+
+    /**
+     * この関数が取る引数のリストを読み取り専用で返す.<br>
+     * 関数がoption(o1, o2=10, o3="hoge")なら
+     * {"o1", "o2=10", "o3=hoge"}が返る.
+     * @return この関数が取る引数のリスト
+     */
+    public List<String> getArguments() {
+        return Collections.unmodifiableList(args);
+    }
+
+    @Override
+    public String toString() {
+        return createFunctionInfo();
+    }
+
+    /**
+     * 引数なしでこの関数を実行する.
+     * execute(RosettoArguments.EMPTY)と同じ.
+     */
+    public RosettoValue execute(Scope parentScope) {
+        return execute(OptionableList.EMPTY, parentScope);
+    }
+
+    /**
+     * この関数を実行する.
+     * @param args 実行時引数
+     */
+    public RosettoValue execute(OptionableList args, Scope parentScope) {
+        if(args == null)
+            args = OptionableList.EMPTY;
+        RosettoValue result = Values.NULL;
+        try {
+            Scope functionScope = createScope(args, parentScope);
+            result = run(functionScope, args);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        Observatories.getAction().functionExecuted(this, args, result);
+        RosettoLogger.finer(SystemMessage.S11000_FUNCTION_EXECUTED, this.toString());
+        return result;
+    }
+
+    /**
+     * この関数を実行する.
+     * @param args 文字列形式の実行時引数
+     */
+    public RosettoValue execute(String args, Scope parentScope) {
+        OptionableList rargs = OptionableList.EMPTY;
+        if(args != null) {
+            rargs = OptionableList.createFromString(args);
+        }
+        return execute(rargs, parentScope);
+    }
+
     @Override
     public RosettoValue first() {
         return this;
@@ -129,81 +198,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return 1;
     }
     
-    /**
-     * 特殊関数では評価順を変える等の処理をする.
-     * @param args
-     * @param parentScope
-     * @return
-     */
-    protected Scope createScope(OptionableList args, Scope parentScope) {
-        //通常はすべての関数が評価されて渡される
-        return new Scope(args.evaluateChildren(parentScope), this, parentScope);
-    }
-
-    /**
-     * 引数なしでこの関数を実行する.
-     * execute(RosettoArguments.EMPTY)と同じ.
-     */
-    public RosettoValue execute(Scope parentScope) {
-        return execute(OptionableList.EMPTY, parentScope);
-    }
-    
-    /**
-     * この関数を実行する.
-     * @param args 実行時引数
-     */
-    public RosettoValue execute(OptionableList args, Scope parentScope) {
-        if(args == null)
-            args = OptionableList.EMPTY;
-        RosettoValue result = Values.NULL;
-        try {
-            Scope functionScope = createScope(args, parentScope);
-            result = run(functionScope, args);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        Observatories.getAction().functionExecuted(this, args, result);
-        logFunctionExecuted(this);
-        return result;
-    }
-    
-    
-    /**
-     * この関数を実行する.
-     * @param args 文字列形式の実行時引数
-     */
-    public RosettoValue execute(String args, Scope parentScope) {
-        OptionableList rargs = OptionableList.EMPTY;
-        if(args != null) {
-            rargs = OptionableList.createFromString(args);
-        }
-        RosettoValue result = Values.NULL;
-        try {
-            result = run(createScope(rargs, parentScope), rargs);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        Observatories.getAction().functionExecuted(this, rargs, result);
-        logFunctionExecuted(this);
-        return result;
-    }
-    
-    @Override
-    public String toString() {
-        return createFunctionInfo();
-    }
-    
-    /**
-     * この関数が取る引数のリストを読み取り専用で返す.<br>
-     * 関数がoption(o1, o2=10, o3="hoge")なら
-     * {"o1", "o2=10", "o3=hoge"}が返る.
-     * @return この関数が取る引数のリスト
-     */
-    public List<String> getArguments() {
-        return Collections.unmodifiableList(args);
-    }
-    
-
     @Override
     public RosettoValue evaluate(Scope scope) {
         return this;
@@ -212,7 +206,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     public String getName() {
         return name;
     }
-
 
     @Override
     public ValueType getType() {
@@ -274,14 +267,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return defaultValue;
     }
     
-    
-    /**
-     * 関数実行のログを取る. finerで出力される.
-     * @param func 実行された関数
-     */
-    private static void logFunctionExecuted(RosettoFunction func) {
-        RosettoLogger.finer("function executed: " + func.toString());
-    }
 
     /**
      * この関数の情報を表す文字列を生成する.
@@ -289,21 +274,12 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      */
     private String createFunctionInfo() {
         StringBuilder result = new StringBuilder();
-        result.append("[").append(name).append(" ");
-        String argsStr = createArgsStr();
-        result.append(argsStr).append("]");
-        return result.toString();
-    }
-    
-    protected String createArgsStr() {
-        StringBuilder result = new StringBuilder();
-        List<String> args = getArguments();
-        for(int i=0; i<args.size(); i++) {
-            result.append(args.get(i));
-            if(i != args.size()-1)
-                result.append(" ");
+        result.append("[").append(name);
+        String argsStr = StringUtils.join(getArguments(), ' ');
+        if(argsStr.length() != 0) {
+            result.append(" ").append(argsStr);
         }
+        result.append("]");
         return result.toString();
     }
-    
 }

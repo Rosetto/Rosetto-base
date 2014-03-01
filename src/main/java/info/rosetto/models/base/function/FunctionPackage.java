@@ -11,8 +11,8 @@ import java.util.List;
  * 名前空間に取り込む関数をまとめたパッケージ.<br>
  * ネイティブ定義の関数を定義し、名前空間に一括追加するために用いる.<br>
  * <br>
- * 具体的な実装についてはBaseFunctionsを参照のこと.<br>
- * シングルトンにし、関数をstatic定義する場合はシングルトンインスタンスを遅延評価する必要がある点に留意.
+ * 具体的な実装例についてはfunctions.baseを参照のこと.<br>
+ * パッケージはシングルトンにし、また関数をstatic定義する場合はシングルトンインスタンスを遅延評価する必要がある点に留意.
  * @author tohhy
  */
 public class FunctionPackage {
@@ -25,16 +25,16 @@ public class FunctionPackage {
      */
     private final List<String> names = new ArrayList<String>();
     
-    
     /**
-     * 
-     * @param packageName
-     * @param functions
+     * 引数に与えた関数をまとめたパッケージを生成する.
+     * @param functions このパッケージに追加する関数
      */
     public FunctionPackage(RosettoFunction...functions) {
+        if(functions == null)
+            throw new IllegalArgumentException("functions must not be null");
         for(int i=0; i<functions.length; i++) {
             if(functions[i] == null)
-                throw new IllegalArgumentException("Functions contains null value");
+                throw new IllegalArgumentException("Functions must not contain null value");
             this.functions.add(functions[i]);
             this.names.add(functions[i].getName());
         }
@@ -47,7 +47,7 @@ public class FunctionPackage {
     
     /**
      * このパッケージが保有する関数のリストを返す.
-     * @return
+     * @return このパッケージが保有する関数のリスト
      */
     public List<RosettoFunction> getFunctions() {
         return Collections.unmodifiableList(functions);
@@ -55,7 +55,7 @@ public class FunctionPackage {
     
     /**
      * このパッケージが保有する関数の名前のリストを返す.
-     * @return
+     * @return このパッケージが保有する関数の名前のリスト
      */
     public List<String> getFunctionNames() {
         return Collections.unmodifiableList(names);
@@ -63,7 +63,7 @@ public class FunctionPackage {
     
     /**
      * このパッケージが保有する関数の個数を返す.
-     * @return
+     * @return このパッケージが保有する関数の個数
      */
     public int getFunctionCount() {
         return functions.size();

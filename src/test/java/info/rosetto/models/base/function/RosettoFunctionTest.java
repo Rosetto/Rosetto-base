@@ -1,35 +1,53 @@
 package info.rosetto.models.base.function;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.OptionableList;
 import info.rosetto.models.system.Scope;
+import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
 
+import org.junit.Before;
 import org.junit.Test;
 
-
+@SuppressWarnings("serial")
 public class RosettoFunctionTest {
     
+    @Before
+    public void setUp() {
+        Contexts.dispose();
+        Contexts.initialize();
+    }
     
-    @SuppressWarnings("serial")
+    
     @Test
     public void インスタンス化テスト() throws Exception {
         RosettoFunction f1 = new RosettoFunction("f1") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, OptionableList args) {
+                return Values.VOID;
+            }
         };
         assertThat(f1.getName(), is("f1"));
+        assertThat(f1.getType(), is(ValueType.FUNCTION));
+        assertThat(f1.getValue(), is(f1));
+        assertThat(f1.evaluate(new Scope()), is((RosettoValue)f1));
         assertThat(f1.getArguments().size(), is(0));
+        assertThat(f1.asString(), is("[f1]"));
         
         RosettoFunction f2 = new RosettoFunction("f2",
-                "hoge", "huga", "foo=bar") {
+                "hoge", "fuga", "foo=bar") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, OptionableList args) {
+                return Values.VOID;
+            }
         };
         assertThat(f2.getName(), is("f2"));
         assertThat(f2.getArguments().size(), is(3));
+        assertThat(f2.asString(), is("[f2 hoge fuga foo=bar]"));
         
         RosettoFunction f3 = new RosettoFunction("f3", 
                 (String[])null) {
@@ -38,168 +56,76 @@ public class RosettoFunctionTest {
         };
         assertThat(f3.getName(), is("f3"));
         assertThat(f3.getArguments().size(), is(0));
+        assertThat(f3.asString(), is("[f3]"));
+        
+        try {
+            new RosettoFunction(null, "foo") {
+                @Override
+                protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+                    return null;
+                }
+            };
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
     }
-//    
-//    private String bufferForExecTest;
-//    @Test
-//    public void execで関数を実行できる() throws Exception {
-//        bufferForExecTest = null;
-//        RosettoFunction f1 = new RosettoFunction("f1") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                bufferForExecTest = "f1";
-//                for(Entry<String, String> e:args.getMap().entrySet()) {
-//                    bufferForExecTest += " " + e.getKey() + "=" + e.getValue();
-//                }
-//                return Values.VOID;
-//            }
-//        };
-//        f1.exec();
-//        assertThat(bufferForExecTest, is("f1"));
-//        
-//        RosettoFunction f2 = new RosettoFunction(new FunctionName("test", "f2")) {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                bufferForExecTest = "f2";
-//                for(Entry<String, String> e:args.getMap().entrySet()) {
-//                    bufferForExecTest += " " + e.getKey() + "=" + e.getValue();
-//                }
-//                return Values.VOID;
-//            }
-//        };
-//        f2.exec("hoge=fuga");
-//        assertThat(bufferForExecTest, is("f2 hoge=fuga"));
-//        
-//        RosettoFunction f3 = new RosettoFunction(
-//                new FunctionName("this.is.some.long.package.function","f3"), 
-//                "foo=bar") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                bufferForExecTest = "f3";
-//                for(Entry<String, String> e:args.getMap().entrySet()) {
-//                    bufferForExecTest += " " + e.getKey() + "=" + e.getValue();
-//                }
-//                return Values.VOID;
-//            }
-//        };
-//        f3.exec(new RosettoArguments("hoge=fuga ika=tako"));
-//        assertThat(bufferForExecTest, is("f3 foo=bar hoge=fuga ika=tako"));
-//        
-//        RosettoFunction f4 = new RosettoFunction(
-//                new FunctionName("test","f4")) {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                bufferForExecTest = "f4";
-//                return Values.VOID;
-//            }
-//        };
-//        f4.exec((RosettoArguments) null);
-//        assertThat(bufferForExecTest, is("f4"));
-//        
-//        RosettoFunction f5 = new RosettoFunction(
-//                new FunctionName("test","f5")) {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                bufferForExecTest = "f5";
-//                return Values.VOID;
-//            }
-//        };
-//        f5.exec((String) null);
-//        assertThat(bufferForExecTest, is("f5"));
-//    }
-//    
-//    @Test
-//    public void getFunctionInfoで形式通りの関数情報が返る() throws Exception {
-//        //function testfunc(arg1, arg2=10) <example.test.testfunc>
-//        RosettoFunction testfunc = new RosettoFunction(
-//                new FunctionName("example.test", "testfunc"),
-//                "arg1", "arg2=10") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//        };
-//        assertThat(testfunc.getFunctionInfo(), 
-//            is("function testfunc(arg1, arg2=10) <example.test.testfunc>"));
-//        //toStringと等しい
-//        assertThat(testfunc.getFunctionInfo(), 
-//                is(testfunc.toString()));
-//    }
-//
-//    @Test
-//    public void getNameObjectへの短縮メソッドが等しい値を返す() throws Exception {
-//        RosettoFunction testfunc = new RosettoFunction(
-//                new FunctionName("example.test", "testfunc"),
-//                "arg1", "arg2=10") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//        };
-//        FunctionName name = testfunc.getNameObject();
-//        assertThat(name.getFullName(), is(testfunc.getFullName()));
-//        assertThat(name.getShortName(), is(testfunc.getShortName()));
-//        assertThat(name.getPackage(), is(testfunc.getPackage()));
-//    }
-//    
-//    @Test
-//    public void デフォルト値付き引数の後に通常引数を指定するとエラー() {
-//        try {
-//            new RosettoFunction(
-//                    new FunctionName("test.function", "f1"),
-//                    "arg1", "arg2=10", "arg3") {
-//                @Override
-//                public RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//            };
-//            fail();
-//        } catch(Exception e) {
-//            assertThat(e, instanceOf(IllegalArgumentException.class));
-//        }
-//    }
-//    
-//    @Test
-//    public void RuntimeArgumentsから引数の情報を取得できる() throws Exception {
-//        RosettoFunction f2 = new RosettoFunction(
-//                new FunctionName("test", "f2"),
-//                "hoge", "huga", "foo=bar") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {
-//                assertThat(args.get("foo"), is("bar"));
-//                assertThat(args.get("hoge"), is("ika"));
-//                assertThat(args.containsKey("huga"), is(true));
-//                assertThat(args.containsKey("piyo"), is(false));
-//                return Values.VOID;
-//            }
-//        };
-//        Contexts.getFunction().initialize();
-//        Contexts.getFunction().registerStatic(f2);
-//        f2.exec("hoge=ika huga=tako");
-//        Contexts.getFunction().initialize();
-//    }
-//    
-//    @Test
-//    public void toActionでアクションに変換できる() throws Exception {
-//        FunctionName name1 = new FunctionName("test.function", "sut1");
-//        RosettoFunction sut1 = new RosettoFunction(name1, "foo=bar", "baz=%hoge") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//        };
-//        ActionCall result1 = new ActionCall(name1);
-//        assertThat(sut1.toAction().toString(), is(result1.toString()));
-//        
-//        FunctionName name2 = new FunctionName("test.function", "sut2");
-//        String arg2 = "hoge=fuga";
-//        RosettoFunction sut2 = new RosettoFunction(name2, "foo=bar", "baz=%hoge") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//        };
-//        ActionCall result2 = new ActionCall(name2, arg2);
-//        assertThat(sut2.toAction(arg2).toString(), is(result2.toString()));
-//        
-//        FunctionName name3 = new FunctionName("test.function", "sut3");
-//        RosettoArguments arg3 = new RosettoArguments("hoge=foobar");
-//        RosettoFunction sut3 = new RosettoFunction(name3, "foo=bar", "baz=%hoge") {
-//            @Override
-//            protected RosettoValue run(ExpandedArguments args) {return Values.VOID;}
-//        };
-//        ActionCall result3 = new ActionCall(name3, arg3);
-//        assertThat(sut3.toAction(arg3).toString(), is(result3.toString()));
-//    }
+    
+    @Test
+    public void valueConvertTest() throws Exception {
+        RosettoFunction sut = new RosettoFunction("f1") {
+            @Override
+            protected RosettoValue run(Scope functionScope, OptionableList args) {
+                return Values.VOID;
+            }
+        };
+        //asStringは関数呼び出し表記が返る
+        assertThat(sut.asString(), is("[f1]"));
+        assertThat(sut.asString("dummy"), is("[f1]"));
+        
+        //リストとしては単一要素扱い
+        assertThat(sut.first(), is((RosettoValue)sut));
+        assertThat(sut.rest(), is((RosettoValue)Values.NULL));
+        assertThat(sut.cons(Values.create(1)).asString(), is("(1 " + sut.toString() + ")"));
+        assertThat(sut.size(), is(1));
+        assertThat(sut.getAt(0), is((RosettoValue)sut));
+        assertThat(sut.getAt(1), is((RosettoValue)Values.NULL));
+        
+        //数値や真偽値への変換は常にデフォルト値が返る
+        assertThat(sut.asBool(true), is(true));
+        assertThat(sut.asInt(100), is(100));
+        assertThat(sut.asLong(100L), is(100L));
+        assertThat(sut.asDouble(100.0), is(100.0));
+        
+        try {
+            sut.asBool();
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(NotConvertibleException.class));
+        }
+        
+        try {
+            sut.asInt();
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(NotConvertibleException.class));
+        }
+        
+        try {
+            sut.asDouble();
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(NotConvertibleException.class));
+        }
+        
+        try {
+            sut.asLong();
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(NotConvertibleException.class));
+        }
+        
+    }
+    
 
 }
