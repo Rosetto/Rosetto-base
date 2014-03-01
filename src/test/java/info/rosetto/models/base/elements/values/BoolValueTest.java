@@ -21,6 +21,10 @@ public class BoolValueTest {
     public void convertTest() {
         convertAndTestEachOther(BoolValue.TRUE);
         convertAndTestEachOther(BoolValue.FALSE);
+        
+        //リストとしては単一要素扱い
+        ValueTestUtils.isSingleValue(BoolValue.TRUE);
+        ValueTestUtils.isSingleValue(BoolValue.FALSE);
     }
     
     

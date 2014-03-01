@@ -2,10 +2,14 @@ package info.rosetto.models.base.function;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ValueTestUtils;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
 import info.rosetto.utils.base.Values;
@@ -24,7 +28,7 @@ public class RosettoFunctionTest {
     
     
     @Test
-    public void インスタンス化テスト() throws Exception {
+    public void constructorTest() throws Exception {
         RosettoFunction f1 = new RosettoFunction("f1") {
             @Override
             protected RosettoValue run(Scope functionScope, OptionableList args) {
@@ -72,6 +76,25 @@ public class RosettoFunctionTest {
     }
     
     @Test
+    public void executeTest() throws Exception {
+        final StringBuilder sb = new StringBuilder();
+        RosettoFunction sut = new RosettoFunction("f1", "text") {
+            @Override
+            protected RosettoValue run(Scope functionScope, OptionableList args) {
+                sb.append(functionScope.get("text").asString());
+                return Values.VOID;
+            }
+        };
+        //初期状態は空
+        assertThat(sb.length(), is(0));
+        //引数を与えると読める
+        sut.execute("text=foo", new Scope());
+        assertThat(sb.toString(), is("foo"));
+        //引数がnullなら変化なし
+        sut.execute((String)null, new Scope());
+    }
+    
+    @Test
     public void valueConvertTest() throws Exception {
         RosettoFunction sut = new RosettoFunction("f1") {
             @Override
@@ -84,12 +107,7 @@ public class RosettoFunctionTest {
         assertThat(sut.asString("dummy"), is("[f1]"));
         
         //リストとしては単一要素扱い
-        assertThat(sut.first(), is((RosettoValue)sut));
-        assertThat(sut.rest(), is((RosettoValue)Values.NULL));
-        assertThat(sut.cons(Values.create(1)).asString(), is("(1 " + sut.toString() + ")"));
-        assertThat(sut.size(), is(1));
-        assertThat(sut.getAt(0), is((RosettoValue)sut));
-        assertThat(sut.getAt(1), is((RosettoValue)Values.NULL));
+        ValueTestUtils.isSingleValue(sut);
         
         //数値や真偽値への変換は常にデフォルト値が返る
         assertThat(sut.asBool(true), is(true));
