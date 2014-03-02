@@ -56,6 +56,10 @@ public class BaseFunctionsTest {
         RosettoValue sut1 = BaseFunctions.fn.execute("(x) [* @x 2]", testScope);
         assertThat(sut1.getType(), is(ValueType.FUNCTION));
         assertThat(((RosettoFunction)sut1).execute("2", testScope).asInt(), is(4));
+        
+        RosettoValue sut2 = BaseFunctions.fn.execute("(x) [* @x 10] [* @x 100]", testScope);
+        assertThat(sut2.getType(), is(ValueType.FUNCTION));
+        assertThat(((RosettoFunction)sut2).execute("5", testScope).asInt(), is(500));
     }
     
     @Test

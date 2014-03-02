@@ -4,7 +4,7 @@
 package info.rosetto.observers;
 
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
@@ -20,7 +20,7 @@ implements ActionObserver {
     ActionObservatory() {}
     
     @Override
-    public void functionExecuted(RosettoFunction func, OptionableList args,
+    public void functionExecuted(RosettoFunction func, ListValue args,
             RosettoValue evaluatedValue) {
         for(ActionObserver o : getObservers()) {
             o.functionExecuted(func, args, evaluatedValue);
@@ -28,7 +28,7 @@ implements ActionObserver {
     }
     
     @Override
-    public void macroExecuted(ScriptValue macro, OptionableList args,
+    public void macroExecuted(ScriptValue macro, ListValue args,
             RosettoValue evaluatedValue) {
         for(ActionObserver o : getObservers()) {
             o.macroExecuted(macro, args, evaluatedValue);

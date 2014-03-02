@@ -6,7 +6,7 @@ package info.rosetto.models.base.elements;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.elements.values.VoidValue;
 import info.rosetto.models.base.function.RosettoFunction;
@@ -32,10 +32,6 @@ public enum ValueType {
      * リストを表す型.
      */
     LIST(ListValue.class),
-    /**
-     * オプション付きリストを表す型.
-     */
-    OPTIONABLE_LIST(OptionableList.class),
     /**
      * 関数を示す型.
      */

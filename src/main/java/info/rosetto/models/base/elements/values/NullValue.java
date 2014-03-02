@@ -193,7 +193,7 @@ public class NullValue implements RosettoValue, RosettoAction {
     }
     
     @Override
-    public RosettoValue execute(OptionableList args, Scope parentScope) {
+    public RosettoValue execute(ListValue args, Scope parentScope) {
         RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
         return this;
     }

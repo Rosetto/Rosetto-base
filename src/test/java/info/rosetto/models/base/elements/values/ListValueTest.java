@@ -28,14 +28,14 @@ public class ListValueTest {
     public void restTest() throws Exception {
         ListValue list = new ListValue(Values.create(1), Values.create(2), Values.create(3), 
                 Values.create(4), Values.create(5));
-        assertThat(list.getSize(), is(5));
+        assertThat(list.size(), is(5));
         
         list = (ListValue)list.rest();
-        assertThat(list.getSize(), is(4));
+        assertThat(list.size(), is(4));
         
         list = (ListValue)list.rest();
         list = (ListValue)list.rest();
-        assertThat(list.getSize(), is(2));
+        assertThat(list.size(), is(2));
         
         assertThat((IntValue)list.rest(), is(Values.create(5)));
         

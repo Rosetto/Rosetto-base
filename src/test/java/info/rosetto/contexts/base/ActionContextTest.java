@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
@@ -24,7 +24,7 @@ public class ActionContextTest {
         
         RosettoFunction f1 = new RosettoFunction("foo") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return null;
             }
         };
@@ -34,7 +34,7 @@ public class ActionContextTest {
         
         RosettoFunction f2 = new RosettoFunction("bar") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return null;
             }
         };

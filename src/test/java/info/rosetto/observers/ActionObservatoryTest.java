@@ -3,7 +3,7 @@ package info.rosetto.observers;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
@@ -18,13 +18,13 @@ public class ActionObservatoryTest {
         Observatories.getAction().addObserver(new ActionObserver() {
             
             @Override
-            public void functionExecuted(RosettoFunction func, OptionableList args,
+            public void functionExecuted(RosettoFunction func, ListValue args,
                     RosettoValue evaluatedValue) {
                 sb.append(".");
             }
 
             @Override
-            public void macroExecuted(ScriptValue macro, OptionableList args,
+            public void macroExecuted(ScriptValue macro, ListValue args,
                     RosettoValue evaluatedValue) {}
         });
         
@@ -32,7 +32,7 @@ public class ActionObservatoryTest {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return null;
             }
         };

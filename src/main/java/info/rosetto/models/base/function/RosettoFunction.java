@@ -7,11 +7,12 @@ import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.system.exceptions.UnExpectedValueTypeException;
 import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.utils.base.Values;
 
@@ -87,7 +88,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         }
         if(args.getType() == ValueType.LIST) {
             ListValue argList = ((ListValue)args);
-            this.args = new ArrayList<String>(argList.getSize());
+            this.args = new ArrayList<String>(argList.size());
             for(RosettoValue s : argList.getList()) {
                 this.args.add(s.asString());
             }
@@ -104,7 +105,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * そのため、個々の引数も非nullになる.<br>
      * execメソッドが実行される際にこのメソッドが呼び出される.
      */
-    protected abstract RosettoValue run(Scope scope, OptionableList rawArgs);
+    protected abstract RosettoValue run(Scope scope, ListValue rawArgs);
     
 
     /**
@@ -113,7 +114,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @param parentScope
      * @return
      */
-    protected Scope createScope(OptionableList args, Scope parentScope) {
+    protected Scope createScope(ListValue args, Scope parentScope) {
         //通常はすべての関数が評価されて渡される
         return new Scope(args.evaluateChildren(parentScope), this, parentScope);
     }
@@ -138,16 +139,16 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * execute(RosettoArguments.EMPTY)と同じ.
      */
     public RosettoValue execute(Scope parentScope) {
-        return execute(OptionableList.EMPTY, parentScope);
+        return execute(ListValue.EMPTY, parentScope);
     }
 
     /**
      * この関数を実行する.
      * @param args 実行時引数
      */
-    public RosettoValue execute(OptionableList args, Scope parentScope) {
+    public RosettoValue execute(ListValue args, Scope parentScope) {
         if(args == null)
-            args = OptionableList.EMPTY;
+            args = ListValue.EMPTY;
         RosettoValue result = Values.NULL;
         try {
             Scope functionScope = createScope(args, parentScope);
@@ -165,9 +166,9 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * @param args 文字列形式の実行時引数
      */
     public RosettoValue execute(String args, Scope parentScope) {
-        OptionableList rargs = OptionableList.EMPTY;
+        ListValue rargs = ListValue.EMPTY;
         if(args != null) {
-            rargs = OptionableList.createFromString(args);
+            rargs = ListValue.createFromString(args);
         }
         return execute(rargs, parentScope);
     }
@@ -281,5 +282,34 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         }
         result.append("]");
         return result.toString();
+    }
+    
+    /**
+     * 指定した値が指定した型のいずれかに該当するかどうかを返す.
+     * @param value
+     * @param expected
+     * @return
+     */
+    protected boolean checkType(RosettoValue value, ValueType...expected) {
+        for(int i=0; i<expected.length; i++) {
+            if(value.getType() == expected[i]) return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 
+     * @param value
+     * @param expected
+     */
+    protected void validateType(RosettoValue value, ValueType...expected) {
+        boolean isValid = false;
+        for(int i=0; i<expected.length; i++) {
+            if(value.getType() == expected[i]) {
+                isValid =  true;
+                return;
+            }
+        }
+        if(!isValid) throw new UnExpectedValueTypeException();
     }
 }

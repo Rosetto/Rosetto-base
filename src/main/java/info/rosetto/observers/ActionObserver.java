@@ -4,7 +4,7 @@
 package info.rosetto.observers;
 
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.RosettoFunction;
 
@@ -21,7 +21,7 @@ public interface ActionObserver {
      * @param evaluatedValue 実行結果の返り値
      */
     public void functionExecuted(RosettoFunction func, 
-            OptionableList args, 
+            ListValue args, 
             RosettoValue evaluatedValue);
     
     /**
@@ -31,7 +31,7 @@ public interface ActionObserver {
      * @param evaluatedValue 実行結果の返り値
      */
     public void macroExecuted(ScriptValue macro, 
-            OptionableList args,
+            ListValue args,
             RosettoValue evaluatedValue);
     
 }

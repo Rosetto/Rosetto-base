@@ -8,7 +8,7 @@ import java.util.HashMap;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ValueTestUtils;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;
@@ -31,7 +31,7 @@ public class RosettoFunctionTest {
     public void constructorTest() throws Exception {
         RosettoFunction f1 = new RosettoFunction("f1") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return Values.VOID;
             }
         };
@@ -45,7 +45,7 @@ public class RosettoFunctionTest {
         RosettoFunction f2 = new RosettoFunction("f2",
                 "hoge", "fuga", "foo=bar") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return Values.VOID;
             }
         };
@@ -56,7 +56,7 @@ public class RosettoFunctionTest {
         RosettoFunction f3 = new RosettoFunction("f3", 
                 (String[])null) {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {return Values.VOID;}
+            protected RosettoValue run(Scope functionScope, ListValue args) {return Values.VOID;}
         };
         assertThat(f3.getName(), is("f3"));
         assertThat(f3.getArguments().size(), is(0));
@@ -65,7 +65,7 @@ public class RosettoFunctionTest {
         try {
             new RosettoFunction(null, "foo") {
                 @Override
-                protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+                protected RosettoValue run(Scope scope, ListValue rawArgs) {
                     return null;
                 }
             };
@@ -80,7 +80,7 @@ public class RosettoFunctionTest {
         final StringBuilder sb = new StringBuilder();
         RosettoFunction sut = new RosettoFunction("f1", "text") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 sb.append(functionScope.get("text").asString());
                 return Values.VOID;
             }
@@ -98,7 +98,7 @@ public class RosettoFunctionTest {
     public void valueConvertTest() throws Exception {
         RosettoFunction sut = new RosettoFunction("f1") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return Values.VOID;
             }
         };

@@ -3,7 +3,7 @@ package info.rosetto.models.base.function;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.system.Scope;
 
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class FunctionPackageTest {
         
         RosettoFunction f1 = new RosettoFunction("foo") {
             @Override
-            protected RosettoValue run(Scope functionScope, OptionableList args) {
+            protected RosettoValue run(Scope functionScope, ListValue args) {
                 return null;
             }
         };

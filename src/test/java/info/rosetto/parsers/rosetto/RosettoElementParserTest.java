@@ -7,7 +7,7 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.utils.base.Values;
 
 import java.util.List;
@@ -57,16 +57,16 @@ public class RosettoElementParserTest {
     }
     
     @Test
-    public void ハッシュドリストリテラルのパース() throws Exception {
+    public void オプション付きリストのパース() throws Exception {
         RosettoValue sut1 = parser.parseElement("(foo=bar baz)");
-        assertThat(sut1.getType(), is(ValueType.OPTIONABLE_LIST));
-        assertThat(((OptionableList)sut1).get("foo").asString(), is("bar"));
-        assertThat(((OptionableList)sut1).first().asString(), is("baz"));
+        assertThat(sut1.getType(), is(ValueType.LIST));
+        assertThat(((ListValue)sut1).get("foo").asString(), is("bar"));
+        assertThat(((ListValue)sut1).first().asString(), is("baz"));
         
         RosettoValue sut2 = parser.parseElement("(foo=bar hoge baz=100 fuga)");
-        assertThat(sut2.getType(), is(ValueType.OPTIONABLE_LIST));
-        assertThat(((OptionableList)sut2).get("foo").asString(), is("bar"));
-        assertThat(((OptionableList)sut2).getAt(0).asString(), is("hoge"));
+        assertThat(sut2.getType(), is(ValueType.LIST));
+        assertThat(((ListValue)sut2).get("foo").asString(), is("bar"));
+        assertThat(((ListValue)sut2).getAt(0).asString(), is("hoge"));
     }
     
 

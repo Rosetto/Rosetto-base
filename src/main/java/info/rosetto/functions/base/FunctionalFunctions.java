@@ -9,7 +9,7 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
@@ -41,7 +41,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue v = scope.get("list");
             if(v instanceof RosettoValue) {
                 return ((RosettoValue)v).first();
@@ -55,7 +55,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue v = scope.get("list");
             if(v instanceof RosettoValue) {
                 return ((RosettoValue)v).rest();
@@ -69,7 +69,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue f = scope.get("fn");
             RosettoValue l = scope.get("list");
             RosettoAction fn = (f instanceof RosettoFunction) ? 
@@ -84,8 +84,8 @@ public class FunctionalFunctions extends FunctionPackage {
                 }
                 return new ListValue(result);
                 
-            } else if(l instanceof OptionableList) {
-                List<RosettoValue> list = ((OptionableList)l).getList();
+            } else if(l instanceof ListValue) {
+                List<RosettoValue> list = ((ListValue)l).getList();
                 List<RosettoValue> result = new LinkedList<RosettoValue>();
                 for(RosettoValue v : list) {
                     result.add(fn.execute(v.asString(), scope).evaluate(scope));
@@ -101,7 +101,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             int start = scope.get("start").asInt();
             int end = scope.get("end").asInt();
             List<RosettoValue> list = new LinkedList<RosettoValue>();
@@ -119,7 +119,7 @@ public class FunctionalFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(OptionableList args, Scope parentScope) {
+        protected Scope createScope(ListValue args, Scope parentScope) {
             Map<String, RosettoValue> parsed = args.bind(this, parentScope);
             Scope scope = new Scope(parentScope);
             scope.set("args", parsed.get("args"));
@@ -127,7 +127,7 @@ public class FunctionalFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue argsValue = scope.get("args");
             if(argsValue.getType() == ValueType.LIST) {
                 for(RosettoValue v : ((ListValue)argsValue).getList()) {

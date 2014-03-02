@@ -37,20 +37,20 @@ public class ActionCall implements RosettoValue {
      * 実行時の引数リスト.
      */
     @Nonnull
-    private final OptionableList args;
+    private final ListValue args;
     
     /**
      * 何もしないActionCall.空の関数呼び出しを行う.
      */
     public static final ActionCall EMPTY = 
-            new ActionCall(BaseFunctions.pass.getName(), OptionableList.EMPTY);
+            new ActionCall(BaseFunctions.pass.getName(), ListValue.EMPTY);
     
     /**
      * 引数なしで指定した対象を実行するActionCallを生成する.
      * @param functionName 呼び出す関数名
      */
     public ActionCall(String functionName) {
-        this(functionName, OptionableList.EMPTY);
+        this(functionName, ListValue.EMPTY);
     }
     
     /**
@@ -59,7 +59,7 @@ public class ActionCall implements RosettoValue {
      * @param args 適用する引数
      */
     public ActionCall(String functionName, String args) {
-        this(functionName, OptionableList.createFromString(args));
+        this(functionName, ListValue.createFromString(args));
     }
     
     /**
@@ -68,7 +68,7 @@ public class ActionCall implements RosettoValue {
      * @param args 適用する引数
      */
     public ActionCall(String functionName, String[] args) {
-        this(functionName, OptionableList.createFromString(args));
+        this(functionName, ListValue.createFromString(args));
     }
     
     /**
@@ -76,11 +76,11 @@ public class ActionCall implements RosettoValue {
      * @param functionName 呼び出す関数名
      * @param args 適用する引数
      */
-    public ActionCall(String functionName, OptionableList args) {
+    public ActionCall(String functionName, ListValue args) {
         if(functionName == null)
             throw new IllegalArgumentException("関数オブジェクトがnullです");
         this.callName = functionName;
-        this.args = (args != null) ? args : OptionableList.EMPTY;
+        this.args = (args != null) ? args : ListValue.EMPTY;
     }
     
     @Override
@@ -94,7 +94,7 @@ public class ActionCall implements RosettoValue {
     @Override
     public String toString() {
         if(args.size() == 0 && args.optionSize() == 0) return "[" + callName + "]";
-        return "[" + callName + " " + args.toString() + "]";
+        return "[" + callName + " " + args.toArgsExpression() + "]";
     }
     
     /**
@@ -116,7 +116,7 @@ public class ActionCall implements RosettoValue {
         
         if(v.getType() == ValueType.FUNCTION) {
             RosettoFunction f = (RosettoFunction) v;
-            OptionableList args = this.getArgs();
+            ListValue args = this.getArgs();
             RosettoValue result = f.execute(args, parentScope);
             Observatories.getAction().functionExecuted(f, args, result);
             return result;
@@ -186,7 +186,7 @@ public class ActionCall implements RosettoValue {
      * この呼び出しにおいて関数に渡される引数リストを返す.
      * @return この呼び出しにおいて関数に渡される引数リスト
      */
-    public OptionableList getArgs() {
+    public ListValue getArgs() {
         return args;
     }
 
@@ -202,14 +202,14 @@ public class ActionCall implements RosettoValue {
 
     @Override
     public RosettoValue first() {
-        return new StringValue(getFunctionName());
+        return this;
     }
 
     @Override
     public RosettoValue rest() {
-        return new ListValue(getArgs().getList());
+        return Values.NULL;
     }
-
+    
     @Override
     public RosettoValue cons(RosettoValue head) {
         return new ListValue(head, this);
@@ -217,8 +217,8 @@ public class ActionCall implements RosettoValue {
 
     @Override
     public RosettoValue getAt(int index) {
-        if(index == 0) return first();
-        return getArgs().getAt(index-1);
+        if(index == 0) return this;
+        return Values.NULL;
     }
     
     @Override

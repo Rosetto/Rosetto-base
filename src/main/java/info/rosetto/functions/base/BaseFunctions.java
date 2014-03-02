@@ -7,7 +7,7 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.LambdaFunction;
@@ -55,7 +55,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             return Values.VOID;
         }
     };
@@ -68,7 +68,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             String key = scope.get("key").asString("");
             RosettoValue value = scope.get("value");
             Contexts.define(key, value);
@@ -85,7 +85,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             RosettoValue key = scope.get("key");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return Contexts.get(key.asString());
@@ -100,7 +100,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             String key = scope.get("key").asString("");
             RosettoValue value = scope.get("value");
             scope.getParent().set(key, value);
@@ -118,7 +118,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             RosettoValue key = scope.get("**key**");
             if(key.getType() == ValueType.NULL) return Values.NULL;
             return scope.get(key.asString());
@@ -130,7 +130,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(OptionableList args, Scope parentScope) {
+        protected Scope createScope(ListValue args, Scope parentScope) {
             RosettoValue name = args.getAt(0);
             RosettoValue list = args.getAt(1);
             RosettoValue actionCall = args.getAt(2);
@@ -142,7 +142,7 @@ public class BaseFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue argsValue = scope.get("args");
             RosettoValue actionValue = scope.get("action");
             if(actionValue.getType() == ValueType.ACTION_CALL) {
@@ -150,7 +150,7 @@ public class BaseFunctions extends FunctionPackage {
                 RosettoFunction f = new RosettoFunction(scope.get("name").asString(), argsValue) {
                     private static final long serialVersionUID = 1L;
                     @Override
-                    protected RosettoValue run(Scope scope, OptionableList args) {
+                    protected RosettoValue run(Scope scope, ListValue args) {
                         return ac.evaluate(scope);
                     }
                 };
@@ -161,36 +161,48 @@ public class BaseFunctions extends FunctionPackage {
         }
     };
 
+    /**
+     * ラムダ関数を生成する.
+     */
     public static final RosettoFunction fn = new RosettoFunction("fn", 
             "args", "action") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(OptionableList args, Scope parentScope) {
-            RosettoValue list = args.getAt(0);
-            RosettoValue actionCall = args.getAt(1);
+        protected Scope createScope(ListValue args, Scope parentScope) {
+            //引数のうち最初のものを引数リスト、それ以降を順に実行される実装内容とみなす
+            RosettoValue list = args.first();
+            RosettoValue actions = args.rest();
             Scope scope = new Scope(parentScope);
             scope.set("args", list);
-            scope.set("action", actionCall);
+            scope.set("action", actions);
             return scope;
         }
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue argsValue = scope.get("args");
             RosettoValue actionValue = scope.get("action");
-            if(actionValue.getType() == ValueType.ACTION_CALL) {
-                final ActionCall ac = (ActionCall) actionValue;
-                RosettoFunction f = new LambdaFunction(argsValue) {
-                    private static final long serialVersionUID = 1L;
-                    @Override
-                    protected RosettoValue run(Scope scope, OptionableList args) {
-                        return ac.evaluate(scope);
-                    }
-                };
-                return f;
+            validateType(argsValue, ValueType.LIST);
+            validateType(actionValue, ValueType.ACTION_CALL, ValueType.LIST);
+            
+            RosettoValue result = Values.NULL;
+            while(true) {
+                RosettoValue action = actionValue.first();
+                if(action.getType() == ValueType.ACTION_CALL) {
+                    final ActionCall ac = (ActionCall) action;
+                    RosettoFunction f = new LambdaFunction(argsValue) {
+                        private static final long serialVersionUID = 1L;
+                        @Override
+                        protected RosettoValue run(Scope scope, ListValue args) {
+                            return ac.evaluate(scope);
+                        }
+                    };
+                    result = f;
+                }
+                if(actionValue.size() == 1) return result;
+                actionValue = actionValue.rest();
             }
-            return Values.NULL;
         }
     };
     
@@ -200,7 +212,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(OptionableList args, Scope parentScope) {
+        protected Scope createScope(ListValue args, Scope parentScope) {
             RosettoValue name = args.getAt(0);
             RosettoValue list = args.getAt(1);
             RosettoValue script = args.getAt(2);
@@ -216,7 +228,7 @@ public class BaseFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue nameValue = scope.get("name");
             RosettoValue argsValue = scope.get("args");
             RosettoValue scriptValue = scope.get("script");
@@ -234,7 +246,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
-        protected Scope createScope(OptionableList args, Scope parentScope) {
+        protected Scope createScope(ListValue args, Scope parentScope) {
             RosettoValue list = args.getAt(0);
             RosettoValue script = args.getAt(1);
             Scope scope = new Scope(parentScope);
@@ -244,7 +256,7 @@ public class BaseFunctions extends FunctionPackage {
         }
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList args) {
+        protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue argsValue = scope.get("args");
             RosettoValue scriptValue = scope.get("script");
             if(scriptValue.getType() == ValueType.SCRIPT) {
@@ -252,7 +264,7 @@ public class BaseFunctions extends FunctionPackage {
                 RosettoFunction f = new LambdaFunction(argsValue) {
                     private static final long serialVersionUID = 1L;
                     @Override
-                    protected RosettoValue run(Scope scope, OptionableList args) {
+                    protected RosettoValue run(Scope scope, ListValue args) {
                         return script.evaluate(scope);
                     }
                 };
@@ -270,7 +282,7 @@ public class BaseFunctions extends FunctionPackage {
         private static final long serialVersionUID = 4075950193187972686L;
         
         @Override
-        protected RosettoValue run(Scope scope, OptionableList rawArgs) {
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
             RosettoValue pkg = scope.get("package");
             Contexts.usePackage(pkg.asString());
             return Values.VOID;

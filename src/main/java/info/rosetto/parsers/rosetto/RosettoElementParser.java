@@ -9,7 +9,7 @@ import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.DoubleValue;
 import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.parsers.AbstractElementParser;
 import info.rosetto.parsers.ParseUtils;
@@ -102,9 +102,9 @@ public class RosettoElementParser extends AbstractElementParser {
         if(element == null) return ListValue.EMPTY;
         String content = ParseUtils.removeRBracket(element);
         List<String> splited = splitElements(content);
-        OptionableList elements = OptionableList.createFromString(splited);
+        ListValue elements = ListValue.createFromString(splited);
         if(elements.hasMappedValue()) {
-            return OptionableList.createFromValue(elements);
+            return ListValue.createFromValue(elements);
         }
         return new ListValue(elements.getList());
     }

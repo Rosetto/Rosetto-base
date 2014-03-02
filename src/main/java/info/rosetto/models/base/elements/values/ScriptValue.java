@@ -170,7 +170,7 @@ public class ScriptValue implements RosettoAction {
      */
     @Override
     public RosettoValue execute(Scope parentScope) {
-        return execute(OptionableList.EMPTY, parentScope);
+        return execute(ListValue.EMPTY, parentScope);
     }
 
     /**
@@ -179,8 +179,8 @@ public class ScriptValue implements RosettoAction {
      * @param parentScope
      * @return
      */
-    protected Scope createScope(OptionableList args, Scope parentScope) {
-        OptionableList evaluated = args.evaluateChildren(parentScope);
+    protected Scope createScope(ListValue args, Scope parentScope) {
+        ListValue evaluated = args.evaluateChildren(parentScope);
         return new Scope(parentScope, evaluated.getMap());
     }
     
@@ -189,9 +189,9 @@ public class ScriptValue implements RosettoAction {
      * @param args 実行時引数
      */
     @Override
-    public RosettoValue execute(OptionableList args, Scope parentScope) {
+    public RosettoValue execute(ListValue args, Scope parentScope) {
         if(args == null)
-            args = OptionableList.EMPTY;
+            args = ListValue.EMPTY;
         RosettoValue result = Values.NULL;
         try {
             Scope scriptScope = createScope(args, parentScope);

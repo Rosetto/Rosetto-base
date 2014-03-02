@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.models.base.elements;
 
-import info.rosetto.models.base.elements.values.OptionableList;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.system.Scope;
 
 /**
@@ -29,7 +29,7 @@ public interface RosettoAction extends RosettoValue {
      * @param args 実行時引数
      * @return 実行した結果の返り値
      */
-    public RosettoValue execute(OptionableList args, Scope parentScope);
+    public RosettoValue execute(ListValue args, Scope parentScope);
     
     /**
      * このアクションを実行する.
