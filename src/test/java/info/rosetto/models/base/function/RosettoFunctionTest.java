@@ -90,8 +90,6 @@ public class RosettoFunctionTest {
         //引数を与えると読める
         sut.execute("text=foo", new Scope());
         assertThat(sb.toString(), is("foo"));
-        //引数がnullなら変化なし
-        sut.execute((String)null, new Scope());
     }
     
     @Test

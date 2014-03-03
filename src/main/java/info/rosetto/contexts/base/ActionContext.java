@@ -49,7 +49,7 @@ public class ActionContext implements Serializable {
     
     /**
      * 指定名のアクションを取得する.<br>
-     * 指定名のアクションが存在しない場合はNullValueが返る.
+     * 指定名のアクションが存在しない場合はValues.NULLが返る.
      * @param functionName 関数コンテキストから取得するアクションの名称
      * @return 取得したアクション
      */
@@ -114,7 +114,7 @@ public class ActionContext implements Serializable {
      */
     public void usePackage(String packageName) {
         NameSpace pkg = getNameSpace(packageName);
-        if(pkg != null) current.include(pkg);
+        current.include(pkg);
     }
     
     /**

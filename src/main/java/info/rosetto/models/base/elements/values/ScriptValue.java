@@ -21,6 +21,8 @@ import info.rosetto.utils.base.Values;
 public class ScriptValue implements RosettoAction {
     private static final long serialVersionUID = 40494134581575429L;
     
+    public static final ScriptValue EMPTY = new ScriptValue("");
+    
     private final String name;
     
     private final String script;

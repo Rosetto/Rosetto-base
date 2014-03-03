@@ -3,13 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers.rosetto;
 
+import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.DoubleValue;
 import info.rosetto.models.base.elements.values.IntValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.elements.values.StringValue;
 import info.rosetto.parsers.AbstractElementParser;
 import info.rosetto.parsers.ParseUtils;
@@ -45,6 +46,9 @@ public class RosettoElementParser extends AbstractElementParser {
         } else if(element.startsWith("(") && element.endsWith(")")) {
             //丸括弧で囲まれていればリストと判断
             return parseList(element);
+        } else if(element.startsWith("{") && element.endsWith("}")) {
+            //中括弧で囲まれていればマクロと判断
+            return parseMacro(element);
         }
         
         //特定の接頭詞があればそれに合わせた変換
@@ -107,6 +111,12 @@ public class RosettoElementParser extends AbstractElementParser {
             return ListValue.createFromValue(elements);
         }
         return new ListValue(elements.getList());
+    }
+    
+    public RosettoValue parseMacro(String element) {
+        if(element == null) return ScriptValue.EMPTY;
+        String content = ParseUtils.removeCBracket(element);
+        return new ScriptValue(content);
     }
     
     

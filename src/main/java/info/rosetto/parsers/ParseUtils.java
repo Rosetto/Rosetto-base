@@ -32,6 +32,20 @@ public class ParseUtils {
     }
     
     /**
+     * 指定文字列を囲んでいる中括弧を除去する.<br>
+     * 行頭と行末にそれぞれ左中括弧と右中括弧が存在する場合にその再外周の括弧のみを取り除く.<br>
+     * 行頭と行末のホワイトスペースは無視される.
+     * @param tag 中括弧を除去する文字列
+     * @return 除去後の文字列
+     */
+    public static String removeCBracket(String tag) {
+        tag = tag.trim();
+        if(tag.startsWith("{") && tag.endsWith("}"))
+            return tag.substring(1, tag.length() - 1);
+        return tag;
+    }
+    
+    /**
      * 指定文字列を囲んでいるダブルクォートを除去する.<br>
      * 行頭と行末のホワイトスペースは無視される.
      * @param tag 角括弧を除去する文字列

@@ -45,16 +45,16 @@ public class SystemContext {
     }
     
     /**
-     * 
-     * @return
+     * システムが利用するシナリオプレイヤーのインスタンスを取得する.
+     * @return システムが利用するシナリオプレイヤーのインスタンス
      */
     public ScenarioPlayer getPlayer() {
         return player;
     }
     
     /**
-     * 
-     * @param player
+     * システムが利用するシナリオプレイヤーのインスタンスを指定する.
+     * @param player システムが利用するシナリオプレイヤーのインスタンス
      */
     public void setPlayer(ScenarioPlayer player) {
         this.player = player;

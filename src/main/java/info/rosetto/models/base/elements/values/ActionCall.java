@@ -71,12 +71,16 @@ public class ActionCall implements RosettoValue {
         this(functionName, ListValue.createFromString(args));
     }
     
+    public ActionCall(String functionName, RosettoValue...args) {
+        this(functionName, new ListValue(args));
+    }
+    
     /**
      * 指定引数で指定関数を呼び出すFunctionCallを生成する.
      * @param functionName 呼び出す関数名
      * @param args 適用する引数
      */
-    public ActionCall(String functionName, ListValue args) {
+    private ActionCall(String functionName, ListValue args) {
         if(functionName == null)
             throw new IllegalArgumentException("関数オブジェクトがnullです");
         this.callName = functionName;

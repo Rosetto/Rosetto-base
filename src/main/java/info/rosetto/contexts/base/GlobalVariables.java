@@ -13,8 +13,7 @@ import java.util.Map;
 
 /**
  * Rosetto中の全てのグローバル変数を格納するコンテキスト.<br>
- * 実質的にRosettoが認識する全てのゲーム状態と等しくなる.<br>
- * VariableContextをシリアライズすることでゲーム上の状態が完全に保存できるように実装する.
+ * シリアライズすることでゲーム上の状態が完全に保存できるように実装する.
  * @author tohhy
  */
 public class GlobalVariables implements Serializable {
@@ -85,8 +84,7 @@ public class GlobalVariables implements Serializable {
 
     /**
      * 指定名の名前空間を取得する.<br>
-     * 名前空間のインスタンスが存在しない場合は新しく空の名前空間を生成し、
-     * rosetto.baseの関数群をUseした状態にして取得する.
+     * 名前空間のインスタンスが存在しない場合は新しく空の名前空間を生成する.
      * @param name 取得する名前空間の完全名
      * @return 取得した、あるいは生成した名前空間
      */
@@ -117,7 +115,7 @@ public class GlobalVariables implements Serializable {
     }
 
     /**
-     * WholeSpaceに指定した名前空間を追加する.
+     * 指定した名前空間を追加する.
      * @param ns 追加する名前空間
      */
     private void putNameSpace(NameSpace ns) {

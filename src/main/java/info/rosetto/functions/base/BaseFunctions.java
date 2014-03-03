@@ -44,7 +44,7 @@ public class BaseFunctions extends FunctionPackage {
     private BaseFunctions() {
         super(pass, 
                 getglobal, def, getlocal, set, 
-                defn, fn, defmacro, macro, 
+                doActions, defn, fn, defmacro, macro, 
                 use);
     }
     
@@ -181,32 +181,46 @@ public class BaseFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, ListValue args) {
-            RosettoValue argsValue = scope.get("args");
-            RosettoValue actionValue = scope.get("action");
+            final RosettoValue argsValue = scope.get("args");
+            final RosettoValue actionValue = scope.get("action");
             validateType(argsValue, ValueType.LIST);
             validateType(actionValue, ValueType.ACTION_CALL, ValueType.LIST);
             
-            RosettoValue result = Values.NULL;
-            while(true) {
-                RosettoValue action = actionValue.first();
-                if(action.getType() == ValueType.ACTION_CALL) {
-                    final ActionCall ac = (ActionCall) action;
-                    RosettoFunction f = new LambdaFunction(argsValue) {
-                        private static final long serialVersionUID = 1L;
-                        @Override
-                        protected RosettoValue run(Scope scope, ListValue args) {
-                            return ac.evaluate(scope);
-                        }
-                    };
-                    result = f;
+            RosettoFunction f = new LambdaFunction(argsValue) {
+                private static final long serialVersionUID = 1L;
+                @Override
+                protected RosettoValue run(Scope scope, ListValue args) {
+                    return doActions(scope, actionValue);
                 }
-                if(actionValue.size() == 1) return result;
-                actionValue = actionValue.rest();
-            }
+            };
+            return f;
         }
     };
     
-
+    
+    /**
+     * 引数に与えたアクションを順に実行する.
+     */
+    public static final RosettoFunction doActions = new RosettoFunction("do", 
+            "action") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected Scope createScope(ListValue args, Scope parentScope) {
+            //引数を順に実行される実装内容とみなす
+            Scope scope = new Scope(parentScope);
+            scope.set("action", args);
+            return scope;
+        }
+        
+        @Override
+        protected RosettoValue run(Scope scope, ListValue args) {
+            RosettoValue actionValue = scope.get("action");
+            validateType(actionValue, ValueType.ACTION_CALL, ValueType.LIST);
+            return doActions(scope, actionValue);
+        }
+    };
+    
     public static final RosettoFunction defmacro = new RosettoFunction("defmacro", 
             "name", "args", "action") {
         private static final long serialVersionUID = -411581748747383868L;
@@ -288,5 +302,24 @@ public class BaseFunctions extends FunctionPackage {
             return Values.VOID;
         }
     };
+    
+    /**
+     * 引数に与えたスコープを用いて引数に与えたアクションまたはアクションのリストを順に実行する.
+     * @param scope
+     * @param actions
+     * @return
+     */
+    private static RosettoValue doActions(Scope scope, RosettoValue actions) {
+        RosettoValue result = Values.NULL;
+        while(true) {
+            RosettoValue action = actions.first();
+            if(action.getType() == ValueType.ACTION_CALL) {
+                final ActionCall ac = (ActionCall) action;
+                result = ac.evaluate(scope);
+            }
+            if(actions.size() == 1) return result;
+            actions = actions.rest();
+        }
+    }
 
 }

@@ -1,24 +1,25 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import info.rosetto.BaseTestUtils;
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ScriptValue;
+import info.rosetto.models.base.function.FunctionPackage;
 import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
-import info.rosetto.models.base.scenario.Unit;
-import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.ScenarioPlayer;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import sun.org.mozilla.javascript.internal.BaseFunction;
 
 public class ContextsTest {
     
@@ -60,6 +61,24 @@ public class ContextsTest {
         Contexts.initialize();
     }
     
+    @SuppressWarnings("serial")
+    @Test
+    public void initializeWithArgsTest() throws Exception {
+        GlobalVariables sut1 = new GlobalVariables();
+        ActionContext sut2 = new ActionContext();
+        sut2.defineAction(new RosettoFunction("foo") {
+            @Override
+            protected RosettoValue run(Scope scope, ListValue rawArgs) {
+                return null;
+            }
+        });
+        SystemContext sut3 = new SystemContext();
+        Contexts.initialize(sut1, sut2, sut3);
+        assertThat(Contexts.getVariableContext(), is(sut1));
+        assertThat(Contexts.getAction("foo"), is(sut2.get("foo")));
+        assertThat(Contexts.getParser(), is(sut3.getParser()));
+    }
+    
     @Test
     public void getAndDefineValueTest() throws Exception {
         Contexts.initialize();
@@ -75,6 +94,9 @@ public class ContextsTest {
         
         Contexts.define("hoge.fuga", 100);
         assertThat(Contexts.get("hoge.fuga").asInt(), is(100));
+        
+        Contexts.define("hoge.fuga", 100.0);
+        assertThat(Contexts.get("hoge.fuga").getType(), is(ValueType.DOUBLE));
         
         //値を上書きする
         Contexts.define("foobar", true);
@@ -121,7 +143,7 @@ public class ContextsTest {
     }
     
     @Test
-    public void getAsFunctionTest() throws Exception {
+    public void getAndDefineFunctionTest() throws Exception {
         Contexts.initialize();
         Contexts.defineFunction(new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
@@ -134,37 +156,67 @@ public class ContextsTest {
         assertThat(Contexts.getAction("org.example.not-found-func"), is((RosettoAction)Values.NULL));
     }
     
+    @Test
+    public void getAndDefineMacroTest() throws Exception {
+        Contexts.initialize();
+        Contexts.defineMacro("foo", (ScriptValue)Values.create("{Hello, World!}"));
+        
+        assertThat(Contexts.getAction("foo").getType(), is(ValueType.SCRIPT));
+        assertThat(Contexts.getAction("foo").asString(), is("{Hello, World!}"));
+        assertThat(Contexts.getAction("org.example.not-found-macro"), is((RosettoAction)Values.NULL));
+    }
+    
     
     @Test
     public void getAndSetParserTest() throws Exception {
         Contexts.initialize();
+        //初期状態のパーサーは通常のRosettoのもの
+        Scenario sut1 = Contexts.getParser().parseScript("foobar[br]");
+        assertThat(sut1.getUnitAt(0).getContent(), is("foobar"));
+        assertThat(sut1.getUnitAt(0).getAction().toString(), is("[br]"));
+        //ダミーパーサーを追加
+        Contexts.setParser(BaseTestUtils.createDummyParser());
+        Scenario sut2 = Contexts.getParser().parseScript("foobar[br]");
+        assertThat(sut2.getUnitAt(0).getContent(), is("TestParser"));
+        assertThat(sut2.getUnitAt(0).getAction().toString(), is("[pass]"));
+    }
+    
+    @SuppressWarnings("serial")
+    @Test
+    public void importAndUsePackageTest() throws Exception {
+        Contexts.initialize();
         
-        Contexts.setParser(new Parser() {
+        RosettoFunction f1 = new RosettoFunction("bar") {
             @Override
-            public Scenario parseScript(String script) {
-                return new Scenario(new Unit("TestParser"));
-            }
-            @Override
-            public Scenario parseScript(List<String> scriptLines) {
+            protected RosettoValue run(Scope scope, ListValue rawArgs) {
                 return null;
             }
+        };
+        FunctionPackage sut = new FunctionPackage(f1);
+        
+        assertThat(Contexts.getAction("foo.bar"), is((RosettoValue)Values.NULL));
+        assertThat(Contexts.getAction("bar"), is((RosettoValue)Values.NULL));
+        
+        Contexts.importPackage(sut, "foo");
+        assertThat(Contexts.getAction("foo.bar"), is((RosettoValue)f1));
+        assertThat(Contexts.getAction("bar"), is((RosettoValue)Values.NULL));
+        
+        Contexts.usePackage("foo");
+        assertThat(Contexts.getAction("foo.bar"), is((RosettoValue)f1));
+        assertThat(Contexts.getAction("bar"), is((RosettoValue)f1));
+    }
+    
+    @Test
+    public void getAndSetPlayerTest() throws Exception {
+        Contexts.initialize();
+        //初期状態でPlayerは空
+        assertThat(Contexts.getPlayer(), is(nullValue()));
+        //Playerを追加
+        Contexts.setPlayer(new ScenarioPlayer() {
             @Override
-            public RosettoValue parseElement(String actionCall) {
-                return null;
-            }
-            @Override
-            public List<String> splitElements(String elements) {
-                return null;
-            }
-            @Override
-            public Scenario parseScript(ScriptValue script) {
-                // TODO Auto-generated method stub
-                return null;
-            }
+            public void pushScenario(Scenario scenario, Scope playingScope) {}
         });
-        assertThat(Contexts.getParser().parseScript("foobar")
-                .getUnitAt(0).getContent(), is("TestParser"));
-        
+        assertThat(Contexts.getPlayer(), is(notNullValue()));
     }
     
     @Test
@@ -174,8 +226,12 @@ public class ContextsTest {
         //変更できる
         GlobalVariables ws = new GlobalVariables();
         ws.createNameSpace("foo");
-        ws.createNameSpace("bar");
         Contexts.setVariableContext(ws);
+        assertThat(Contexts.getVariableContext().containsNameSpace("foo"), is(true));
+        assertThat(Contexts.getVariableContext().containsNameSpace("bar"), is(false));
+        
+        //getNameSpaceで名前空間が生成される
+        assertThat(Contexts.getNameSpace("bar"), is(notNullValue()));
         assertThat(Contexts.getVariableContext().containsNameSpace("foo"), is(true));
         assertThat(Contexts.getVariableContext().containsNameSpace("bar"), is(true));
         
@@ -187,6 +243,7 @@ public class ContextsTest {
             assertThat(e, instanceOf(IllegalArgumentException.class));
         }
     }
+    
     
 
 }

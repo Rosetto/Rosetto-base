@@ -9,9 +9,16 @@ import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.system.NameSpace;
 import info.rosetto.utils.base.Values;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class GlobalVariablesTest {
+    
+    @Before
+    public void setUp() {
+        Contexts.dispose();
+        Contexts.initialize();
+    }
     
     @Test
     public void getNameSpaceTest() throws Exception {

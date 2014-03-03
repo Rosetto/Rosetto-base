@@ -123,6 +123,7 @@ public class NameSpace implements Serializable {
      * @param space 取り込む名前空間
      */
     public void include(NameSpace space) {
+        if(space == null) return;
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             try {
                 set(e.getKey(), e.getValue());

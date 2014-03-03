@@ -181,10 +181,11 @@ public class Contexts {
     }
     
     /**
-     * アクションコンテキストから指定名のアクションを取得する.
-     * 指定名のアクションが存在しない場合はBaseFunctions.passが返る.
+     * アクションコンテキストから指定名のアクションを取得する.<br>
+     * 指定名のアクションが存在しない場合はValues.NULLが返る.<br>
+     * Values.NULLをアクションとして呼び出すと何もしないアクションになる.
      * @param key 値を取得する変数名
-     * @return 取得したアクション. アクションが存在しなければBaseFunctions.pass
+     * @return 取得したアクション. アクションが存在しなければValues.NULL
      */
     public static RosettoAction getAction(String key) {
         return instance.actions.get(key);
@@ -228,6 +229,16 @@ public class Contexts {
     }
     
     /**
+     * 指定名の名前空間を取得する.<br>
+     * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
+     * @param name 取得する名前空間
+     * @return 取得した名前空間
+     */
+    public static NameSpace getNameSpace(String name) {
+        return instance.globalVars.getNameSpace(name);
+    }
+
+    /**
      * このContextが保持する名前空間全体のインスタンスを取得する.
      * @return このContextが保持する名前空間全体のインスタンス
      */
@@ -249,16 +260,6 @@ public class Contexts {
         instance.globalVars = variableContext;
     }
     
-    /**
-     * 指定名の名前空間を取得する.<br>
-     * コンテキスト中に指定名の名前空間がまだ存在しない場合は生成して返す.
-     * @param name 取得する名前空間
-     * @return 取得した名前空間
-     */
-    public static NameSpace getNameSpace(String name) {
-        return instance.globalVars.getNameSpace(name);
-    }
-
     /**
      * 現在のコンテキストで利用するパーサーを取得する.
      * @return 現在のコンテキストで利用するパーサー
