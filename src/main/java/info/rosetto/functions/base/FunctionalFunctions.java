@@ -10,8 +10,8 @@ import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 

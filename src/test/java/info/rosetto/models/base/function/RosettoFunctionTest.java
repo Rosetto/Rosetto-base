@@ -9,6 +9,7 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ValueTestUtils;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.exceptions.NotConvertibleException;

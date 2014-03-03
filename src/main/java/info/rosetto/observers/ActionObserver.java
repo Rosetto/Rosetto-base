@@ -5,8 +5,8 @@ package info.rosetto.observers;
 
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
-import info.rosetto.models.base.function.RosettoFunction;
 
 /**
  * Rosetto中の関数呼び出しやマクロ実行等を監視するオブザーバ.

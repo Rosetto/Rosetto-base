@@ -4,8 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
-import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
 
 import org.junit.Test;

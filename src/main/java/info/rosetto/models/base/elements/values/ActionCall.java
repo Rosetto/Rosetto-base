@@ -7,7 +7,6 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;

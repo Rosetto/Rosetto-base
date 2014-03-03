@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.system.exceptions;
 
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.system.messages.SystemMessages;

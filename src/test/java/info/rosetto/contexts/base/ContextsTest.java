@@ -1,25 +1,26 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import info.rosetto.BaseTestUtils;
-import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
 import info.rosetto.models.base.scenario.Scenario;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.ScenarioPlayer;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import sun.org.mozilla.javascript.internal.BaseFunction;
 
 public class ContextsTest {
     
@@ -66,7 +67,7 @@ public class ContextsTest {
     public void initializeWithArgsTest() throws Exception {
         GlobalVariables sut1 = new GlobalVariables();
         ActionContext sut2 = new ActionContext();
-        sut2.defineAction(new RosettoFunction("foo") {
+        sut2.defineAction("foo", new RosettoFunction("foo") {
             @Override
             protected RosettoValue run(Scope scope, ListValue rawArgs) {
                 return null;
@@ -145,14 +146,15 @@ public class ContextsTest {
     @Test
     public void getAndDefineFunctionTest() throws Exception {
         Contexts.initialize();
-        Contexts.defineFunction(new RosettoFunction("func") {
+        RosettoFunction f1 = new RosettoFunction("func") {
             private static final long serialVersionUID = 1694180059203694661L;
             @Override
             protected RosettoValue run(Scope functionScope, ListValue args) {
                 return Values.VOID;
             }
-        });
-        assertThat(Contexts.getAction("func").getName(), is("func"));
+        };
+        Contexts.defineFunction(f1);
+        assertThat(Contexts.getAction("func"), is((RosettoValue)f1));
         assertThat(Contexts.getAction("org.example.not-found-func"), is((RosettoAction)Values.NULL));
     }
     

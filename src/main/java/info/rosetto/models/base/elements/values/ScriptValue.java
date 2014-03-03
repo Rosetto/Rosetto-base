@@ -23,17 +23,9 @@ public class ScriptValue implements RosettoAction {
     
     public static final ScriptValue EMPTY = new ScriptValue("");
     
-    private final String name;
-    
     private final String script;
     
-    public ScriptValue(String name, String script) {
-        this.name = name;
-        this.script = script;
-    }
-    
     public ScriptValue(String script) {
-        this.name = "";
         this.script = script;
     }
 
@@ -159,11 +151,6 @@ public class ScriptValue implements RosettoAction {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     /**

@@ -1,18 +1,16 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-package info.rosetto.models.base.function;
+package info.rosetto.models.base.elements.values;
 
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
-import info.rosetto.system.exceptions.UnExpectedValueTypeException;
+import info.rosetto.system.exceptions.UnExpectedTypeValueException;
 import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.utils.base.Values;
 
@@ -134,6 +132,10 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return createFunctionInfo();
     }
 
+    public String getName() {
+        return name;
+    }
+
     /**
      * 引数なしでこの関数を実行する.
      * execute(RosettoArguments.EMPTY)と同じ.
@@ -154,7 +156,7 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
             Scope functionScope = createScope(args, parentScope);
             result = run(functionScope, args);
         } catch(Exception e) {
-            e.printStackTrace();
+            RosettoLogger.throwing(getClass(), "execute", e);
         }
         Observatories.getAction().functionExecuted(this, args, result);
         RosettoLogger.finer(SystemMessage.S11000_FUNCTION_EXECUTED, this.toString());
@@ -204,10 +206,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return this;
     }
     
-    public String getName() {
-        return name;
-    }
-
     @Override
     public ValueType getType() {
         return ValueType.FUNCTION;
@@ -310,6 +308,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
                 return;
             }
         }
-        if(!isValid) throw new UnExpectedValueTypeException();
+        if(!isValid) throw new UnExpectedTypeValueException();
     }
 }

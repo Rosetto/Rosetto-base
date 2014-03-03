@@ -7,9 +7,9 @@ import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.elements.values.VoidValue;
-import info.rosetto.models.base.function.RosettoFunction;
 
 /**
  * Rosetto中の引数や関数の型を定義した列挙子.

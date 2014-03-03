@@ -1,14 +1,12 @@
 package info.rosetto.contexts.base;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import info.rosetto.functions.base.BaseFunctions;
-import info.rosetto.functions.base.FunctionalFunctions;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -39,7 +37,7 @@ public class ActionContextTest {
                 return null;
             }
         };
-        sut.defineAction(f1);
+        sut.defineAction(f1.getName(), f1);
         assertThat(sut.get("foo"), is((RosettoAction)f1));
         assertThat(sut.containsNameSpace("foo"), is(false));
         
@@ -49,7 +47,7 @@ public class ActionContextTest {
                 return null;
             }
         };
-        sut.defineAction(f2, "foo");
+        sut.defineAction(f2.getName(), f2, "foo");
         assertThat(sut.get("foo.bar"), is((RosettoAction)f2));
         assertThat(sut.containsNameSpace("foo"), is(true));
     }

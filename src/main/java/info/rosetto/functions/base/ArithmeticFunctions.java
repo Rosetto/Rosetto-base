@@ -4,10 +4,13 @@
 package info.rosetto.functions.base;
 
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
+import info.rosetto.system.RosettoLogger;
+import info.rosetto.system.exceptions.UnExpectedTypeValueException;
 import info.rosetto.utils.base.Values;
 
 public class ArithmeticFunctions extends FunctionPackage {
@@ -21,49 +24,150 @@ public class ArithmeticFunctions extends FunctionPackage {
         return instance;
     }
     
-    
     public ArithmeticFunctions() {
         super(plus, minus, multiple, division, mod,
               eq, lt, gt, leq, geq);
     }
     
     public static final RosettoFunction plus = new RosettoFunction("+", 
-            "x", "y") {
+            "*nums") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asInt() + scope.get("y").asInt());
+            long l = 0;
+            double d = 0.0;
+            boolean isDouble = false;
+            RosettoValue nums = scope.get("nums");
+            while(true) {
+                RosettoValue num = nums.first();
+                if(num.getType() == ValueType.DOUBLE) {
+                    //double値が入れば以降の計算はすべてdouble
+                    isDouble = true;
+                    d += l;
+                    l = 0;
+                    d += num.asDouble();
+                } else if(num.getType() == ValueType.INTEGER) {
+                    if(isDouble) {
+                        d += num.asDouble();
+                    } else {
+                        l += num.asLong();
+                    }
+                } else {
+                    throw new UnExpectedTypeValueException();
+                }
+                nums = nums.rest();
+                if(nums.getType() == ValueType.NULL) break;
+            }
+            return isDouble ? Values.create(d) : Values.create(l);
         }
     };
     
     public static final RosettoFunction minus = new RosettoFunction("-", 
-            "x", "y") {
+            "*nums") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asInt() - scope.get("y").asInt());
+            long l = 0;
+            double d = 0.0;
+            boolean isDouble = false;
+            boolean isFirstItem = true;
+            RosettoValue nums = scope.get("nums");
+            while(true) {
+                RosettoValue num = nums.first();
+                if(num.getType() == ValueType.DOUBLE) {
+                    //double値が入れば以降の計算はすべてdouble
+                    isDouble = true;
+                    d += l;
+                    l = 0;
+                    d = (isFirstItem) ? num.asDouble() : d-num.asDouble();
+                } else if(num.getType() == ValueType.INTEGER) {
+                    if(isDouble) {
+                        d = (isFirstItem) ? num.asDouble() : d-num.asDouble();
+                    } else {
+                        l = (isFirstItem) ? num.asLong() : l-num.asLong();
+                    }
+                } else {
+                    throw new UnExpectedTypeValueException();
+                }
+                isFirstItem = false;
+                nums = nums.rest();
+                if(nums.getType() == ValueType.NULL) break;
+            }
+            return isDouble ? Values.create(d) : Values.create(l);
         }
     };
     
     public static final RosettoFunction multiple = new RosettoFunction("*", 
-            "x", "y") {
+            "*nums") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asInt() * scope.get("y").asInt());
+            long l = 0;
+            double d = 0.0;
+            boolean isDouble = false;
+            boolean isFirstItem = true;
+            RosettoValue nums = scope.get("nums");
+            while(true) {
+                RosettoValue num = nums.first();
+                if(num.getType() == ValueType.DOUBLE) {
+                    //double値が入れば以降の計算はすべてdouble
+                    isDouble = true;
+                    d += l;
+                    l = 0;
+                    d = (isFirstItem) ? num.asDouble() : d*num.asDouble();
+                } else if(num.getType() == ValueType.INTEGER) {
+                    if(isDouble) {
+                        d = (isFirstItem) ? num.asDouble() : d*num.asDouble();
+                    } else {
+                        l = (isFirstItem) ? num.asLong() : l*num.asLong();
+                    }
+                } else {
+                    throw new UnExpectedTypeValueException();
+                }
+                isFirstItem = false;
+                nums = nums.rest();
+                if(nums.getType() == ValueType.NULL) break;
+            }
+            return isDouble ? Values.create(d) : Values.create(l);
         }
     };
     
     public static final RosettoFunction division = new RosettoFunction("/", 
-            "x", "y") {
+            "*nums") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asDouble() / scope.get("y").asDouble());
+            long l = 0;
+            double d = 0.0;
+            boolean isDouble = false;
+            boolean isFirstItem = true;
+            RosettoValue nums = scope.get("nums");
+            while(true) {
+                RosettoValue num = nums.first();
+                if(num.getType() == ValueType.DOUBLE) {
+                    //double値が入れば以降の計算はすべてdouble
+                    isDouble = true;
+                    d += l;
+                    l = 0;
+                    d = (isFirstItem) ? num.asDouble() : d/num.asDouble();
+                } else if(num.getType() == ValueType.INTEGER) {
+                    if(isDouble) {
+                        d = (isFirstItem) ? num.asDouble() : d/num.asDouble();
+                    } else {
+                        l = (isFirstItem) ? num.asLong() : l/num.asLong();
+                    }
+                } else {
+                    throw new UnExpectedTypeValueException();
+                }
+                isFirstItem = false;
+                nums = nums.rest();
+                if(nums.getType() == ValueType.NULL) break;
+            }
+            return isDouble ? Values.create(d) : Values.create(l);
         }
     };
     
@@ -119,6 +223,27 @@ public class ArithmeticFunctions extends FunctionPackage {
     };
     
     public static final RosettoFunction geq = new RosettoFunction("geq?", 
+            "x", "y") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
+            return Values.create(scope.get("x").asDouble() >= scope.get("y").asDouble());
+        }
+    };
+    
+    public static final RosettoFunction odd = new RosettoFunction("odd?", 
+            "x", "y") {
+        private static final long serialVersionUID = -411581748747383868L;
+        
+        @Override
+        protected RosettoValue run(Scope scope, ListValue rawArgs) {
+            
+            return Values.create(scope.get("x").asDouble() <= scope.get("y").asDouble());
+        }
+    };
+    
+    public static final RosettoFunction even = new RosettoFunction("even?", 
             "x", "y") {
         private static final long serialVersionUID = -411581748747383868L;
         

@@ -5,7 +5,7 @@ package info.rosetto.models.system;
 
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ListValue;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.utils.base.Values;
 
 import java.util.HashMap;

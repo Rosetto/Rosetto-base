@@ -180,11 +180,6 @@ public class NullValue implements RosettoValue, RosettoAction {
     public double asDouble(double defaultValue) {
         return defaultValue;
     }
-
-    @Override
-    public String getName() {
-        return "NULL";
-    }
     
     @Override
     public RosettoValue execute(Scope parentScope) {

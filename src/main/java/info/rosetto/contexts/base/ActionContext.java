@@ -8,8 +8,8 @@ import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.functions.base.FunctionalFunctions;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.NameSpace;
 import info.rosetto.utils.base.Values;
 
@@ -76,16 +76,8 @@ public class ActionContext implements Serializable {
      * 指定したアクションをコンテキスト上に定義する.
      * @param action 定義する関数
      */
-    public void defineAction(String name, RosettoAction action) {
-        current.set(name, action);
-    }
-    
-    /**
-     * 指定したアクションをコンテキスト上に定義する.
-     * @param action 定義する関数
-     */
-    public void defineAction(RosettoAction action) {
-        current.set(action.getName(), action);
+    public void defineAction(String key, RosettoAction action) {
+        current.set(key, action);
     }
     
     /**
@@ -93,8 +85,8 @@ public class ActionContext implements Serializable {
      * @param action 定義するアクション
      * @param packageName 追加先のパッケージ
      */
-    public void defineAction(RosettoAction action, String packageName) {
-        getNameSpace(packageName).set(action.getName(), action);
+    public void defineAction(String key, RosettoAction action, String packageName) {
+        getNameSpace(packageName).set(key, action);
     }
     
     /**

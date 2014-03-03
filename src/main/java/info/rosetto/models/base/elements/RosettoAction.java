@@ -13,12 +13,6 @@ import info.rosetto.models.system.Scope;
 public interface RosettoAction extends RosettoValue {
     
     /**
-     * このアクション呼び出しの名前を取得する.
-     * @return このアクション呼び出しの名前
-     */
-    public String getName();
-    
-    /**
      * このアクションを引数なしで実行する.
      * @return 実行した結果の返り値
      */

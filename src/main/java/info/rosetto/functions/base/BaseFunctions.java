@@ -7,11 +7,11 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.ActionCall;
+import info.rosetto.models.base.elements.values.LambdaFunction;
 import info.rosetto.models.base.elements.values.ListValue;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.LambdaFunction;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
 import info.rosetto.utils.base.Values;
 
@@ -146,8 +146,9 @@ public class BaseFunctions extends FunctionPackage {
             RosettoValue argsValue = scope.get("args");
             RosettoValue actionValue = scope.get("action");
             if(actionValue.getType() == ValueType.ACTION_CALL) {
+                String name = scope.get("name").asString();
                 final ActionCall ac = (ActionCall) actionValue;
-                RosettoFunction f = new RosettoFunction(scope.get("name").asString(), argsValue) {
+                RosettoFunction f = new RosettoFunction(name, argsValue) {
                     private static final long serialVersionUID = 1L;
                     @Override
                     protected RosettoValue run(Scope scope, ListValue args) {

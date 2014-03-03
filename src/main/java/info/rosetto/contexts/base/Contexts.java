@@ -5,13 +5,15 @@ package info.rosetto.contexts.base;
 
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.LambdaFunction;
+import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
-import info.rosetto.models.base.function.FunctionPackage;
-import info.rosetto.models.base.function.RosettoFunction;
+import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.NameSpace;
 import info.rosetto.models.system.Parser;
 import info.rosetto.models.system.ScenarioPlayer;
 import info.rosetto.observers.Observatories;
+import info.rosetto.system.RosettoLogger;
 import info.rosetto.utils.base.Values;
 
 /**
@@ -60,7 +62,8 @@ public class Contexts {
             ActionContext actions, SystemContext system) {
         if(instance.isInitialized)
             throw new IllegalStateException("Contexts already initialized");
-        
+        RosettoLogger.resetExceptionLogLevel();
+        RosettoLogger.resetLevel();
         instance.globalVars = (global != null) ? global : new GlobalVariables();
         instance.actions = (actions != null) ? actions : new ActionContext();
         instance.system = (system != null) ? system : new SystemContext();
@@ -192,17 +195,29 @@ public class Contexts {
     }
     
     /**
+     * 指定した無名関数を指定名でアクションコンテキストに追加する.
+     * @param name 追加する関数の名称
+     * @param func アクションコンテキストに追加する関数
+     */
+    public static void defineFunction(String name, LambdaFunction func) {
+        initializedCheck();
+        instance.actions.defineAction(name, func);
+    }
+    
+    /**
      * 指定した関数をアクションコンテキストに追加する.
+     * @param name 追加する関数の名称
      * @param func アクションコンテキストに追加する関数
      */
     public static void defineFunction(RosettoFunction func) {
         initializedCheck();
-        instance.actions.defineAction(func);
+        instance.actions.defineAction(func.getName(), func);
     }
     
     /**
      * 指定したマクロをアクションコンテキストに追加する.
-     * @param macro
+     * @param name 追加するマクロの名称
+     * @param macro 追加するマクロ
      */
     public static void defineMacro(String name, ScriptValue macro) {
         initializedCheck();
