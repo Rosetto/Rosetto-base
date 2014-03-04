@@ -15,20 +15,15 @@ import java.io.Serializable;
  * あるRosettoValueに変換される文字列と、変換されたRosettoValueのasString()の結果は常に文字列上で一致する.<br>
  * 実装クラスはSerializableであることが必要.<br>
  * <br>
- * <br>
- * RosettoScriptの記法を実現する都合上、引数には型の情報を持たせることができない.<br>
- * そのため、ユーザが入力したあらゆるスクリプトからの引数は全てRosettoValueを継承したStringValueとして渡ってくる.<br>
+ * ユーザが入力したあらゆるスクリプトからの引数は全てRosettoValueとして渡ってくる.<br>
  * ある種の関数の実装に際しては、そうした文字列状態の引数を数値や真偽値として解釈する必要があるが、
  * その手続きを一貫して行うのがRosettoValueに定義された各種の変換メソッド.<br>
- * <br>
- * 一方で、関数の返り値については、元々数値を返したい関数であるのに
- * わざわざユーザ入力の形式に合わせて文字列に変換するのは不要なオーバーヘッドになる.<br>
- * このインタフェースを実装したIntValueやDoubleValue等を用いて値を返すことで不要な処理を防げる上、
  * 各関数の実装でRosettoValueのインタフェースを使って演算している限りは
- * 大方の関数実装においてRosettoValueの実体が何であるかは気にする必要がななくなる.
+ * 大方の関数実装においてRosettoValueの実体が何であるかは気にする必要がなくなる.
  * <br>
  * 特定の型の実体を持った引数に限って受け取りたい関数等の実装では、getTypeで判別することができる.<br>
- * ジェネリクスではなくenumで型情報を保持しているのは、返り値の型を動的に判別するため.<br>
+ * ジェネリクスではなくenumで型情報を保持しているのは、返り値の型を動的かつ高速に判別するため.<br>
+ * 実装においてはinstanceofではなくenumの同値で型を判別するようにする.
  * @author tohhy
  */
 public interface RosettoValue extends Serializable {

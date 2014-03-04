@@ -33,6 +33,11 @@ public class StringValue implements RosettoValue {
     }
     
     @Override
+    public String toString() {
+        return value;
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         if(obj instanceof RosettoValue) {
             try {
@@ -45,12 +50,20 @@ public class StringValue implements RosettoValue {
     }
     
     @Override
-    public String toString() {
+    public ValueType getType() {
+        return ValueType.STRING;
+    }
+
+    @Override
+    public String getValue() {
         return value;
     }
-    
-    
-    
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
+    }
+
     @Override
     public RosettoValue first() {
         return this;
@@ -75,21 +88,6 @@ public class StringValue implements RosettoValue {
     @Override
     public int size() {
         return 1;
-    }
-    
-    @Override
-    public RosettoValue evaluate(Scope scope) {
-        return this;
-    }
-    
-    @Override
-    public ValueType getType() {
-        return ValueType.STRING;
-    }
-    
-    @Override
-    public String getValue() {
-        return value;
     }
     
     @Override

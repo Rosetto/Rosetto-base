@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * リストを拡張し、キーと値の組を格納できるようにしたもの.<br>
+ * Rosettoにおけるすべての構造体はこのListValueで表現する.<br>
  * 以下のようにごちゃ混ぜに値を放り込むことができる.<br>
  * <br>
  * (foo=10 bar=100 2 6 a=1 9 3)<br>

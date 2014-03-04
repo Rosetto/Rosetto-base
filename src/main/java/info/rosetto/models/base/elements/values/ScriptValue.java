@@ -12,6 +12,7 @@ import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.NotConvertibleException;
+import info.rosetto.system.messages.SystemMessage;
 import info.rosetto.utils.base.Values;
 
 /**
@@ -28,6 +29,71 @@ public class ScriptValue implements RosettoAction {
     public ScriptValue(String script) {
         this.script = script;
     }
+    
+    /**
+     * 特殊関数では評価順を変える等の処理をする.
+     * @param args
+     * @param parentScope
+     * @return
+     */
+    protected Scope createScope(ListValue args, Scope parentScope) {
+        ListValue evaluated = args.evaluateChildren(parentScope);
+        return new Scope(parentScope, evaluated.getMap());
+    }
+
+    /**
+     * 引数なしでこのスクリプトを実行する.
+     * execute(RosettoArguments.EMPTY)と同じ.
+     */
+    @Override
+    public RosettoValue execute(Scope parentScope) {
+        return execute(ListValue.EMPTY, parentScope);
+    }
+
+    /**
+     * このスクリプトを実行する.
+     * @param args 実行時引数
+     */
+    @Override
+    public RosettoValue execute(ListValue args, Scope parentScope) {
+        if(args == null)
+            args = ListValue.EMPTY;
+        RosettoValue result = Values.NULL;
+        try {
+            Scope scriptScope = createScope(args, parentScope);
+            Scenario parsed = Contexts.getParser().parseScript(this);
+            Contexts.getPlayer().pushScenario(parsed, scriptScope);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        Observatories.getAction().macroExecuted(this, args, result);
+        String s = (script.length() > 10) ? asString().substring(0, 10) : asString();
+        RosettoLogger.finer(SystemMessage.S11100_MACRO_EXECUTED, s);
+        return Values.VOID;
+    }
+
+    @Override
+    public RosettoValue execute(String args, Scope parentScope) {
+        return execute(ListValue.createFromString(args), parentScope);
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    @Override
+    public String toString() {
+        return script;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ScriptValue) {
+            return script.equals(((ScriptValue)obj).toString());
+        }
+        return false;
+    }
+    
 
     @Override
     public ValueType getType() {
@@ -151,64 +217,5 @@ public class ScriptValue implements RosettoAction {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
-    }
-
-    /**
-     * 引数なしでこのスクリプトを実行する.
-     * execute(RosettoArguments.EMPTY)と同じ.
-     */
-    @Override
-    public RosettoValue execute(Scope parentScope) {
-        return execute(ListValue.EMPTY, parentScope);
-    }
-
-    /**
-     * 特殊関数では評価順を変える等の処理をする.
-     * @param args
-     * @param parentScope
-     * @return
-     */
-    protected Scope createScope(ListValue args, Scope parentScope) {
-        ListValue evaluated = args.evaluateChildren(parentScope);
-        return new Scope(parentScope, evaluated.getMap());
-    }
-    
-    /**
-     * このスクリプトを実行する.
-     * @param args 実行時引数
-     */
-    @Override
-    public RosettoValue execute(ListValue args, Scope parentScope) {
-        if(args == null)
-            args = ListValue.EMPTY;
-        RosettoValue result = Values.NULL;
-        try {
-            Scope scriptScope = createScope(args, parentScope);
-            Scenario parsed = Contexts.getParser().parseScript(this);
-            Contexts.getPlayer().pushScenario(parsed, scriptScope);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        Observatories.getAction().macroExecuted(this, args, result);
-        logMacroExecuted();
-        return Values.VOID;
-    }
-    
-    /**
-     * 悪路実行のログを取る. finerで出力される.
-     * @param func 実行された関数
-     */
-    private void logMacroExecuted() {
-        RosettoLogger.finer("macro executed: " + toString());
-    }
-
-    @Override
-    public RosettoValue execute(String args, Scope parentScope) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public String getScript() {
-        return script;
     }
 }

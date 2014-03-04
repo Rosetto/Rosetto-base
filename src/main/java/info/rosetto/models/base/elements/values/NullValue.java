@@ -17,8 +17,9 @@ import info.rosetto.utils.base.Values;
  * 値を返す必要があるが、返すべき値が存在しない場合等に返る.<br>
  * <br>
  * 実行時に動的に値を返すかどうか決まるような関数の返値にはNullを用いる.<br>
- * 常に値を返さないと決まっている関数の場合はVoidを用いる方がよい.<br>
+ * 常に値を返さないと決まっている関数の場合はVoidを用いる.<br>
  * <br>
+ * アクションとして実行すると何もしないアクションになる.<br>
  * どの値にも変換できない. getValueはnullになる.
  * @author tohhy
  */
@@ -36,6 +37,24 @@ public class NullValue implements RosettoValue, RosettoAction {
     private NullValue() {}
     
     @Override
+    public RosettoValue execute(Scope parentScope) {
+        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
+        return this;
+    }
+
+    @Override
+    public RosettoValue execute(ListValue args, Scope parentScope) {
+        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
+        return this;
+    }
+
+    @Override
+    public RosettoValue execute(String args, Scope parentScope) {
+        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "NullValue";
     }
@@ -48,6 +67,24 @@ public class NullValue implements RosettoValue, RosettoAction {
         return false;
     }
     
+    @Override
+    public ValueType getType() {
+        return ValueType.NULL;
+    }
+
+    /**
+     * nullを返す.
+     */
+    @Override
+    public Object getValue() {
+        return null;
+    }
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
+    }
+
     @Override
     public RosettoValue first() {
         return this;
@@ -71,24 +108,6 @@ public class NullValue implements RosettoValue, RosettoAction {
     @Override
     public int size() {
         return 0;
-    }
-    
-    @Override
-    public RosettoValue evaluate(Scope scope) {
-        return this;
-    }
-    
-    @Override
-    public ValueType getType() {
-        return ValueType.NULL;
-    }
-    
-    /**
-     * nullを返す.
-     */
-    @Override
-    public Object getValue() {
-        return null;
     }
     
     /**
@@ -179,23 +198,5 @@ public class NullValue implements RosettoValue, RosettoAction {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
-    }
-    
-    @Override
-    public RosettoValue execute(Scope parentScope) {
-        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
-        return this;
-    }
-    
-    @Override
-    public RosettoValue execute(ListValue args, Scope parentScope) {
-        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
-        return this;
-    }
-
-    @Override
-    public RosettoValue execute(String args, Scope parentScope) {
-        RosettoLogger.warning(SystemMessage.E7000_NULL_ACTION_CALLED);
-        return null;
     }
 }

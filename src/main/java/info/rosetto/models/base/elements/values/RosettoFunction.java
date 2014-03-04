@@ -104,7 +104,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
      * execメソッドが実行される際にこのメソッドが呼び出される.
      */
     protected abstract RosettoValue run(Scope scope, ListValue rawArgs);
-    
 
     /**
      * 特殊関数では評価順を変える等の処理をする.
@@ -115,25 +114,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     protected Scope createScope(ListValue args, Scope parentScope) {
         //通常はすべての関数が評価されて渡される
         return new Scope(args.evaluateChildren(parentScope), this, parentScope);
-    }
-
-    /**
-     * この関数が取る引数のリストを読み取り専用で返す.<br>
-     * 関数がoption(o1, o2=10, o3="hoge")なら
-     * {"o1", "o2=10", "o3=hoge"}が返る.
-     * @return この関数が取る引数のリスト
-     */
-    public List<String> getArguments() {
-        return Collections.unmodifiableList(args);
-    }
-
-    @Override
-    public String toString() {
-        return createFunctionInfo();
-    }
-
-    public String getName() {
-        return name;
     }
 
     /**
@@ -175,6 +155,91 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return execute(rargs, parentScope);
     }
 
+    /**
+     * この関数の情報を表す文字列を生成する.
+     * @return この関数の情報を表す文字列
+     */
+    private String createFunctionInfo() {
+        StringBuilder result = new StringBuilder();
+        result.append("[").append(name);
+        String argsStr = StringUtils.join(getArguments(), ' ');
+        if(argsStr.length() != 0) {
+            result.append(" ").append(argsStr);
+        }
+        result.append("]");
+        return result.toString();
+    }
+
+    /**
+     * 指定した値が指定した型のいずれかに該当するかどうかを返す.
+     * @param value
+     * @param expected
+     * @return
+     */
+    protected boolean checkType(RosettoValue value, ValueType...expected) {
+        for(int i=0; i<expected.length; i++) {
+            if(value.getType() == expected[i]) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param value
+     * @param expected
+     */
+    protected void validateType(RosettoValue value, ValueType...expected) {
+        boolean isValid = false;
+        for(int i=0; i<expected.length; i++) {
+            if(value.getType() == expected[i]) {
+                isValid =  true;
+                return;
+            }
+        }
+        if(!isValid) throw new UnExpectedTypeValueException();
+    }
+
+    /**
+     * この関数が取る引数のリストを読み取り専用で返す.
+     * @return この関数が取る引数のリスト
+     */
+    public List<String> getArguments() {
+        return Collections.unmodifiableList(args);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return createFunctionInfo();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof RosettoFunction) {
+            RosettoFunction f = (RosettoFunction) obj;
+            return name.equals(f.getName()) && args.equals(f.getArguments());
+        }
+        return false;
+    }
+
+    @Override
+    public ValueType getType() {
+        return ValueType.FUNCTION;
+    }
+
+    @Override
+    public RosettoFunction getValue() {
+        return this;
+    }
+
+    @Override
+    public RosettoValue evaluate(Scope scope) {
+        return this;
+    }
+
     @Override
     public RosettoValue first() {
         return this;
@@ -201,21 +266,6 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
         return 1;
     }
     
-    @Override
-    public RosettoValue evaluate(Scope scope) {
-        return this;
-    }
-    
-    @Override
-    public ValueType getType() {
-        return ValueType.FUNCTION;
-    }
-
-    @Override
-    public RosettoFunction getValue() {
-        return this;
-    }
-
     @Override
     public String asString() {
         return toString();
@@ -264,50 +314,5 @@ public abstract class RosettoFunction implements RosettoValue, RosettoAction {
     @Override
     public double asDouble(double defaultValue) {
         return defaultValue;
-    }
-    
-
-    /**
-     * この関数の情報を表す文字列を生成する.
-     * @return この関数の情報を表す文字列
-     */
-    private String createFunctionInfo() {
-        StringBuilder result = new StringBuilder();
-        result.append("[").append(name);
-        String argsStr = StringUtils.join(getArguments(), ' ');
-        if(argsStr.length() != 0) {
-            result.append(" ").append(argsStr);
-        }
-        result.append("]");
-        return result.toString();
-    }
-    
-    /**
-     * 指定した値が指定した型のいずれかに該当するかどうかを返す.
-     * @param value
-     * @param expected
-     * @return
-     */
-    protected boolean checkType(RosettoValue value, ValueType...expected) {
-        for(int i=0; i<expected.length; i++) {
-            if(value.getType() == expected[i]) return true;
-        }
-        return false;
-    }
-    
-    /**
-     * 
-     * @param value
-     * @param expected
-     */
-    protected void validateType(RosettoValue value, ValueType...expected) {
-        boolean isValid = false;
-        for(int i=0; i<expected.length; i++) {
-            if(value.getType() == expected[i]) {
-                isValid =  true;
-                return;
-            }
-        }
-        if(!isValid) throw new UnExpectedTypeValueException();
     }
 }

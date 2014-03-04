@@ -31,5 +31,5 @@ public interface RosettoAction extends RosettoValue {
      * @return 実行した結果の返り値
      */
     public RosettoValue execute(String args, Scope parentScope);
-
+    
 }

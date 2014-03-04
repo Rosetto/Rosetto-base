@@ -6,7 +6,6 @@ package info.rosetto.models.base.elements;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.NullValue;
-import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.base.elements.values.VoidValue;
@@ -29,7 +28,7 @@ public enum ValueType {
      */
     ACTION_CALL(ActionCall.class),
     /**
-     * リストを表す型.
+     * 構造体を表す型.
      */
     LIST(ListValue.class),
     /**
@@ -37,11 +36,11 @@ public enum ValueType {
      */
     FUNCTION(RosettoFunction.class),
     /**
-     * マクロを示す型.
+     * スクリプト片を示す型.
      */
     SCRIPT(ScriptValue.class),
     /**
-     * 文字列リテラルを示す型.
+     * 文字列を示す型.
      */
     STRING(String.class),
     /**
