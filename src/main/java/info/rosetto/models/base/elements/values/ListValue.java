@@ -386,7 +386,7 @@ public class ListValue implements RosettoValue {
      * オプションマップ中の指定キーに関連づけられた値を取得する.
      */
     public RosettoValue get(String mapKey) {
-        return map.get(mapKey);
+        return map.containsKey(mapKey) ? map.get(mapKey) : Values.NULL;
     }
 
     public int optionSize() {

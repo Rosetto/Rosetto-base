@@ -109,7 +109,7 @@ public class ActionCall implements RosettoValue {
      * @return 評価した結果
      */
     public RosettoValue evaluate(Scope parentScope) {
-        String varName = this.getFunctionName();
+        String varName = this.getActionName();
         RosettoValue v = Contexts.getAction(varName);
         
         if(v == Values.NULL || v == BaseFunctions.pass) {
@@ -181,7 +181,7 @@ public class ActionCall implements RosettoValue {
      * このFunctionCallで呼び出される関数名を返す.
      * @return このFunctionCallで呼び出される関数名
      */
-    public String getFunctionName() {
+    public String getActionName() {
         return callName;
     }
 

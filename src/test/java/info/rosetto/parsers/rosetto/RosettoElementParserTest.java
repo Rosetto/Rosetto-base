@@ -30,14 +30,14 @@ public class RosettoElementParserTest {
     @Test
     public void parseElementでタグをActionCallに変換できる() throws Exception {
         ActionCall s1 = (ActionCall)parser.parseElement("[hoge]");
-        assertThat(s1.getFunctionName(), is("hoge"));
+        assertThat(s1.getActionName(), is("hoge"));
         assertThat(s1.getArgs().size(), is(0));
         ActionCall s2 = (ActionCall)parser.parseElement("[print text=\"test\"]");
-        assertThat(s2.getFunctionName(), is("print"));
+        assertThat(s2.getActionName(), is("print"));
         assertThat(s2.getArgs().optionSize(), is(1));
         assertThat(s2.getArgs().get("text").asString(), is("test"));
         ActionCall s3 = (ActionCall)parser.parseElement("[wait 1000]");
-        assertThat(s3.getFunctionName(), is("wait"));
+        assertThat(s3.getActionName(), is("wait"));
         assertThat(s3.getArgs().size(), is(1));
         assertThat(s3.getArgs().getAt(0).asString(), is("1000"));
         //nullだとActionはEMPTYになる

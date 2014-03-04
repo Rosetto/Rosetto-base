@@ -1,13 +1,16 @@
 package info.rosetto.functions.base;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import java.util.logging.Level;
+
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.Scope;
+import info.rosetto.system.RosettoLogger;
 import info.rosetto.utils.base.Values;
 
 import org.junit.Before;
@@ -67,6 +70,17 @@ public class BaseFunctionsTest {
         RosettoValue sut1 = BaseFunctions.defn.execute("foo (x) [* @x 2]", testScope);
         assertThat(sut1.getType(), is(ValueType.FUNCTION));
         assertThat(Contexts.getAction("foo").execute("2", testScope).asInt(), is(4));
+    }
+    
+    @Test
+    public void doTest() throws Exception {
+        RosettoValue sut1 = BaseFunctions.doActions.execute("[* 2 2]", testScope);
+        assertThat(sut1.getType(), is(ValueType.INTEGER));
+        assertThat(sut1.asInt(), is(4));
+        RosettoLogger.setLevel(Level.ALL);
+        RosettoValue sut2 = BaseFunctions.doActions.execute("1 2 3 4 5", testScope);
+        assertThat(sut2.getType(), is(ValueType.INTEGER));
+        assertThat(sut2.asInt(), is(5));
     }
 
 }

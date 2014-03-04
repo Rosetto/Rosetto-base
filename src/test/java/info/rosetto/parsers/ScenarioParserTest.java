@@ -1,7 +1,7 @@
 package info.rosetto.parsers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.scenario.Scenario;
@@ -47,11 +47,21 @@ public class ScenarioParserTest {
     public void createUnitでユニットを生成できる() throws Exception {
         Unit s1 = sut.createUnit("吾輩は猫である。[hoge fuga=piyo]");
         assertThat(s1.getContent(), is("吾輩は猫である。"));
-        assertThat(s1.getAction().getFunctionName(), is("hoge"));
+        assertThat(s1.getAction().getActionName(), is("hoge"));
         assertThat(s1.getAction().getArgs().get("fuga").asString(), is("piyo"));
         Unit s2 = sut.createUnit("テスト。");
         assertThat(s2.getContent(), is("テスト。"));
         assertThat(s2.getAction(), is(ActionCall.EMPTY));
+    }
+    
+    @Test
+    public void ラベルを含むシナリオ() throws Exception {
+         Scenario s = sut.parseScript("foo[br]bar[br][label a]baz[br]hoge[label b][br] fuga");
+         assertThat(s.getUnits().size(), is(7));
+         assertThat(s.getLabels().size(), is(2));
+         assertThat(s.getLabelAt(2), is(nullValue()));
+         assertThat(s.getLabelAt(3).getName(), is("a"));
+         assertThat(s.getLabelAt(5).getName(), is("b"));
     }
     
     @Test

@@ -3,17 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package info.rosetto.parsers;
 
+import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.ActionCall;
 import info.rosetto.models.base.elements.values.ScriptValue;
+import info.rosetto.models.base.scenario.Label;
 import info.rosetto.models.base.scenario.Scenario;
 import info.rosetto.models.base.scenario.ScenarioToken;
 import info.rosetto.models.base.scenario.Unit;
 import info.rosetto.models.system.Parser;
+import info.rosetto.models.system.Scope;
 import info.rosetto.parsers.rosetto.RosettoElementParser;
 import info.rosetto.utils.base.TextUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import org.frows.lilex.parser.Tokenizer;
 import org.frows.lilex.token.Token;
@@ -151,8 +155,21 @@ public class ScenarioParser extends Tokenizer implements Parser {
             Unit u = createUnit(unitStr);
             //ユニットを追加
             ps.addUnit(u);
+            //ユニットがラベルならラベルも追加（パース時唯一の例外的処理）
+            if(u.getAction().getActionName().equals("label")) {
+                ps.addLabel(createLabel(ps, u.getAction()));
+            }
         }
         return ps.getTokens();
+    }
+    
+    private static Label createLabel(ParserState ps, ActionCall labelAction) {
+        Map<String, RosettoValue> args = 
+                labelAction.getArgs().bind(BaseFunctions.label, new Scope());
+        
+        String labelName = args.get("name").asString();
+        String labelTitle = args.get("title").asString();
+        return new Label(labelName,  ps.getUnitIndex(), labelTitle);
     }
     
 }

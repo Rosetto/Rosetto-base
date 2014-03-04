@@ -84,7 +84,7 @@ public class ArithmeticFunctions extends FunctionPackage {
                     d = (isFirstItem) ? num.asDouble() : d-num.asDouble();
                 } else if(num.getType() == ValueType.INTEGER) {
                     if(isDouble) {
-                        d = (isFirstItem) ? num.asDouble() : d-num.asDouble();
+                        d = d-num.asDouble();
                     } else {
                         l = (isFirstItem) ? num.asLong() : l-num.asLong();
                     }
@@ -120,7 +120,7 @@ public class ArithmeticFunctions extends FunctionPackage {
                     d = (isFirstItem) ? num.asDouble() : d*num.asDouble();
                 } else if(num.getType() == ValueType.INTEGER) {
                     if(isDouble) {
-                        d = (isFirstItem) ? num.asDouble() : d*num.asDouble();
+                        d = d*num.asDouble();
                     } else {
                         l = (isFirstItem) ? num.asLong() : l*num.asLong();
                     }
@@ -156,7 +156,7 @@ public class ArithmeticFunctions extends FunctionPackage {
                     d = (isFirstItem) ? num.asDouble() : d/num.asDouble();
                 } else if(num.getType() == ValueType.INTEGER) {
                     if(isDouble) {
-                        d = (isFirstItem) ? num.asDouble() : d/num.asDouble();
+                        d = d/num.asDouble();
                     } else {
                         l = (isFirstItem) ? num.asLong() : l/num.asLong();
                     }
@@ -177,7 +177,7 @@ public class ArithmeticFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asInt() % scope.get("y").asInt());
+            return Values.create(scope.get("x").asDouble() % scope.get("y").asDouble());
         }
     };
     
@@ -233,23 +233,23 @@ public class ArithmeticFunctions extends FunctionPackage {
     };
     
     public static final RosettoFunction odd = new RosettoFunction("odd?", 
-            "x", "y") {
+            "num") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
             
-            return Values.create(scope.get("x").asDouble() <= scope.get("y").asDouble());
+            return Values.create(scope.get("num").asInt()%2 != 0);
         }
     };
     
     public static final RosettoFunction even = new RosettoFunction("even?", 
-            "x", "y") {
+            "num") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asDouble() >= scope.get("y").asDouble());
+            return Values.create(scope.get("num").asInt()%2 == 0);
         }
     };
 

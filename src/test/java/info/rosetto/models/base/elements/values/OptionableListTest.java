@@ -176,7 +176,7 @@ public class OptionableListTest {
     public void getで指定キーに関連づけられた値が返る() throws Exception {
         ListValue sut = ListValue.createFromString("%1 2=2 3=3");
         assertThat(sut.get("2").asString(), is("2"));
-        assertThat(sut.get("5"), is(nullValue()));
+        assertThat(sut.get("5"), is((RosettoValue)Values.NULL));
     }
 
 }

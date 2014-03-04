@@ -77,7 +77,7 @@ public class Unit implements Serializable, ScenarioToken {
     @Override
     public String toString() {
         String str = getContent();
-        String function = action.getFunctionName();
+        String function = action.getActionName();
         return new StringBuilder()
         .append("[text=").append(str).append(", action=").append(function).append("]")
         .toString();

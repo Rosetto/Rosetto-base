@@ -1,7 +1,7 @@
 package info.rosetto.functions.base;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.util.logging.Level;
 
@@ -113,11 +113,16 @@ public class ArithmeticFunctionsTest {
         assertThat(sut.execute(Double.MAX_VALUE + " 100", s).asDouble(), 
                    is(Double.MAX_VALUE / 100));
         
-      //関数展開
+        //関数展開
         assertThat(sut.execute("1 [+ 1 1] [* 1 3]", s).asInt(), is(1 / 2 / 3));
         
         //数値以外が混じるとNullが返る
         assertThat(sut.execute("1 foo 3", s), is((RosettoValue)Values.NULL));
+    }
+    
+    @Test
+    public void modTest() throws Exception {
+        
     }
 
 }
