@@ -176,7 +176,7 @@ public class ContextsTest {
     @Test
     public void getAndDefineMacroTest() throws Exception {
         Contexts.initialize();
-        Contexts.defineMacro("foo", (ScriptValue)Values.create("{Hello, World!}"));
+        Contexts.defineMacro("foo", ListValue.EMPTY, (ScriptValue)Values.create("{Hello, World!}"));
         
         assertThat(Contexts.getAction("foo").getType(), is(ValueType.SCRIPT));
         assertThat(Contexts.getAction("foo").asString(), is("{Hello, World!}"));

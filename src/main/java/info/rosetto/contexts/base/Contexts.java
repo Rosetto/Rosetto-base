@@ -6,12 +6,14 @@ package info.rosetto.contexts.base;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.LambdaFunction;
+import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
 import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.NameSpace;
 import info.rosetto.models.system.Parser;
 import info.rosetto.models.system.ScenarioPlayer;
+import info.rosetto.models.system.Scope;
 import info.rosetto.observers.Observatories;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.utils.base.Values;
@@ -219,9 +221,15 @@ public class Contexts {
      * @param name 追加するマクロの名称
      * @param macro 追加するマクロ
      */
-    public static void defineMacro(String name, ScriptValue macro) {
+    public static void defineMacro(String name, RosettoValue args, final ScriptValue macro) {
         initializedCheck();
-        instance.actions.defineAction(name, macro);
+        instance.actions.defineAction(name, new LambdaFunction(args) {
+            private static final long serialVersionUID = 1020313832990079692L;
+            @Override
+            protected RosettoValue run(Scope scope, ListValue rawArgs) {
+                return macro.evaluate(scope);
+            }
+        });
     }
     
     /**

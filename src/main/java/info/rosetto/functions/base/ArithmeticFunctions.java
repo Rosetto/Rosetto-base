@@ -9,7 +9,6 @@ import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
-import info.rosetto.system.RosettoLogger;
 import info.rosetto.system.exceptions.UnExpectedTypeValueException;
 import info.rosetto.utils.base.Values;
 
@@ -177,7 +176,12 @@ public class ArithmeticFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asDouble() % scope.get("y").asDouble());
+            RosettoValue x = scope.get("x");
+            RosettoValue y = scope.get("y");
+            if(x.getType() == ValueType.DOUBLE || y.getType() == ValueType.DOUBLE) {
+                return Values.create(x.asDouble() % y.asDouble());
+            }
+            return Values.create(x.asInt() % y.asInt());
         }
     };
     

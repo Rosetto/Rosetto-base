@@ -1,17 +1,15 @@
 package info.rosetto.functions.base;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import java.util.logging.Level;
-
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
-import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.RosettoLogger;
 import info.rosetto.utils.base.Values;
+
+import java.util.logging.Level;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -126,9 +124,9 @@ public class ArithmeticFunctionsTest {
         RosettoFunction sut = ArithmeticFunctions.mod;
         Scope s = new Scope();
         assertThat(sut.execute("3 2", s).asInt(), is(1));
-        assertThat(sut.execute("10 8", s).asInt(), is(2));
-        assertThat(sut.execute("13 5", s).asInt(), is(3));
-        assertThat(sut.execute("67 7", s).asInt(), is(4));
+        assertThat(sut.execute("10 8", s).asString(), is("2"));
+        assertThat(sut.execute("13 5", s).asDouble(), is(3.0));
+        assertThat(sut.execute("67 7", s).asLong(), is(4L));
     }
     
     @Test

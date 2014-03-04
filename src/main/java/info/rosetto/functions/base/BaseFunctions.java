@@ -242,15 +242,17 @@ public class BaseFunctions extends FunctionPackage {
     
     
     public static final RosettoFunction defmacro = new RosettoFunction("defmacro", 
-            "name", "script") {
+            "name", "args", "script") {
         private static final long serialVersionUID = -411581748747383868L;
         
         @Override
         protected Scope createScope(ListValue args, Scope parentScope) {
             RosettoValue name = args.getAt(0);
-            RosettoValue script = args.getAt(1);
+            RosettoValue argList = args.getAt(1);
+            RosettoValue script = args.getAt(2);
             Scope scope = new Scope(parentScope);
             scope.set("name", name);
+            scope.set("args", argList);
             scope.set("script", script);
             return scope;
         }
@@ -258,10 +260,11 @@ public class BaseFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, ListValue args) {
             RosettoValue nameValue = scope.get("name");
+            RosettoValue argsValue = scope.get("args");
             RosettoValue scriptValue = scope.get("script");
             if(scriptValue.getType() == ValueType.SCRIPT) {
                 ScriptValue sv = (ScriptValue) scriptValue;
-                Contexts.defineMacro(nameValue.asString(), sv);
+                Contexts.defineMacro(nameValue.asString(), argsValue, sv);
                 return sv;
             }
             return Values.NULL;

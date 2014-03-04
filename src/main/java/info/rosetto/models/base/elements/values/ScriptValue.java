@@ -107,8 +107,8 @@ public class ScriptValue implements RosettoAction {
 
     @Override
     public RosettoValue evaluate(Scope scope) {
-        // TODO playerのインタフェースを作って対応
-        return this;
+        Contexts.getPlayer().pushScenario(Contexts.getParser().parseScript(script), scope);
+        return Values.VOID;
     }
 
     @Override
