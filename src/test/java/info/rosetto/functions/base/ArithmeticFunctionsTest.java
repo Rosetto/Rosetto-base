@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoValue;
+import info.rosetto.models.base.elements.values.BoolValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.Scope;
 import info.rosetto.system.RosettoLogger;
@@ -122,7 +123,74 @@ public class ArithmeticFunctionsTest {
     
     @Test
     public void modTest() throws Exception {
+        RosettoFunction sut = ArithmeticFunctions.mod;
+        Scope s = new Scope();
+        assertThat(sut.execute("3 2", s).asInt(), is(1));
+        assertThat(sut.execute("10 8", s).asInt(), is(2));
+        assertThat(sut.execute("13 5", s).asInt(), is(3));
+        assertThat(sut.execute("67 7", s).asInt(), is(4));
+    }
+    
+    @Test
+    public void eqTest() throws Exception {
+        RosettoFunction sut = ArithmeticFunctions.eq;
+        Scope s = new Scope();
+        assertThat(sut.execute("1 1", s).asBool(), is(true));
+        assertThat(sut.execute("1.5 1.5", s).asBool(), is(true));
+        assertThat(sut.execute("0 0.00", s).asBool(), is(true));
+        assertThat(sut.execute("true true", s).asBool(), is(true));
+        assertThat(sut.execute("2.0 [+ 1 1]", s).asBool(), is(true));
+        assertThat(sut.execute("foo foo", s).asBool(), is(true));
+        
+        assertThat(sut.execute("1 2", s).asBool(), is(false));
+        assertThat(sut.execute("1.0 1.000001", s).asBool(), is(false));
+        assertThat(sut.execute("3 3.14", s).asBool(), is(false));
+        assertThat(sut.execute("true false", s).asBool(), is(false));
+        assertThat(sut.execute("1 one", s).asBool(), is(false));
+    }
+    
+    @Test
+    public void ltgtTest() throws Exception {
+        RosettoFunction lt = ArithmeticFunctions.lt;
+        RosettoFunction gt = ArithmeticFunctions.gt;
+        Scope s = new Scope();
+        assertThat(lt.execute("1 2", s).asBool(), is(true));
+        assertThat(lt.execute("-2.8 -1.5", s).asBool(), is(true));
+        assertThat(lt.execute("-5 -10", s).asBool(), is(false));
+        assertThat(lt.execute("10.00 3.14", s).asBool(), is(false));
+        
+        assertThat(lt.execute("100 100", s).asBool(), is(false));
+        assertThat(lt.execute("1.0 1.000", s).asBool(), is(false));
+        
+        assertThat(gt.execute("1 2", s).asBool(), is(false));
+        assertThat(gt.execute("-2.8 -1.5", s).asBool(), is(false));
+        assertThat(gt.execute("-5 -10", s).asBool(), is(true));
+        assertThat(gt.execute("10.00 3.14", s).asBool(), is(true));
+        
+        assertThat(gt.execute("100 100", s).asBool(), is(false));
+        assertThat(gt.execute("1.0 1.000", s).asBool(), is(false));
         
     }
-
+    
+    @Test
+    public void leqgeqTest() throws Exception {
+        RosettoFunction leq = ArithmeticFunctions.leq;
+        RosettoFunction geq = ArithmeticFunctions.geq;
+        Scope s = new Scope();
+        assertThat(leq.execute("1 2", s).asBool(), is(true));
+        assertThat(leq.execute("-2.8 -1.5", s).asBool(), is(true));
+        assertThat(leq.execute("-5 -10", s).asBool(), is(false));
+        assertThat(leq.execute("10.00 3.14", s).asBool(), is(false));
+        
+        assertThat(leq.execute("100 100", s).asBool(), is(true));
+        assertThat(leq.execute("1.0 1.000", s).asBool(), is(true));
+        
+        assertThat(geq.execute("1 2", s).asBool(), is(false));
+        assertThat(geq.execute("-2.8 -1.5", s).asBool(), is(false));
+        assertThat(geq.execute("-5 -10", s).asBool(), is(true));
+        assertThat(geq.execute("10.00 3.14", s).asBool(), is(true));
+        
+        assertThat(geq.execute("100 100", s).asBool(), is(true));
+        assertThat(geq.execute("1.0 1.000", s).asBool(), is(true));
+    }
 }

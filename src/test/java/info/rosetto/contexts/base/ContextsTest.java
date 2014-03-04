@@ -10,6 +10,7 @@ import info.rosetto.BaseTestUtils;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
+import info.rosetto.models.base.elements.values.LambdaFunction;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.base.elements.values.ScriptValue;
@@ -155,6 +156,20 @@ public class ContextsTest {
         };
         Contexts.defineFunction(f1);
         assertThat(Contexts.getAction("func"), is((RosettoValue)f1));
+        
+        LambdaFunction f2 = new LambdaFunction() {
+            private static final long serialVersionUID = -5525955984024609753L;
+
+            @Override
+            protected RosettoValue run(Scope scope, ListValue rawArgs) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        };
+        
+        Contexts.defineFunction("func2", f2);
+        assertThat(Contexts.getAction("func2"), is((RosettoValue)f2));
+        
         assertThat(Contexts.getAction("org.example.not-found-func"), is((RosettoAction)Values.NULL));
     }
     

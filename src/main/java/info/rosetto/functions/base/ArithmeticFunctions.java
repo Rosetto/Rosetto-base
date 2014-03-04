@@ -188,7 +188,18 @@ public class ArithmeticFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("x").asDouble() == scope.get("y").asDouble());
+            RosettoValue x = scope.get("x");
+            RosettoValue y = scope.get("y");
+            boolean result = false;
+            if((x.getType() == ValueType.INTEGER || x.getType() == ValueType.DOUBLE) &&
+               (y.getType() == ValueType.INTEGER || y.getType() == ValueType.DOUBLE)) {
+                //数値比較の場合はdoubleで比較
+                result = scope.get("x").asDouble() == scope.get("y").asDouble();
+            } else {
+                //それ以外は文字列表現で比較
+                result = x.asString().equals(y.asString());
+            }
+            return Values.create(result);
         }
     };
     
@@ -229,27 +240,6 @@ public class ArithmeticFunctions extends FunctionPackage {
         @Override
         protected RosettoValue run(Scope scope, ListValue rawArgs) {
             return Values.create(scope.get("x").asDouble() >= scope.get("y").asDouble());
-        }
-    };
-    
-    public static final RosettoFunction odd = new RosettoFunction("odd?", 
-            "num") {
-        private static final long serialVersionUID = -411581748747383868L;
-        
-        @Override
-        protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            
-            return Values.create(scope.get("num").asInt()%2 != 0);
-        }
-    };
-    
-    public static final RosettoFunction even = new RosettoFunction("even?", 
-            "num") {
-        private static final long serialVersionUID = -411581748747383868L;
-        
-        @Override
-        protected RosettoValue run(Scope scope, ListValue rawArgs) {
-            return Values.create(scope.get("num").asInt()%2 == 0);
         }
     };
 
