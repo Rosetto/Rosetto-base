@@ -81,8 +81,7 @@ public class RosettoNormalizer extends AbstractNormalizer {
             return line;
         } else {
             if(nextLine == null) {
-                //シナリオの最後なら改行付加
-                return line + "[br]";
+                //次の行がなければ改行は付加しない
             } else if(!isPaging(nextLine)) {
                 //次の行がページングでなければ改行付加
                 return line + "[br]";
@@ -98,6 +97,7 @@ public class RosettoNormalizer extends AbstractNormalizer {
      * @return 
      */
     private boolean isPaging(String line) {
+        if(line == null) return false;
         //キャラクタ選択もページングを行う
         return line.contains(PAGING_TAG) || line.startsWith("[character.select");
     }

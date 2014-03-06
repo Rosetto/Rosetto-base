@@ -6,6 +6,7 @@ package info.rosetto.contexts.base;
 import info.rosetto.functions.base.ArithmeticFunctions;
 import info.rosetto.functions.base.BaseFunctions;
 import info.rosetto.functions.base.FunctionalFunctions;
+import info.rosetto.functions.base.MathFunctions;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
@@ -43,6 +44,7 @@ public class ActionContext implements Serializable {
         importPackage(BaseFunctions.getInstance(), "base");
         importPackage(ArithmeticFunctions.getInstance(), "arithmetic");
         importPackage(FunctionalFunctions.getInstance(), "functional");
+        importPackage(MathFunctions.getInstance(), "math");
         usePackage("base");
         usePackage("arithmetic");
     }

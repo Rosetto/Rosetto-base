@@ -7,12 +7,11 @@ import info.rosetto.contexts.base.Contexts;
 import info.rosetto.models.base.elements.RosettoAction;
 import info.rosetto.models.base.elements.RosettoValue;
 import info.rosetto.models.base.elements.ValueType;
-import info.rosetto.models.base.elements.values.ActionCall;
-import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.models.system.FunctionPackage;
 import info.rosetto.models.system.Scope;
+import info.rosetto.utils.base.FunctionUtils;
 import info.rosetto.utils.base.Values;
 
 import java.util.LinkedList;
@@ -24,9 +23,8 @@ public class FunctionalFunctions extends FunctionPackage {
     private static FunctionalFunctions instance;
     
     private FunctionalFunctions() {
-        super(first, rest, map, range, cond);
+        super(map, range, cond);
     }
-    
     
     public static FunctionalFunctions getInstance() {
         if(instance == null) {
@@ -35,34 +33,6 @@ public class FunctionalFunctions extends FunctionPackage {
         return instance;
     }
     
-    
-    public static final RosettoFunction first = new RosettoFunction("first", 
-            "list") {
-        private static final long serialVersionUID = -411581748747383868L;
-        
-        @Override
-        protected RosettoValue run(Scope scope, ListValue args) {
-            RosettoValue v = scope.get("list");
-            if(v instanceof RosettoValue) {
-                return ((RosettoValue)v).first();
-            }
-            return Values.NULL;
-        }
-    };
-    
-    public static final RosettoFunction rest = new RosettoFunction("rest", 
-            "list") {
-        private static final long serialVersionUID = -411581748747383868L;
-        
-        @Override
-        protected RosettoValue run(Scope scope, ListValue args) {
-            RosettoValue v = scope.get("list");
-            if(v instanceof RosettoValue) {
-                return ((RosettoValue)v).rest();
-            }
-            return Values.NULL;
-        }
-    };
     
     public static final RosettoFunction map = new RosettoFunction("map", 
             "fn", "list") {
@@ -74,7 +44,6 @@ public class FunctionalFunctions extends FunctionPackage {
             RosettoValue l = scope.get("list");
             RosettoAction fn = (f instanceof RosettoFunction) ? 
                     (RosettoFunction) f : Contexts.getAction(f.asString());
-            if(fn == BaseFunctions.pass) return Values.NULL;
             
             if(l instanceof ListValue) {
                 List<RosettoValue> list = ((ListValue)l).getList();
@@ -83,16 +52,9 @@ public class FunctionalFunctions extends FunctionPackage {
                     result.add(fn.execute(v.asString(), scope).evaluate(scope));
                 }
                 return new ListValue(result);
-                
-            } else if(l instanceof ListValue) {
-                List<RosettoValue> list = ((ListValue)l).getList();
-                List<RosettoValue> result = new LinkedList<RosettoValue>();
-                for(RosettoValue v : list) {
-                    result.add(fn.execute(v.asString(), scope).evaluate(scope));
-                }
-                return new ListValue(result);
+            } else {
+                return fn.execute(l.asString(), scope).evaluate(scope);
             }
-            return Values.NULL;
         }
     };
     
@@ -112,8 +74,6 @@ public class FunctionalFunctions extends FunctionPackage {
         }
     };
     
-    
-
     public static final RosettoFunction cond = new RosettoFunction("cond", 
             "*args") {
         private static final long serialVersionUID = -411581748747383868L;
@@ -128,23 +88,20 @@ public class FunctionalFunctions extends FunctionPackage {
         
         @Override
         protected RosettoValue run(Scope scope, ListValue args) {
-            RosettoValue argsValue = scope.get("args");
-            if(argsValue.getType() == ValueType.LIST) {
-                for(RosettoValue v : ((ListValue)argsValue).getList()) {
+            if(args.first().getType() != ValueType.LIST) {
+                RosettoValue condition = args.first().evaluate(scope);
+                if(condition.asBool() == true) {
+                    RosettoValue actions = args.rest().evaluate(scope);
+                    return FunctionUtils.doActions(scope, actions);
+                }
+            } else {
+                for(RosettoValue v : args.getList()) {
                     ListValue l = (ListValue)v;
                     RosettoValue condition = l.first().evaluate(scope);
                     if(condition.asBool() == true) {
                         RosettoValue actions = l.rest().evaluate(scope);
-                        RosettoValue result = actions;
-                        if(actions instanceof ListValue)
-                        for(RosettoValue a : ((ListValue)actions).getList()) {
-                            result = a;
-                            if(a instanceof ActionCall)
-                                result = ((ActionCall)a).evaluate(scope);
-                        }
-                        return result;
+                        return FunctionUtils.doActions(scope, actions);
                     }
-                    
                 }
             }
             return Values.NULL;

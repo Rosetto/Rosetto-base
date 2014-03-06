@@ -2,6 +2,7 @@ package info.rosetto.contexts.base;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -178,8 +179,7 @@ public class ContextsTest {
         Contexts.initialize();
         Contexts.defineMacro("foo", ListValue.EMPTY, (ScriptValue)Values.create("{Hello, World!}"));
         
-        assertThat(Contexts.getAction("foo").getType(), is(ValueType.SCRIPT));
-        assertThat(Contexts.getAction("foo").asString(), is("{Hello, World!}"));
+        assertThat(Contexts.getAction("foo"), is(not((RosettoValue)Values.NULL)));
         assertThat(Contexts.getAction("org.example.not-found-macro"), is((RosettoAction)Values.NULL));
     }
     

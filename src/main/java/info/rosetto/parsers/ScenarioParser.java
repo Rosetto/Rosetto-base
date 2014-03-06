@@ -124,7 +124,7 @@ public class ScenarioParser extends Tokenizer implements Parser {
         //TODO スコープ継承
         return new Scenario(tokens);
     }
-
+    
     /**
      * プレーンテキストとタグが１つずつ組になったテキストを受け取り、ユニットを生成して返す.
      * unitStrは<br>

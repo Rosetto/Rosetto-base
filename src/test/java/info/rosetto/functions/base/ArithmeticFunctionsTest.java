@@ -125,8 +125,8 @@ public class ArithmeticFunctionsTest {
         Scope s = new Scope();
         assertThat(sut.execute("3 2", s).asInt(), is(1));
         assertThat(sut.execute("10 8", s).asString(), is("2"));
-        assertThat(sut.execute("13 5", s).asDouble(), is(3.0));
-        assertThat(sut.execute("67 7", s).asLong(), is(4L));
+        assertThat(sut.execute("13.0 5", s).asDouble(), is(3.0));
+        assertThat(sut.execute("67 7.0", s).asLong(), is(4L));
     }
     
     @Test
