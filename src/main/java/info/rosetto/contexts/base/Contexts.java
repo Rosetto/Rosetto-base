@@ -134,7 +134,7 @@ public class Contexts {
         if(lastDotIndex > 0) {
             String packageName = key.substring(0, lastDotIndex);
             NameSpace ns = instance.globalVars.getNameSpace(packageName);
-            ns.set(key.substring(lastDotIndex+1), value);
+            ns.define(key.substring(lastDotIndex+1), value);
         } else {
             instance.globalVars.define(key, value);
         }

@@ -16,5 +16,5 @@ public interface ScenarioPlayer {
      * @param playingScope シナリオの再生時に参照するスコープ
      */
     public void pushScenario(Scenario scenario, Scope playingScope);
-
+    
 }

@@ -74,12 +74,12 @@ public class GlobalVariables implements Serializable {
             throw new IllegalArgumentException("key must not be empty");
         int lastDot = key.lastIndexOf('.');
         if(lastDot == -1) {
-            rootSpace.set(key, value);
+            rootSpace.define(key, value);
             return;
         }
         String nameSpace = key.substring(0, lastDot);
         String varName = key.substring(lastDot + 1);
-        getNameSpace(nameSpace).set(varName, value);
+        getNameSpace(nameSpace).define(varName, value);
     }
 
     /**

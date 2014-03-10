@@ -25,6 +25,7 @@ public class NameSpaceTest {
     public void constructorTest() throws Exception {
         NameSpace sut1 = new NameSpace("foo");
         assertThat(sut1.getName(), is("foo"));
+        assertThat(sut1.toString(), is("[namespace:foo variables:{} sealed:[]]"));
         
         //nullで初期化するとエラー
         try {
@@ -58,18 +59,24 @@ public class NameSpaceTest {
     }
     
     @Test
-    public void getAndSetValueTest() throws Exception {
+    public void getAndDefineValueTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
-        sut.set("bar", Values.create("baz"));
+        sut.define("bar", Values.create("baz"));
         assertThat(sut.get("bar").asString(), is("baz"));
+        
+        NameSpace sut2 = Contexts.getNameSpace("testspace");
+        NameSpace sut3 = Contexts.getNameSpace("testspace.hoge");
+        
+        sut3.define("fuga", Values.create("piyo"));
+        assertThat(sut2.get("hoge.fuga").asString(), is("piyo"));
         
         //存在しないキーはnull
         assertThat(sut.get("some not found key"), is((RosettoValue)Values.NULL));
         
         //nullキーでsutするとエラー
         try {
-            sut.set(null, Values.create("foo"));
+            sut.define(null, Values.create("foo"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -78,7 +85,7 @@ public class NameSpaceTest {
         assertThat(sut.get(null), is((RosettoValue)Values.NULL));
         //空文字でputするとエラー
         try {
-            sut.set("", Values.create("bar"));
+            sut.define("", Values.create("bar"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -88,7 +95,7 @@ public class NameSpaceTest {
         
         //キーにdotを含むとエラー（パッケージ階層と区別するため）
         try {
-            sut.set("some.package-like.key", Values.create("foo"));
+            sut.define("some.package-like.key", Values.create("foo"));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -96,7 +103,7 @@ public class NameSpaceTest {
         
         //null値を与えるとエラー
         try {
-            sut.set("baz", null);
+            sut.define("baz", null);
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(IllegalArgumentException.class));
@@ -111,9 +118,9 @@ public class NameSpaceTest {
         
         //既に値を入れた変数を用意しておく
         NameSpace include = new NameSpace("org.example");
-        include.set("bar", Values.create("baz"));
-        include.set("hoge", Values.create("fuga"));
-        include.set("piyo", Values.create(100));
+        include.define("bar", Values.create("baz"));
+        include.define("hoge", Values.create("fuga"));
+        include.define("piyo", Values.create(100));
         include.seal("piyo");
         
         //include時に指定したパッケージの全変数がputされる
@@ -130,43 +137,49 @@ public class NameSpaceTest {
         
         //同名のパッケージで上書きuseしたケース
         NameSpace include2 = new NameSpace("org.example");
-        include2.set("hoge", Values.create(true));
-        include2.set("piyo", Values.create(12.345));
+        include2.define("hoge", Values.create(true));
+        include2.define("piyo", Values.create(12.345));
         sut.include(include2);
         
         //sealされていればそのまま、されていなければ上書き
         assertThat(sut.get("hoge").asString(), is("true"));
         assertThat(sut.get("piyo").asString(), is("100"));
         
+        try {
+            sut.include(null);
+            fail();
+        } catch(Exception e) {
+            assertThat(e, instanceOf(IllegalArgumentException.class));
+        }
     }
     
     @Test
     public void sealTest() throws Exception {
         NameSpace sut = new NameSpace("foo");
         
-        sut.set("bar", Values.create("baz"));
-        sut.set("hoge", Values.create("fuga"));
+        sut.define("bar", Values.create("baz"));
+        sut.define("hoge", Values.create("fuga"));
         
         //barをsealする
         sut.seal("bar");
         
         //barに代入するとエラー
         try {
-            sut.set("bar", Values.create(100));
+            sut.define("bar", Values.create(100));
             fail();
         } catch(Exception e) {
             assertThat(e, instanceOf(VariableSealedException.class));
         }
         assertThat(sut.get("bar").asString(), is("baz"));
         //hogeには代入できる
-        sut.set("hoge", Values.create(1000));
+        sut.define("hoge", Values.create(1000));
         assertThat(sut.get("hoge").asString(), is("1000"));
         
         //barをunsealする
         sut.unSeal("bar");
         
         //barに代入できるようになる
-        sut.set("bar", Values.create(10000));
+        sut.define("bar", Values.create(10000));
         assertThat(sut.get("bar").asInt(), is(10000));
     }
 

@@ -71,7 +71,8 @@ public class ActionContext implements Serializable {
      */
     public RosettoAction get(String nameSpace, String varName) {
         if(!nameSpaces.containsKey(nameSpace)) return Values.NULL;
-        return (RosettoFunction)nameSpaces.get(nameSpace).get(varName);
+        NameSpace ns = nameSpaces.get(nameSpace);
+        return (RosettoAction)ns.get(varName);
     }
     
     /**
@@ -79,7 +80,7 @@ public class ActionContext implements Serializable {
      * @param action 定義する関数
      */
     public void defineAction(String key, RosettoAction action) {
-        current.set(key, action);
+        current.define(key, action);
     }
     
     /**
@@ -88,7 +89,7 @@ public class ActionContext implements Serializable {
      * @param packageName 追加先のパッケージ
      */
     public void defineAction(String key, RosettoAction action, String packageName) {
-        getNameSpace(packageName).set(key, action);
+        getNameSpace(packageName).define(key, action);
     }
     
     /**
@@ -98,7 +99,7 @@ public class ActionContext implements Serializable {
     public void importPackage(FunctionPackage p, String packageName) {
         NameSpace space = getNameSpace(packageName);
         for(RosettoFunction f : p.getFunctions()) {
-            space.set(f.getName(), f);
+            space.define(f.getName(), f);
         }
     }
     

@@ -1,4 +1,4 @@
-package info.rosetto.models.base.function;
+package info.rosetto.models.system;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

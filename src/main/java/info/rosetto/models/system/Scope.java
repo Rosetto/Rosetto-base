@@ -8,32 +8,48 @@ import info.rosetto.models.base.elements.values.ListValue;
 import info.rosetto.models.base.elements.values.RosettoFunction;
 import info.rosetto.utils.base.Values;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ローカル変数を保持するスコープ.<br>
- * 
- * すべての値は評価済みで、ActionCallは含まれない.<br>
+ * ローカル変数を保持するスコープ.
  * @author tohhy
  */
 public class Scope {
     
+    /**
+     * このスコープが保持するローカル変数の一覧.
+     */
     private final Map<String, RosettoValue> vars;
     
+    /**
+     * このスコープの親スコープ.
+     */
     private final Scope parent;
     
-    
+    /**
+     * 新しいルートスコープを生成する.
+     */
     public Scope() {
         this.vars = new HashMap<String, RosettoValue>();
         this.parent = null;
     }
     
+    /**
+     * 指定スコープを親とする新しいスコープを生成する.
+     * @param parent 生成するスコープの親スコープ
+     */
     public Scope(Scope parent) {
         this.vars = new HashMap<String, RosettoValue>();
         this.parent = parent;
     }
     
+    /**
+     * 指定したローカル変数マッピングをもつ新しいスコープを生成する.
+     * @param parent 生成するスコープの親スコープ、ルートスコープならnull
+     * @param values このスコープに与えるローカル変数
+     */
     public Scope(Scope parent, Map<String, RosettoValue> values) {
         this.vars = new HashMap<String, RosettoValue>(values);
         this.parent = parent;
@@ -52,11 +68,24 @@ public class Scope {
         this.vars = new HashMap<String, RosettoValue>(parsed);
         this.parent = parent;
     }
+    
+    @Override
+    public String toString() {
+        return vars.toString();
+    }
 
+    /**
+     * このスコープが親を持っているかどうかを返す.
+     * @return このスコープが親を持っているかどうか
+     */
     public boolean hasParent() {
         return parent != null;
     }
     
+    /**
+     * このスコープの親スコープを返す.
+     * @return このスコープの親スコープ
+     */
     public Scope getParent() {
         return parent;
     }
@@ -73,6 +102,11 @@ public class Scope {
         return Values.NULL;
     }
     
+    /**
+     * このスコープに新しくローカル変数をセットする.
+     * @param key セットする変数のキー
+     * @param value セットする変数の値
+     */
     public void set(String key, RosettoValue value) {
         this.vars.put(key, value);
     }
@@ -88,17 +122,12 @@ public class Scope {
         return false;
     }
     
-    @Override
-    public String toString() {
-        return vars.toString();
-    }
-    
     /**
      * キーワード引数のマップを取得する.読み込み専用.
-     * @return
+     * @return キーワード引数のマップ
      */
     public Map<String, RosettoValue> getMap() {
-        return vars;
+        return Collections.unmodifiableMap(vars);
     }
 
 }

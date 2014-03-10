@@ -71,12 +71,12 @@ public class NameSpace implements Serializable {
     public static NameSpace createRootSpace() {
         return new NameSpace();
     }
-
+    
     @Override
     public String toString() {
-        return "NameSpace:" + name + 
-                "variables:" + variables + 
-                "sealed:" + sealedKeys;
+        return "[namespace:" + name + 
+                " variables:" + variables + 
+                " sealed:" + sealedKeys + "]";
     }
     
     /**
@@ -104,7 +104,7 @@ public class NameSpace implements Serializable {
      * @param key 設定する変数名
      * @param value 設定する値
      */
-    public void set(String key, RosettoValue value) {
+    public void define(String key, RosettoValue value) {
         if(key == null || key.length() == 0)
             throw new IllegalArgumentException("key must not be empty");
         if(value == null)
@@ -123,10 +123,12 @@ public class NameSpace implements Serializable {
      * @param space 取り込む名前空間
      */
     public void include(NameSpace space) {
-        if(space == null) return;
+        if(space == null)
+            throw new IllegalArgumentException("namespace is null");
+        
         for(Entry<String, RosettoValue> e : space.variables.entrySet()) {
             try {
-                set(e.getKey(), e.getValue());
+                define(e.getKey(), e.getValue());
             } catch(VariableSealedException ex) {
                 RosettoLogger.warning("variable" + e.getKey() + " include failed: "
                         + "key already sealed");

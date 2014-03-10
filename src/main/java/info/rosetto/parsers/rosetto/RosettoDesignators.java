@@ -33,12 +33,12 @@ public class RosettoDesignators extends Designators {
      * キャラクター選択指示子
      */
     static final HeadDesignator CHARA_SELECT_D = 
-            StdDesignators.createHeadConvertTag("@", "character.select");
+            StdDesignators.createHeadConvertTag("@", "actor.select");
     /**
      * キャラクター操作指示子
      */
     static final HeadDesignator CHARA_EDIT_D = 
-            StdDesignators.createHeadPackageCall("#", "character");
+            StdDesignators.createHeadPackageCall("#", "actor.current");
     /**
      * アクター操作指示子
      */
