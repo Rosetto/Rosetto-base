@@ -9,10 +9,6 @@ import info.rosetto.models.base.scenario.Label;
 
 import org.junit.Test;
 
-/**
- * OK(2013/09/09)
- * @author tohhy
- */
 public class LabelTest {
 
     @Test
