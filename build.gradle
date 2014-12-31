@@ -15,16 +15,16 @@ sourceCompatibility = 1.8
 
 ext {
     project.version = '0.1.2'
-    project.group = 'org.rosetto'
+    project.group = 'org.ocsoft'
     appName = 'rosetto-script'
     project.description = 'Rosetto script and parser'
-    mainClass = 'info.rosetto.dummy.Launcher'
+    mainClass = 'org.ocsoft.dummy.Launcher'
 }
 
 
 
 dependencies {
-    compile 'com.google.code.findbugs:jsr305:2.0.2'
+    compile 'com.google.code.findbugs:jsr305:3.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
     compile 'org.apache.commons:commons-lang3:3.2.1'
     

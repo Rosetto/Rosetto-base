@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.rosetto.contexts.base.Rosetto;
-import org.rosetto.models.base.scenario.Scenario;
-import org.rosetto.models.system.Parser;
+import org.ocsoft.rosetto.contexts.base.Rosetto;
+import org.ocsoft.rosetto.models.base.scenario.Scenario;
+import org.ocsoft.rosetto.models.system.Parser;
 
 public class ParseTest1 {
     private Parser parser;
