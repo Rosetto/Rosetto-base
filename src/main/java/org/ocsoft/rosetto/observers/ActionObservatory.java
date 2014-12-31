@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package org.ocsoft.rosetto.observers;
 
-import org.frows.observatories.v0_0_6.Observatory;
+import org.frows.observatories.v0_1_0.Observatory;
 import org.ocsoft.rosetto.models.base.elements.RosettoValue;
 import org.ocsoft.rosetto.models.base.elements.values.ListValue;
 import org.ocsoft.rosetto.models.base.elements.values.RosettoFunction;

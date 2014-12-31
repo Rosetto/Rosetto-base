@@ -1,59 +1,86 @@
-// plugins
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
+/* 
+ * plugins
+ */
+plugins {
+    id 'java'
+    id 'maven'
+    id 'eclipse'
+}
 
-// encoding
-def defaultEncoding = 'UTF-8'
-tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
-tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding }
-
-// defaulttasks
-defaultTasks 'clean', 'build'
+/* 
+ * library information
+ */
+group = 'org.ocsoft'
+ext.appName = 'rosetto-script'
+version = '0.1.2'
+description = 'Rosetto script and parser'
 
 sourceCompatibility = 1.8
 
 ext {
-    project.version = '0.1.2'
-    project.group = 'org.ocsoft'
-    appName = 'rosetto-script'
-    project.description = 'Rosetto script and parser'
-    mainClass = 'org.ocsoft.dummy.Launcher'
+    defaultEncoding = 'UTF-8'
+    isRunnable = false
+    mainClass = 'org.ocsoft.libname.Dummy'
+    licenseName = 'Mozilla Public License Version 2.0'
+    licenseURL = 'https://www.mozilla.org/MPL/2.0/'
+    pomInceptionYear = '2014'
 }
 
+/*
+ * project information
+ */
 
+defaultTasks 'clean', 'build'
 
+//defined on ~/.gradle/gradle.properties
+ext.mvnDeployURL = frowsmvnPath 
+ext.mvnSnapshotDeployURL = m2Repository
+
+/*
+ * dependencies
+ */
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.+'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.4'
     compile 'org.apache.commons:commons-lang3:3.2.1'
     
     compile 'org.frows:lilex:0.0.4'
-    compile 'org.frows:observatories:0.0.6'
+    compile 'org.frows:observatories:0.1.0'
     
     testCompile 'junit:junit:4.+'
 }
 
+/*
+ * repositories
+ */
 repositories {
     mavenCentral()
     mavenLocal()
-    flatDir { dirs 'lib' }
+    maven {url "https://frows.github.io/mvn-repo"}
+    maven {url "https://tohhy.github.io/mvn-repo"}
 }
 
-task runMain(dependsOn: classes, type: JavaExec) {
+/*
+ * original tasks
+ */
+
+task runMain(type: JavaExec, dependsOn: classes) {
+    description 'Executes main class.'
     main = mainClass
     classpath sourceSets.main.output.classesDir
     classpath configurations.compile
 }
 
 task sourcesJar(type: Jar, dependsOn:classes) {
-     classifier = 'sources'
-     from sourceSets.main.allSource
+    description 'Creates sources jar file.'
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn:javadoc) {
-     classifier = 'javadoc'
-     from javadoc.destinationDir
+    description 'Creates javadoc jar file.'
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 artifacts {
@@ -61,22 +88,57 @@ artifacts {
     //archives javadocJar
 }
 
+/* 
+ * settings
+ */
 
+//deploy
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: m2Repository)
-            pom.version = project.version
-            pom.groupId = project.group
-            pom.artifactId = appName
+            repository(url: mvnDeployURL)
+            snapshotRepository(url: mvnSnapshotDeployURL)
+            pom {
+                version = project.version
+                groupId = project.group
+                artifactId = appName
+                project {
+                    inceptionYear pomInceptionYear
+                    licenses {
+                        license {
+                            name licenseName
+                            url licenseURL
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
+
+//encoding
+tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
+tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding }
+
+//javadoc
+javadoc {
+    options.charSet = 'UTF-8'
+}
+
+//clean before create jar
+compileJava.dependsOn(clean)
+
+//create jar
 jar {
     //from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     from (configurations.compile.collect { it.isDirectory() ? it : fileTree(it) }) {
         exclude '**/*.jar'
     }
-    manifest.mainAttributes("Main-Class" : mainClass)
+    jar.baseName = appName
+    manifest.attributes("Main-Class" : mainClass)
 }
+
+// ---------------------------------------------------------------
+

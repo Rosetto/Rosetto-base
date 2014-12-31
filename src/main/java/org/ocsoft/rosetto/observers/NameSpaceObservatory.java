@@ -6,7 +6,7 @@ package org.ocsoft.rosetto.observers;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.frows.observatories.v0_0_6.ObjectObservatory;
+import org.frows.observatories.v0_1_0.ObjectObservatory;
 import org.ocsoft.rosetto.models.base.elements.RosettoValue;
 
 /**
