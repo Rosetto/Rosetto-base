@@ -11,29 +11,27 @@ tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding
 // defaulttasks
 defaultTasks 'clean', 'build'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 
 ext {
-    project.version = '0.1.0'
-    project.group = 'info.rosetto'
-    appName = 'rosetto-base'
-    project.description = 'Rosetto base classes'
-    mainClass = 'info.olivinecafe.testapp.Launcher'
+    project.version = '0.1.2'
+    project.group = 'org.rosetto'
+    appName = 'rosetto-script'
+    project.description = 'Rosetto script and parser'
+    mainClass = 'info.rosetto.dummy.Launcher'
 }
 
-manifest.mainAttributes("Main-Class" : mainClass)
 
 
 dependencies {
-    testCompile 'junit:junit:4.11'
-    
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
     compile 'org.apache.commons:commons-lang3:3.2.1'
     
-    compile 'org.frows:puregds:0.1.4'
     compile 'org.frows:lilex:0.0.4'
-    compile 'org.frows:observatories:0.0.4'
+    compile 'org.frows:observatories:0.0.6'
+    
+    testCompile 'junit:junit:4.+'
 }
 
 repositories {
@@ -80,4 +78,5 @@ jar {
     from (configurations.compile.collect { it.isDirectory() ? it : fileTree(it) }) {
         exclude '**/*.jar'
     }
+    manifest.mainAttributes("Main-Class" : mainClass)
 }

@@ -2,21 +2,21 @@ package parsetest;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import info.rosetto.contexts.base.Contexts;
-import info.rosetto.models.base.scenario.Scenario;
-import info.rosetto.models.system.Parser;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.rosetto.contexts.base.Rosetto;
+import org.rosetto.models.base.scenario.Scenario;
+import org.rosetto.models.system.Parser;
 
 public class ParseTest1 {
     private Parser parser;
     
     @Before
     public void setUp() {
-        Contexts.dispose();
-        Contexts.initialize();
-        parser = Contexts.getParser();
+        Rosetto.dispose();
+        Rosetto.initialize();
+        parser = Rosetto.getParser();
     }
 
     @Test
